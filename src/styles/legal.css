@@ -1,0 +1,60 @@
+/* ── Legal hero ───────────────────────────────────────── */
+.legal-hero { padding: 150px var(--gutter) 0; text-align: center; }
+.kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--purple-soft); justify-content: center; }
+.legal-hero h1 { font-size: clamp(36px, 4.6vw, 56px); font-weight: 500; line-height: 1.0;
+  letter-spacing: -0.03em; color: var(--bone); margin-top: 16px; }
+.legal-hero h1 .accent-i { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--purple-soft); font-size: 1.06em; letter-spacing: 0; }
+.legal-hero .lede { font-size: 18px; color: var(--bone-dim); line-height: 1.6; max-width: 600px; margin: 18px auto 0; }
+
+/* ── Tabs ─────────────────────────────────────────────── */
+.legal-tabbar { position: sticky; top: 0; z-index: 40; margin-top: 52px;
+  background: rgba(10,10,13,0.78); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.legal-tabs { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter);
+  display: flex; gap: 8px; justify-content: center; }
+.legal-tabs button { appearance: none; border: 0; background: transparent; cursor: pointer;
+  font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--bone-dim);
+  padding: 20px 22px; position: relative; transition: color .25s; white-space: nowrap; }
+.legal-tabs button:hover { color: var(--bone); }
+.legal-tabs button.on { color: var(--bone); }
+.legal-tabs button.on::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: -1px; height: 2px;
+  background: var(--purple); border-radius: 2px; }
+@media (max-width: 620px){
+  .legal-tabs { gap: 0; justify-content: space-between; }
+  .legal-tabs button { padding: 16px 6px; font-size: 13px; }
+  .legal-tabs button.on::after { left: 6px; right: 6px; }
+}
+
+/* ── Document body ────────────────────────────────────── */
+.legal-stage { padding: 60px var(--gutter) 30px; }
+.legal-doc { max-width: 812px; margin: 0 auto; }
+.legal-doc .doc-meta { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; flex-wrap: wrap; }
+.legal-doc .doc-meta .tag { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--purple-soft); background: rgba(92,111,255,0.12); border: 1px solid rgba(92,111,255,0.3);
+  padding: 5px 12px; border-radius: 999px; }
+.legal-doc .doc-meta .upd { font-size: 13px; color: var(--bone-faint); }
+.legal-doc h2.doc-title { font-size: clamp(28px, 3.4vw, 40px); font-weight: 500; letter-spacing: -0.03em;
+  line-height: 1.05; color: var(--bone); margin-bottom: 14px; }
+.legal-doc .intro p { font-size: 16px; color: var(--bone-dim); line-height: 1.72; margin-bottom: 16px; }
+.legal-doc .intro p strong, .legal-doc p strong, .legal-doc li strong { color: var(--bone); font-weight: 600; }
+.legal-doc .intro { padding-bottom: 30px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+
+.legal-doc section { padding: 30px 0; border-bottom: 1px solid var(--line-soft); }
+.legal-doc section:last-child { border-bottom: 0; }
+.legal-doc h3.clause { display: flex; gap: 14px; align-items: baseline;
+  font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: var(--bone); margin-bottom: 16px; }
+.legal-doc h3.clause .n { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--purple-soft); flex: none; min-width: 30px; }
+.legal-doc h4.sub { font-size: 15.5px; font-weight: 600; color: var(--bone); margin: 20px 0 8px; }
+.legal-doc p { font-size: 15.5px; color: var(--bone-dim); line-height: 1.72; margin-bottom: 14px; }
+.legal-doc ol, .legal-doc ul { margin: 0 0 14px; padding-left: 22px; }
+.legal-doc li { font-size: 15.5px; color: var(--bone-dim); line-height: 1.7; margin-bottom: 10px; }
+.legal-doc ol { list-style: decimal; }
+.legal-doc ul { list-style: disc; }
+.legal-doc ul ul, .legal-doc ol ol, .legal-doc ol ul { margin-top: 10px; margin-bottom: 0; }
+.legal-doc a.inline { color: var(--purple-soft); text-decoration: none; border-bottom: 1px solid rgba(166,174,255,0.3); }
+.legal-doc a.inline:hover { color: var(--purple-bright); }
+.legal-doc .contact-card { margin-top: 8px; background: var(--ink-1); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
+.legal-doc .contact-card .lab { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bone-faint); margin-bottom: 10px; }
+.legal-doc .contact-card p { margin-bottom: 4px; font-size: 15px; color: var(--bone); }
+.legal-doc .contact-card p span { color: var(--bone-dim); }

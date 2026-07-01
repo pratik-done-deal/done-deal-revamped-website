@@ -1,0 +1,25 @@
+
+#dd-role-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .32s cubic-bezier(.22,1,.36,1),visibility .32s;font-family:inherit;}
+#dd-role-modal.open{opacity:1;visibility:visible;}
+#dd-role-modal .ddrm-bg{position:absolute;inset:0;background:rgba(8,8,11,0.74);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+#dd-role-modal .ddrm-card{position:relative;width:100%;max-width:468px;background:var(--ink-1,#121019);border:1px solid rgba(236,233,226,0.12);border-radius:24px;padding:34px 30px 30px;transform:translateY(14px) scale(.985);transition:transform .32s cubic-bezier(.22,1,.36,1);box-shadow:0 30px 90px -26px rgba(0,0,0,0.75);}
+#dd-role-modal.open .ddrm-card{transform:translateY(0) scale(1);}
+#dd-role-modal .ddrm-close{position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(236,233,226,0.16);background:transparent;color:var(--bone,#ECE9E2);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;}
+#dd-role-modal .ddrm-close:hover{background:rgba(236,233,226,0.08);}
+#dd-role-modal .ddrm-eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple-soft,#A6AEFF);font-weight:600;margin-bottom:12px;}
+#dd-role-modal .ddrm-title{font-size:26px;line-height:1.14;font-weight:600;color:var(--bone,#ECE9E2);margin-bottom:8px;letter-spacing:-0.01em;}
+#dd-role-modal .ddrm-sub{font-size:15px;line-height:1.5;color:var(--bone-dim,rgba(236,233,226,0.62));margin-bottom:24px;max-width:90%;}
+#dd-role-modal .ddrm-opts{display:flex;flex-direction:column;gap:12px;}
+#dd-role-modal .ddrm-opt{display:flex;align-items:center;gap:16px;text-decoration:none;padding:18px 20px;border-radius:16px;background:var(--ink-2,#18151F);border:1px solid rgba(236,233,226,0.10);transition:border-color .2s,background .2s,transform .12s;cursor:pointer;}
+#dd-role-modal .ddrm-opt:hover{border-color:var(--purple,#5C6FFF);background:#1c1926;}
+#dd-role-modal .ddrm-opt.seller:hover{border-color:var(--copper,#D09B6C);}
+#dd-role-modal .ddrm-opt:active{transform:scale(.985);}
+#dd-role-modal .ddrm-ic{flex:0 0 46px;width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:rgba(208,155,108,0.15);color:var(--copper-soft,#ECCBA8);}
+#dd-role-modal .ddrm-opt.investor .ddrm-ic{background:var(--purple-haze,rgba(92,111,255,0.16));color:var(--purple-soft,#A6AEFF);}
+#dd-role-modal .ddrm-ic svg{width:23px;height:23px;}
+#dd-role-modal .ddrm-txt{flex:1;}
+#dd-role-modal .ddrm-opt-t{display:block;font-size:16px;font-weight:600;color:var(--bone,#ECE9E2);margin-bottom:3px;}
+#dd-role-modal .ddrm-opt-d{display:block;font-size:13px;line-height:1.4;color:var(--bone-dim,rgba(236,233,226,0.6));}
+#dd-role-modal .ddrm-arrow{flex:0 0 auto;color:var(--bone-faint,rgba(236,233,226,0.4));transition:transform .2s,color .2s;}
+#dd-role-modal .ddrm-opt:hover .ddrm-arrow{color:var(--bone,#ECE9E2);transform:translateX(3px);}
+@media (max-width:600px){#dd-role-modal .ddrm-card{padding:28px 22px 24px;border-radius:22px;}#dd-role-modal .ddrm-title{font-size:23px;}}

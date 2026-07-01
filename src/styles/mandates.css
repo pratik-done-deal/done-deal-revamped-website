@@ -1,0 +1,200 @@
+/* ── Hero ───────────────────────────────────────────────────── */
+.m-hero {
+  min-height: 100svh; display: flex; flex-direction: column;
+  justify-content: center; gap: clamp(26px,4vh,48px);
+  padding: clamp(96px,12vh,124px) 0 clamp(34px,5vh,56px);
+  background:
+    radial-gradient(110% 80% at 50% -10%, rgba(92,111,255,0.18), transparent 52%),
+    radial-gradient(70% 60% at 12% 4%, rgba(230,181,60,0.08), transparent 56%),
+    linear-gradient(180deg, #0C0B12 0%, #0A0A0D 82%);
+  border-bottom: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+.m-hero .amb .glow { opacity: .5; }
+.m-hero-text { text-align: center; max-width: 1040px; margin: 0 auto; }
+.m-hero .kicker { justify-content: center; }
+.m-hero h1 { font-size: clamp(36px,4.6vw,56px); line-height: 1.03; margin: 16px 0 0; }
+.m-hero .lede { font-size: clamp(16px,1.5vw,18px); max-width: 760px; margin: 16px auto 0; }
+.m-hero .kicker .dot { margin: 0 12px; }
+
+/* ── Float icon (shared decorative elements) ────────────────── */
+.float-ic { display: flex; align-items: center; justify-content: center; }
+.float-ic svg {
+  width: 100%; height: 100%; display: block;
+  fill: none; stroke: currentColor;
+  stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ── Featured slider ────────────────────────────────────────── */
+.fslider { position: relative; z-index: 1; width: 100%; min-width: 0; }
+.fslider-viewport {
+  overflow: hidden; padding: 8px 0 14px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.fslider-track { display: flex; gap: 22px; align-items: center; transition: transform .6s var(--ease-out); }
+.fslider-track > * {
+  flex: 0 0 56%; transform: scale(0.9); opacity: 0.42;
+  transition: transform .5s var(--ease-out), opacity .5s var(--ease-out);
+}
+.fslider-track > *.active { transform: scale(1); opacity: 1; }
+@media (max-width: 1100px) { .fslider-track > * { flex: 0 0 68%; } }
+@media (max-width: 760px)  { .fslider-track > * { flex: 0 0 88%; } }
+.fslider .mcard { height: clamp(248px, 32vh, 280px); overflow: hidden; }
+.fslider .mcard p,
+.fslider .mcard .mcol .v {
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.fslider-controls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 18px; }
+.fslider-dots { display: flex; gap: 8px; justify-content: center; }
+.fslider-dots button {
+  width: 8px; height: 8px; border-radius: 999px; border: 0; padding: 0;
+  cursor: pointer; background: var(--line-strong);
+  transition: width .4s var(--ease-out), background .3s;
+}
+.fslider-dots button.on { width: 26px; background: var(--champagne-soft); }
+
+/* ── Slider nav arrows ──────────────────────────────────────── */
+.fnav {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid var(--line-strong); background: rgba(236,233,226,0.03);
+  color: var(--bone); display: grid; place-items: center;
+  cursor: pointer; transition: background .25s, border-color .25s;
+}
+.fnav:hover { background: rgba(236,233,226,0.08); border-color: var(--bone-faint); }
+.fnav svg { width: 18px; height: 18px; }
+
+/* ── Mandate card ───────────────────────────────────────────── */
+.mcard {
+  --c: #9D6BFF;
+  background: #141417; border: 1px solid #26262c; border-radius: 20px;
+  padding: clamp(20px,2vw,26px); display: flex; flex-direction: column;
+  transition: border-color .3s var(--ease-out), transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+}
+.mcard:hover {
+  border-color: color-mix(in srgb, var(--c) 40%, #26262c);
+  transform: translateY(-3px); box-shadow: 0 22px 60px rgba(0,0,0,0.40);
+}
+.mcard-head { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
+.mcard-ic {
+  width: 52px; height: 52px; border-radius: 13px; display: grid; place-items: center; flex: none;
+  color: var(--c); border: 1.5px solid color-mix(in srgb, var(--c) 55%, transparent);
+  background: radial-gradient(120% 110% at 50% 25%, color-mix(in srgb, var(--c) 24%, transparent), transparent 72%), #0D0D11;
+}
+.mcard-ic svg {
+  width: 26px; height: 26px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.mcard-headtext { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.mcard-pill {
+  align-self: flex-start; padding: 4px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; letter-spacing: -0.005em;
+  color: var(--c);
+  border: 1px solid color-mix(in srgb, var(--c) 50%, transparent);
+  background: color-mix(in srgb, var(--c) 11%, transparent);
+}
+.mcard h3 {
+  font-size: clamp(17px,1.5vw,20px); font-weight: 600;
+  letter-spacing: -0.02em; color: #fff; line-height: 1.14;
+}
+.mcard > p { font-size: 14px; color: var(--bone-dim); line-height: 1.5; margin-bottom: clamp(16px,2vw,20px); }
+.mcard-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-top: auto; }
+.mcard-meta { display: flex; gap: clamp(24px,3.5vw,44px); flex: 1; min-width: 0; }
+.mcol { display: flex; flex-direction: column; gap: 4px; }
+.mcol .k { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--bone-faint); }
+.mcol .v { font-size: 14px; color: var(--bone); font-weight: 500; }
+
+/* ── Category colour tokens ─────────────────────────────────── */
+.mcard[data-cat="ai"]          { --c: #9D6BFF; }
+.mcard[data-cat="b2b"]         { --c: #E6B53C; }
+.mcard[data-cat="consumer"]    { --c: #FA6E86; }
+.mcard[data-cat="fintech"]     { --c: #E6B53C; }
+.mcard[data-cat="healthcare"]  { --c: #FB6F84; }
+.mcard[data-cat="it"]          { --c: #9D6BFF; }
+.mcard[data-cat="marketplace"] { --c: #FA6E86; }
+.mcard[data-cat="saas"]        { --c: #3CC9DE; }
+
+/* ── Express interest button ────────────────────────────────── */
+.btn-express {
+  flex: none; background: var(--purple); color: #fff;
+  font-family: var(--sans); font-weight: 600; font-size: 15px;
+  padding: 13px 24px; border-radius: 999px; text-decoration: none;
+  white-space: nowrap; letter-spacing: -0.01em;
+  box-shadow: 0 8px 26px rgba(92,111,255,0.32);
+  transition: background .25s, box-shadow .25s, transform .2s;
+}
+.btn-express:hover { background: var(--purple-bright); box-shadow: 0 10px 34px rgba(92,111,255,0.42); }
+.btn-express:active { transform: scale(0.98); }
+@media (max-width: 560px) { .mcard-foot { flex-direction: column; align-items: stretch; gap: 22px; } .btn-express { text-align: center; } }
+
+/* ── Featured card ───────────────────────────────────────────── */
+.mcard-shell { position: relative; }
+.mcard.featured {
+  --c: #E6B53C;
+  background: linear-gradient(158deg, rgba(232,194,90,0.16), #141214 56%);
+  border-color: rgba(232,194,90,0.34); position: relative; overflow: hidden;
+}
+.fbadge {
+  position: absolute; top: 20px; right: -42px; z-index: 2;
+  transform: rotate(45deg); transform-origin: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #2c1f06; background: linear-gradient(135deg, #F4CD66, #D09B6C);
+  padding: 6px 50px; box-shadow: 0 4px 14px rgba(0,0,0,0.30);
+}
+
+/* ── Live mandates grid ─────────────────────────────────────── */
+.mand-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 28px; }
+@media (max-width: 1040px) { .mand-grid { grid-template-columns: 1fr; } }
+.mand-noresult { text-align: center; padding: 56px 0; color: var(--bone-faint); font-size: 16px; }
+
+/* ── Duo CTA section ────────────────────────────────────────── */
+.duo-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 44px; }
+@media (max-width: 820px) { .duo-cta { grid-template-columns: 1fr; } }
+.cta-card {
+  border: 1px solid var(--line); border-radius: 24px;
+  padding: clamp(32px,4vw,46px); position: relative; overflow: hidden;
+  display: flex; flex-direction: column; isolation: isolate;
+}
+.cta-card .amb { z-index: 0; }
+.cta-card > *:not(.amb) { position: relative; z-index: 1; }
+.cta-card.founders { background: linear-gradient(160deg, rgba(92,111,255,0.16), var(--ink-purple) 62%); border-color: rgba(92,111,255,0.28); }
+.cta-card.investors { background: linear-gradient(160deg, rgba(208,155,108,0.13), var(--ink-1) 62%); border-color: rgba(208,155,108,0.26); }
+.cta-tag {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--purple-soft); margin-bottom: 18px;
+}
+.cta-card.investors .cta-tag { color: var(--copper-soft); }
+.cta-card h3 {
+  font-size: clamp(24px,2.6vw,32px); font-weight: 500;
+  letter-spacing: -0.025em; color: var(--bone); line-height: 1.12; margin-bottom: 12px;
+}
+.cta-card > p { font-size: 16px; color: var(--bone-dim); line-height: 1.55; margin-bottom: 28px; flex: 1; }
+.cta-actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.cta-card.investors .btn-light {
+  background: linear-gradient(140deg, #F4CD66, #D09B6C);
+  color: #2c1f06; box-shadow: 0 8px 26px rgba(208,155,108,0.34);
+}
+.cta-card.investors .btn-light:hover { filter: brightness(1.05); }
+
+/* ── Mobile overrides ───────────────────────────────────────── */
+@media (max-width: 600px) {
+  .m-hero .kicker .kp { display: block; }
+  .m-hero .kicker .dot { display: none; }
+  .m-hero .kicker .live-dot { display: none !important; }
+  .m-hero .fslider-track { gap: 16px; }
+  .m-hero .fslider-track > * { flex: 0 0 100%; transform: scale(1); opacity: 1; }
+  .m-hero .fslider-viewport { -webkit-mask-image: none; mask-image: none; padding-left: 0; padding-right: 0; }
+  .m-hero .fslider .mcard { height: auto; padding: 18px 18px 20px; }
+  #mandates .mand-filters {
+    flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    position: sticky; top: var(--nav-h, 82px); z-index: 30;
+    margin: 18px 0 6px; padding: 12px 0;
+    background: rgba(10,10,13,0.92);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 10px 18px -12px rgba(0,0,0,0.6);
+  }
+  #mandates .mand-filters::-webkit-scrollbar { display: none; }
+  #mandates .fchip { flex: 0 0 auto; }
+}

@@ -1,0 +1,169 @@
+/* ── Art-back hover (CSS var can't be expressed in Tailwind hover) ── */
+.art-back { color: var(--bone-dim); }
+.art-back:hover { color: var(--bone); }
+
+/* ── Eyebrow colour variants — class added dynamically by data loader ── */
+.art-eyebrow.buyer   { color: var(--purple-soft); }
+.art-eyebrow.founder { color: var(--copper-soft); }
+.art-eyebrow.deal    { color: var(--champagne-soft); }
+
+/* ── Meta children — injected by data loader ──────────────────── */
+.art-meta .sep { width: 3px; height: 3px; border-radius: 50%; background: var(--bone-ghost); }
+.art-meta .mi  { display: inline-flex; align-items: center; gap: 7px; }
+.art-meta .mi svg {
+  width: 15px; height: 15px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ── Cover — injected markup ───────────────────────────────────── */
+.art-cover .cover {
+  position: relative; overflow: hidden;
+  height: clamp(240px, 38vw, 400px); border-radius: 22px; border: 1px solid var(--line);
+}
+.art-cover .cover .cov-ic { width: 280px; height: 280px; }
+.art-cover .cover img.cov-img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+}
+.art-cover .cover.has-img .cov-grid,
+.art-cover .cover.has-img .cov-orb,
+.art-cover .cover.has-img .cov-ic { display: none; }
+.art-cover .cover.has-img .cov-tag { z-index: 2; }
+
+/* ── Article body — rich text injected by data loader ─────────── */
+.art-body > .lead {
+  font-size: 20px; line-height: 1.6; color: var(--bone);
+  font-weight: 400; letter-spacing: -0.012em; margin-top: 0;
+}
+.art-body p { font-size: 17px; line-height: 1.72; color: var(--bone-dim); margin-top: 22px; letter-spacing: -0.004em; }
+.art-body h2 { font-size: clamp(22px, 2.4vw, 28px); font-weight: 600; letter-spacing: -0.025em; color: var(--bone); margin-top: 46px; }
+.art-body h2 + p { margin-top: 16px; }
+.art-body strong,
+.art-body b { color: var(--bone); font-weight: 600; }
+.art-body ul { margin-top: 22px; padding-left: 4px; list-style: none; display: flex; flex-direction: column; gap: 13px; }
+.art-body li { position: relative; padding-left: 30px; font-size: 17px; line-height: 1.6; color: var(--bone-dim); }
+.art-body li::before {
+  content: ""; position: absolute; left: 4px; top: 11px;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--purple);
+}
+.art-body blockquote { margin: 40px 0; padding: 4px 0 4px 28px; border-left: 3px solid var(--champagne); }
+.art-body blockquote p {
+  font-family: var(--serif); font-style: italic; font-size: 24px;
+  line-height: 1.35; color: var(--bone); letter-spacing: 0; margin: 0;
+}
+
+/* ── Prev / next nav cards — injected by data loader ──────────── */
+.art-navcard {
+  display: flex; flex-direction: column; gap: 12px;
+  border: 1px solid var(--line); border-radius: 18px; padding: 24px 26px;
+  background: var(--ink-1); text-decoration: none; min-height: 116px;
+  transition: border-color .3s var(--ease-out), transform .35s var(--ease-out), background .3s;
+}
+.art-navcard:hover  { border-color: rgba(92,111,255,0.34); transform: translateY(-3px); background: var(--ink-2); }
+.art-navcard.next   { text-align: right; align-items: flex-end; }
+.art-navcard.disabled { display: none; }
+.art-navcard .nav-dir {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--purple-soft);
+}
+.art-navcard .nav-title {
+  font-size: clamp(15px, 1.6vw, 18px); font-weight: 500;
+  letter-spacing: -0.02em; color: var(--bone); line-height: 1.25;
+}
+.art-navcard .nav-tag { font-size: 11.5px; color: var(--bone-faint); }
+
+/* ═══════════════════════════════════════════════════════════════
+   Blog listing page
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Filter chips ──────────────────────────────────────────────── */
+.mand-filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 36px 0 8px; }
+.fchip {
+  font-family: var(--sans); font-weight: 600; font-size: 13.5px; letter-spacing: -0.005em;
+  padding: 10px 20px; border-radius: 999px; border: 1px solid var(--line-strong);
+  background: transparent; color: var(--bone-dim); cursor: pointer; white-space: nowrap; flex: 0 0 auto;
+  transition: color .25s, border-color .25s, background .25s;
+}
+.fchip:hover { color: var(--bone); border-color: var(--bone-faint); }
+.fchip.on    { background: var(--bone); color: var(--ink-text); border-color: transparent; }
+
+/* ── Blog grid ─────────────────────────────────────────────────── */
+.blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 34px; }
+@media (max-width: 900px) { .blog-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .blog-grid { grid-template-columns: 1fr; } }
+
+/* ── Blog card ─────────────────────────────────────────────────── */
+.bcard {
+  display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 18px;
+  overflow: hidden; background: var(--ink-1); text-decoration: none;
+  transition: border-color .3s var(--ease-out), transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+}
+.bcard:hover { transform: translateY(-4px); border-color: rgba(92,111,255,0.32); box-shadow: 0 20px 56px rgba(0,0,0,0.36); }
+.bcard-body  { padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+.bcard h3    { font-size: 18.5px; font-weight: 600; letter-spacing: -0.018em; line-height: 1.24; color: var(--bone); }
+.bcard p     {
+  font-size: 14px; color: var(--bone-dim); line-height: 1.55; margin-top: 11px; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.read-link   { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; color: var(--purple-bright); font-weight: 600; font-size: 14px; }
+.read-link .arrow { transition: transform .3s var(--ease-out); }
+.bcard:hover .read-link .arrow { transform: translateX(4px); }
+
+/* ── Featured post ─────────────────────────────────────────────── */
+.blog-feat {
+  display: grid; grid-template-columns: 1.5fr 1fr; gap: 0;
+  border: 1px solid rgba(232,194,90,0.34); border-radius: 24px; overflow: hidden;
+  background: linear-gradient(158deg, rgba(232,194,90,0.13), var(--ink-1) 56%); position: relative;
+}
+@media (max-width: 600px) { .blog-feat { grid-template-columns: 1fr; } }
+.blog-feat .cover     { min-height: 288px; }
+@media (max-width: 600px) { .blog-feat .cover { min-height: 170px; } }
+.blog-feat-body       { padding: clamp(28px,3vw,44px); display: flex; flex-direction: column; justify-content: center; }
+@media (max-width: 600px) { .blog-feat-body { padding: 20px 20px 22px; } }
+.blog-feat h2         { font-size: clamp(26px,3vw,40px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.08; color: var(--bone); }
+@media (max-width: 600px) { .blog-feat h2 { font-size: 21px; line-height: 1.2; } }
+.blog-feat p          { font-size: 16.5px; color: var(--bone-dim); line-height: 1.6; margin-top: 18px; max-width: 460px; }
+.feat-eyebrow         { display: inline-flex; align-items: center; gap: 9px; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--champagne-soft); margin-bottom: 20px; }
+@media (max-width: 600px) { .feat-eyebrow { font-size: 10px; margin-bottom: 8px; } }
+.ribbon {
+  position: absolute; top: 22px; right: -42px; z-index: 3;
+  transform: rotate(45deg); transform-origin: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #2c1f06;
+  background: linear-gradient(135deg, #F4CD66, #D09B6C); padding: 6px 50px;
+}
+@media (max-width: 600px) { .ribbon { font-size: 9px; } }
+
+/* ── Cover element (shared across pages) ──────────────────────── */
+.cover         { position: relative; overflow: hidden; isolation: isolate; }
+.cover .cov-grid { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 22px 22px; opacity: .5; }
+.cover .cov-orb  { position: absolute; border-radius: 50%; filter: blur(34px); }
+.cover .cov-ic   { position: absolute; right: -14px; bottom: -22px; width: 168px; height: 168px; color: rgba(255,255,255,0.16); }
+.cover .cov-ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; display: block; }
+.blog-feat .cover .cov-ic { width: 240px; height: 240px; }
+@media (max-width: 600px) { .cover .cov-ic { width: 104px; height: 104px; } }
+.cov-tag {
+  position: absolute; top: 11px; left: 11px; z-index: 2;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 999px; backdrop-filter: blur(8px);
+}
+
+/* Cover theme variants */
+.cov-buyer   { background: linear-gradient(150deg, #20254F 0%, #2B2150 55%, #14121F 100%); }
+.cov-buyer   .cov-orb { background: rgba(92,111,255,0.6); }
+.cov-buyer   .cov-tag { color: #fff; background: rgba(50,71,255,0.92); border: 1px solid rgba(50,71,255,0.92); }
+.cov-founder { background: linear-gradient(150deg, #3A2A18 0%, #2A2017 55%, #16120E 100%); }
+.cov-founder .cov-orb { background: rgba(232,194,90,0.55); }
+.cov-founder .cov-tag { color: var(--copper-soft); background: rgba(208,155,108,0.18); border: 1px solid rgba(208,155,108,0.42); }
+.cov-deal    { background: linear-gradient(150deg, #2A2350 0%, #2E2535 50%, #3A2A18 100%); }
+.cov-deal    .cov-orb { background: rgba(232,194,90,0.5); }
+.cov-deal    .cov-tag { color: var(--champagne-soft); background: rgba(232,194,90,0.16); border: 1px solid rgba(232,194,90,0.4); }
+
+/* ── Blog meta row ─────────────────────────────────────────────── */
+.blog-meta      { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--bone-faint); letter-spacing: 0.01em; }
+.blog-meta.mt   { margin-top: 26px; }
+.blog-meta .sep { width: 3px; height: 3px; border-radius: 50%; background: var(--bone-ghost); }
+.blog-meta .mi  { display: inline-flex; align-items: center; gap: 7px; }
+.blog-meta .mi svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── Empty state ───────────────────────────────────────────────── */
+.blog-empty { text-align: center; padding: 56px 0; color: var(--bone-faint); font-size: 16px; }

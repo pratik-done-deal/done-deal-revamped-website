@@ -1,0 +1,21 @@
+/* ─────────────────────────────────────────────────────────────
+   Done Deal — global stylesheet entry.
+   The bespoke design-system CSS (fonts, tokens, layout, sections) is
+   preserved verbatim under ./styles and imported first, so the build is
+   pixel-faithful. Tailwind layers come after for utility-class authoring.
+   Tailwind preflight is disabled (see tailwind.config.js) so it never
+   clobbers the design system's own resets.
+   ───────────────────────────────────────────────────────────── */
+@import './styles/base.css';
+@import './styles/layout.css';
+@import './styles/sections.css';
+@import './styles/responsive.css';
+@import './styles/modal.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  isolation: isolate;
+}
