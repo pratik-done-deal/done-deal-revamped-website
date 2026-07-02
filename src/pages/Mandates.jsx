@@ -239,7 +239,10 @@ function MandateCard({ item, featured = false }) {
 
 /* ── Featured slider ────────────────────────────────────────── */
 function FeaturedSlider({ items }) {
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(() => {
+    const saasIndex = items.findIndex((item) => item.cat === 'saas');
+    return saasIndex >= 0 ? saasIndex : 0;
+  });
   const trackRef = useRef(null);
   const pausedRef = useRef(false);
   const n = items.length;

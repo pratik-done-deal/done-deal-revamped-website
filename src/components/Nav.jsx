@@ -21,8 +21,10 @@ export default function Nav({ current }) {
   useNav();
 
   useEffect(() => {
+    document.body.classList.toggle('dd-nav-open', mobileOpen);
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => {
+      document.body.classList.remove('dd-nav-open');
       document.body.style.overflow = '';
     };
   }, [mobileOpen]);
@@ -74,9 +76,10 @@ export default function Nav({ current }) {
       <nav
         className={`dd-mobnav fixed inset-0 z-[9998] flex flex-col bg-[rgba(8,8,12,0.97)] px-7 pb-10 pt-[104px] backdrop-blur-[22px] transition-[opacity,visibility,transform] duration-300 min-[801px]:hidden ${
           mobileOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'
-        }`}
+        }${mobileOpen ? ' is-open' : ''}`}
         id="ddMobNav"
         aria-label="Mobile navigation"
+        aria-hidden={!mobileOpen}
       >
         <div className="absolute inset-x-0 top-0 flex h-[72px] items-center justify-between px-5">
           <a className="inline-flex items-center" href="DoneDeal-Homepage.html" onClick={closeMobile} aria-label="Done Deal home">

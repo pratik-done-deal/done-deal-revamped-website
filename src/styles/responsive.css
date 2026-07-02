@@ -24,6 +24,25 @@
   .dd-mn-close:active{ color:var(--purple-soft,#A6AEFF); }
 }
 
+@media (max-width:800px){
+  .dd-mobnav.is-open,
+  body.dd-nav-open .dd-mobnav{
+    display:flex !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:none !important;
+    z-index:9999 !important;
+  }
+
+  .dd-mobnav .dd-mn-link{
+    display:block !important;
+  }
+
+  .dd-mobnav .dd-mn-cta{
+    display:inline-flex !important;
+  }
+}
+
 
 
 @media (max-width:800px){
