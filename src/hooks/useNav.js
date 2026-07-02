@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 /**
  * Sticky nav background on scroll, auto-hide on scroll-down / reveal on
- * scroll-up, the mobile burger menu, and the --nav-h / --strip-h CSS vars
- * (so nav + hero + strip can total exactly 100vh).
+ * scroll-up, and the --nav-h / --strip-h CSS vars (so nav + hero + strip
+ * can total exactly 100vh).
  */
 export default function useNav() {
   useEffect(() => {
@@ -43,29 +43,11 @@ export default function useNav() {
     window.addEventListener('resize', setVars);
     window.addEventListener('load', setVars);
 
-    // burger / mobile nav
-    const burger = document.getElementById('ddBurger');
-    const closeBtn = document.getElementById('ddNavClose');
-    const body = document.body;
-    const close = () => { body.classList.remove('dd-nav-open'); if (burger) burger.setAttribute('aria-expanded', 'false'); };
-    const toggle = () => {
-      const open = body.classList.toggle('dd-nav-open');
-      if (burger) burger.setAttribute('aria-expanded', String(open));
-    };
-    if (burger) burger.addEventListener('click', toggle);
-    if (closeBtn) closeBtn.addEventListener('click', close);
-    const mobLinks = [].slice.call(document.querySelectorAll('.dd-mn-link, .dd-mn-cta'));
-    mobLinks.forEach((a) => a.addEventListener('click', close));
-
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('scroll', onHide);
       window.removeEventListener('resize', setVars);
       window.removeEventListener('load', setVars);
-      if (burger) burger.removeEventListener('click', toggle);
-      if (closeBtn) closeBtn.removeEventListener('click', close);
-      mobLinks.forEach((a) => a.removeEventListener('click', close));
-      close();
     };
   }, []);
 }

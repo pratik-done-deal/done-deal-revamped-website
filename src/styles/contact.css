@@ -1,0 +1,286 @@
+.contact-fold {
+  padding-top: calc(var(--nav-h, 66px) + 4px);
+  padding-bottom: clamp(28px, 4vh, 48px);
+}
+
+.contact-panel {
+  padding: clamp(28px, 4vw, 52px);
+}
+
+.contact-glow-primary {
+  width: 520px;
+  height: 440px;
+  right: -4%;
+  top: -6%;
+  opacity: 0.3;
+}
+
+.contact-glow-warm {
+  width: 380px;
+  height: 320px;
+  left: -4%;
+  bottom: -12%;
+  opacity: 0.36;
+}
+
+.cf-grid {
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: clamp(28px, 4vw, 60px);
+  align-items: center;
+}
+
+.cf-left {
+  max-width: 560px;
+}
+
+.cf-left .hero-h1 {
+  margin-top: 8px;
+  font-size: clamp(38px, 4.5vw, 60px);
+  font-weight: 600;
+  line-height: 1.02;
+}
+
+.cf-left .lede {
+  margin: 20px 0 26px;
+}
+
+.contact-mail {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--purple), #4458e6);
+  color: #fff;
+  border-radius: 13px;
+  padding: 11px 16px;
+  box-shadow: 0 12px 28px rgba(92, 111, 255, 0.32);
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out),
+    filter 0.3s;
+}
+
+.contact-mail:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 46px rgba(92, 111, 255, 0.46);
+  filter: brightness(1.04);
+}
+
+.contact-mail:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.contact-mail .cm-ic {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.contact-mail .cm-ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+.contact-mail .cm-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.contact-mail .cm-label {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.contact-mail .cm-addr {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.contact-mail .cm-arrow {
+  font-size: 17px;
+  margin-left: 2px;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.contact-mail:hover .cm-arrow {
+  transform: translateX(4px);
+}
+
+.cf-locs {
+  margin-top: 30px;
+}
+
+.cf-locs-label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  margin-bottom: 14px;
+}
+
+.loc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cf-locs .loc-list {
+  gap: 12px;
+}
+
+.loc-card {
+  text-align: left;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+  background: var(--ink-1);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px 24px;
+  cursor: pointer;
+  width: 100%;
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out);
+}
+
+.loc-card:hover,
+.loc-card.active {
+  border-color: var(--purple);
+  background: rgba(92, 111, 255, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(10, 10, 13, 0.4);
+}
+
+.cf-locs .loc-card {
+  padding: 12px 14px;
+  border-radius: 13px;
+  gap: 12px;
+}
+
+.loc-pin-ic {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: rgba(92, 111, 255, 0.12);
+  color: var(--purple);
+  transition:
+    background 0.3s,
+    color 0.3s,
+    transform 0.35s var(--ease-out);
+}
+
+.loc-pin-ic svg {
+  width: 22px;
+  height: 22px;
+}
+
+.loc-card:hover .loc-pin-ic,
+.loc-card.active .loc-pin-ic {
+  background: var(--purple);
+  color: #fff;
+  transform: scale(1.06);
+}
+
+.cf-locs .loc-pin-ic {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+.cf-locs .loc-pin-ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+.loc-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.loc-city {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--bone);
+  letter-spacing: -0.01em;
+  margin-bottom: 7px;
+}
+
+.cf-locs .loc-city {
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+
+.loc-addr {
+  font-size: 14px;
+  color: var(--bone-dim);
+  line-height: 1.5;
+}
+
+.cf-locs .loc-addr {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.loc-map {
+  position: relative;
+}
+
+.india-map {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 880px) {
+  .cf-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .cf-right {
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .cf-grid {
+    gap: 26px;
+  }
+
+  .cf-right {
+    order: 0;
+  }
+
+  .cf-left .hero-h1 {
+    font-size: 36px;
+    line-height: 1.08;
+  }
+
+  .loc-map {
+    text-align: center;
+  }
+
+  .india-map {
+    max-width: 230px;
+  }
+}

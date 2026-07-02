@@ -198,18 +198,19 @@ export default function useHeroViz(hostRef, canvasRef, cardsWrapRef) {
       ctx.arc(x, y, r * 0.42, 0, 6.2832);
       ctx.fill();
       if (ring) {
+        const ringCol = [160, 162, 170];
         const rp = (t * (winner ? 0.45 : 0.5)) % 1;
         ctx.beginPath();
         ctx.arc(x, y, r + rp * r * (winner ? 3.0 : 2.4), 0, 6.2832);
         ctx.lineWidth = winner ? 2.2 : 1.6;
-        ctx.strokeStyle = rgba(c, (winner ? 0.55 : 0.4) * (1 - rp) * a);
+        ctx.strokeStyle = rgba(ringCol, (winner ? 0.55 : 0.4) * (1 - rp) * a);
         ctx.stroke();
         if (winner) {
           const rp2 = (t * 0.45 + 0.5) % 1;
           ctx.beginPath();
           ctx.arc(x, y, r + rp2 * r * 3.0, 0, 6.2832);
           ctx.lineWidth = 2.0;
-          ctx.strokeStyle = rgba(c, 0.45 * (1 - rp2) * a);
+          ctx.strokeStyle = rgba(ringCol, 0.45 * (1 - rp2) * a);
           ctx.stroke();
         }
       }
@@ -336,7 +337,9 @@ export default function useHeroViz(hostRef, canvasRef, cardsWrapRef) {
         const e = enodes[i];
         const pulse2 = 0.5 + 0.5 * Math.sin(t * 1.7 + i * 0.7);
         const isWinner = i === 0 && e.blue > 0.5;
-        drawBall(e.x * W, e.y * H, e.r, mixc(COP, PUR, e.blue), e.a, pulse2, e.ring, isWinner);
+        const GRY = [160, 162, 172];
+        const ballCol = isWinner ? mixc(COP, GRY, e.blue) : mixc(COP, PUR, e.blue);
+        drawBall(e.x * W, e.y * H, e.r, ballCol, e.a, pulse2, e.ring, isWinner);
       }
     }
 

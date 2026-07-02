@@ -1,9 +1,107 @@
 import React from 'react';
 
-const HTML = "\n  <div class=\"amb\"><div class=\"glow warm\" style=\"width:480px;height:400px;left:4%;top:6%;opacity:.2\"></div><div class=\"halfcircle drift\" data-speed=\"0.2\" style=\"width:260px;height:260px;right:-100px;top:18%;\"></div><div class=\"bigicon drift\" data-speed=\"0.07\" style=\"width:400px;height:400px;left:-80px;bottom:-60px;\"><svg viewBox=\"0 0 24 24\"><use href=\"#ic-flag\"></use></svg></div></div>\n  <div class=\"wrap\">\n    <div class=\"eyebrow-row reveal\"><span class=\"num\">03</span><span class=\"kicker\">Selected deals</span><span class=\"ln\"></span></div>\n    <div class=\"deals-head2 reveal\">\n      <h2 class=\"h-sec\">Outcomes, not <span class=\"accent-i\">promises.</span></h2>\n      <div class=\"sqz-nav\">\n        <button type=\"button\" class=\"tnav\" id=\"acc-prev\" aria-label=\"Previous deal\">←</button>\n        <button type=\"button\" class=\"tnav\" id=\"acc-next\" aria-label=\"Next deal\">→</button>\n      </div>\n    </div>\n    <div class=\"acc reveal\" id=\"acc\">\n      <button type=\"button\" class=\"acc-panel on\" data-i=\"0\" data-tag=\"Media · Acquisition\" data-name=\"WLDD × ScoopWhoop\" data-desc=\"Studio meets India’s biggest content engine.\" aria-label=\"WLDD × ScoopWhoop\">\n        <img src=\"/assets/8f781d3e4ec2.png\" alt=\"WLDD × ScoopWhoop — deal announcement\" draggable=\"false\">\n        <span class=\"acc-vname\">WLDD × ScoopWhoop</span>\n      </button>\n      <button type=\"button\" class=\"acc-panel\" data-i=\"1\" data-tag=\"Consumer · Acquisition\" data-name=\"Heritage × Get-A-Way\" data-desc=\"Dessert brand meets India’s leading dairy company.\" aria-label=\"Heritage × Get-A-Way\">\n        <img src=\"/assets/9eebf2194260.png\" alt=\"Heritage × Get-A-Way — deal announcement\" draggable=\"false\">\n        <span class=\"acc-vname\">Heritage × Get-A-Way</span>\n      </button>\n      <button type=\"button\" class=\"acc-panel\" data-i=\"2\" data-tag=\"D2C · Exit\" data-name=\"The Soap Co.\" data-desc=\"A soap brand that 6×’d valuation in 18 months.\" aria-label=\"The Soap Co.\">\n        <img src=\"/assets/9d35981c3de9.png\" alt=\"The Soap Co. — deal announcement\" draggable=\"false\">\n        <span class=\"acc-vname\">The Soap Co.</span>\n      </button>\n      <button type=\"button\" class=\"acc-panel\" data-i=\"3\" data-tag=\"SaaS / AI · Acquisition\" data-name=\"ORBO × Niyogin\" data-desc=\"Computer vision meets embedded finance.\" aria-label=\"ORBO × Niyogin\">\n        <img src=\"/assets/8f781d3e4ec2.png\" alt=\"ORBO × Niyogin — deal announcement\" draggable=\"false\">\n        <span class=\"acc-vname\">ORBO × Niyogin</span>\n      </button>\n      <button type=\"button\" class=\"acc-panel\" data-i=\"4\" data-tag=\"D2C · Acquisition\" data-name=\"Trase × Upscalio\" data-desc=\"A sneaker brand finds its house of brands.\" aria-label=\"Trase × Upscalio\">\n        <img src=\"/assets/9eebf2194260.png\" alt=\"Trase × Upscalio — deal announcement\" draggable=\"false\">\n        <span class=\"acc-vname\">Trase × Upscalio</span>\n      </button>\n      <button type=\"button\" class=\"acc-panel\" data-i=\"5\" data-tag=\"Consumer · Exit\" data-name=\"Zymrat × Stylcheck\" data-desc=\"Performance wear, acquired in 12 weeks.\" aria-label=\"Zymrat × Stylcheck\">\n        <img src=\"/assets/9d35981c3de9.png\" alt=\"Zymrat × Stylcheck — deal announcement\" draggable=\"false\">\n        <span class=\"acc-vname\">Zymrat × Stylcheck</span>\n      </button>\n    </div>\n    <div class=\"acc-cap reveal\">\n      <p id=\"acc-cap-text\"><b>WLDD × ScoopWhoop.</b> Studio meets India’s biggest content engine.</p>\n      <a class=\"link\" href=\"#\" id=\"acc-cap-link\">Read the story <span class=\"arrow\">→</span></a>\n    </div>\n  </div>\n";
+const DEALS = [
+  {
+    tag: 'Media · Acquisition',
+    name: 'WLDD × ScoopWhoop',
+    desc: 'Studio meets India’s biggest content engine.',
+    image: '/assets/8f781d3e4ec2.png',
+  },
+  {
+    tag: 'Consumer · Acquisition',
+    name: 'Heritage × Get-A-Way',
+    desc: 'Dessert brand meets India’s leading dairy company.',
+    image: '/assets/9eebf2194260.png',
+  },
+  {
+    tag: 'D2C · Exit',
+    name: 'The Soap Co.',
+    desc: 'A soap brand that 6×’d valuation in 18 months.',
+    image: '/assets/9d35981c3de9.png',
+  },
+  {
+    tag: 'SaaS / AI · Acquisition',
+    name: 'ORBO × Niyogin',
+    desc: 'Computer vision meets embedded finance.',
+    image: '/assets/8f781d3e4ec2.png',
+  },
+  {
+    tag: 'D2C · Acquisition',
+    name: 'Trase × Upscalio',
+    desc: 'A sneaker brand finds its house of brands.',
+    image: '/assets/9eebf2194260.png',
+  },
+  {
+    tag: 'Consumer · Exit',
+    name: 'Zymrat × Stylcheck',
+    desc: 'Performance wear, acquired in 12 weeks.',
+    image: '/assets/9d35981c3de9.png',
+  },
+];
 
 export default function DealsClosed() {
+  const firstDeal = DEALS[0];
+
   return (
-    <section className="section-pad framed" id="deals" data-screen-label="Deals closed" dangerouslySetInnerHTML={{ __html: HTML }} />
+    <section className="section-pad framed" id="deals" data-screen-label="Deals closed">
+      <div className="amb">
+        <div className="glow warm" style={{ width: 480, height: 400, left: '4%', top: '6%', opacity: 0.2 }} />
+        <div className="halfcircle drift" data-speed="0.2" style={{ width: 260, height: 260, right: -100, top: '18%' }} />
+        <div className="bigicon drift" data-speed="0.07" style={{ width: 400, height: 400, left: -80, bottom: -60 }}>
+          <svg viewBox="0 0 24 24">
+            <use href="#ic-flag" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="wrap">
+        <div className="eyebrow-row reveal">
+          <span className="num">03</span>
+          <span className="kicker">Selected deals</span>
+          <span className="ln" />
+        </div>
+
+        <div className="deals-head2 reveal">
+          <h2 className="h-sec">
+            Outcomes, not <span className="accent-i">promises.</span>
+          </h2>
+          <div className="sqz-nav">
+            <button type="button" className="tnav" id="acc-prev" aria-label="Previous deal">
+              ←
+            </button>
+            <button type="button" className="tnav" id="acc-next" aria-label="Next deal">
+              →
+            </button>
+          </div>
+        </div>
+
+        <div className="acc reveal" id="acc">
+          {DEALS.map((deal, index) => (
+            <button
+              type="button"
+              className={`acc-panel${index === 0 ? ' on' : ''}`}
+              data-i={index}
+              data-tag={deal.tag}
+              data-name={deal.name}
+              data-desc={deal.desc}
+              aria-label={deal.name}
+              key={deal.name}
+            >
+              <img src={deal.image} alt={`${deal.name} — deal announcement`} draggable="false" />
+              <span className="acc-vname">{deal.name}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="acc-cap reveal">
+          <p id="acc-cap-text">
+            <b>{firstDeal.name}.</b> {firstDeal.desc}
+          </p>
+          <a className="link" href="#" id="acc-cap-link">
+            Read the story <span className="arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }

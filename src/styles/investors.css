@@ -260,10 +260,10 @@ body.page-investors .hero-trust span { color: rgba(19,17,25,0.62); }
 /* Fountain canvas — absolutely positioned on the right half of the hero panel */
 .match-viz-wrap {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 58%;
+  right: 4%;
+  top: 10%;
+  bottom: 10%;
+  width: 46%;
   pointer-events: none;
   z-index: 1;
 }

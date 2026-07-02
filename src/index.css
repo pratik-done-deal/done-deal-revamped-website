@@ -16,6 +16,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tailwind's .ring utility conflicts with the design-system .ring class (border-radius:50% shapes).
+   Reset the box-shadow Tailwind injects — the design-system border/border-radius are unaffected. */
+.ring { box-shadow: none; }
+
 #root {
   isolation: isolate;
 }

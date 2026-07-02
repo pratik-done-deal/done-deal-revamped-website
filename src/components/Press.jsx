@@ -1,9 +1,68 @@
 import React from 'react';
 
-const HTML = "\n  <div class=\"wrap\">\n  <div class=\"eyebrow-row reveal\"><span class=\"num\">08</span><span class=\"kicker\">Press</span><span class=\"ln\"></span></div>\n  <h2 class=\"h-sec reveal\">We're in the <span class=\"accent-i\">news.</span></h2>\n  <div class=\"press-list reveal\">\n    <a class=\"press-row\" href=\"#\">\n      <span class=\"pr-src\"><span class=\"news-logo\" style=\"background:linear-gradient(135deg,#7C8AFF,#5C6FFF)\">SS</span>Startup Story Media</span>\n      <span class=\"pr-title\">How Done Deal is rebuilding M&amp;A for India's founders</span>\n      <span class=\"pr-date\">Mar 2026</span>\n      <span class=\"pr-arrow\">→</span>\n    </a>\n    <a class=\"press-row\" href=\"#\">\n      <span class=\"pr-src\"><span class=\"news-logo\" style=\"background:#E11D48\">O</span>Outlook</span>\n      <span class=\"pr-title\">The AI-native investment bank taking on legacy advisory</span>\n      <span class=\"pr-date\">Feb 2026</span>\n      <span class=\"pr-arrow\">→</span>\n    </a>\n    <a class=\"press-row\" href=\"#\">\n      <span class=\"pr-src\"><span class=\"news-logo\" style=\"background:#2563EB\">ET</span>The Economic Times</span>\n      <span class=\"pr-title\">Done Deal closes 30+ founder exits in two years</span>\n      <span class=\"pr-date\">Jan 2026</span>\n      <span class=\"pr-arrow\">→</span>\n    </a>\n    <a class=\"press-row\" href=\"#\">\n      <span class=\"pr-src\"><span class=\"news-logo\" style=\"background:#EA580C\">i</span>Inc42</span>\n      <span class=\"pr-title\">The startup running M&amp;A on autopilot — with a banker in the loop</span>\n      <span class=\"pr-date\">Nov 2025</span>\n      <span class=\"pr-arrow\">→</span>\n    </a>\n  </div>\n  </div>\n";
+const PRESS_ITEMS = [
+  {
+    source: 'Startup Story Media',
+    initials: 'SS',
+    logoStyle: { background: 'linear-gradient(135deg,#7C8AFF,#5C6FFF)' },
+    title: "How Done Deal is rebuilding M&A for India's founders",
+    date: 'Mar 2026',
+  },
+  {
+    source: 'Outlook',
+    initials: 'O',
+    logoStyle: { background: '#E11D48' },
+    title: 'The AI-native investment bank taking on legacy advisory',
+    date: 'Feb 2026',
+  },
+  {
+    source: 'The Economic Times',
+    initials: 'ET',
+    logoStyle: { background: '#2563EB' },
+    title: 'Done Deal closes 30+ founder exits in two years',
+    date: 'Jan 2026',
+  },
+  {
+    source: 'Inc42',
+    initials: 'i',
+    logoStyle: { background: '#EA580C' },
+    title: 'The startup running M&A on autopilot — with a banker in the loop',
+    date: 'Nov 2025',
+  },
+];
 
 export default function Press() {
   return (
-    <section className="section-pad framed" id="press" data-screen-label="News" dangerouslySetInnerHTML={{ __html: HTML }} />
+    <section className="section-pad framed" id="press" data-screen-label="News">
+      <div className="wrap">
+        <div className="eyebrow-row reveal">
+          <span className="num">08</span>
+          <span className="kicker">Press</span>
+          <span className="ln" />
+        </div>
+
+        <h2 className="h-sec reveal">
+          We're in the <span className="accent-i">news.</span>
+        </h2>
+
+        <div className="press-list reveal">
+          {PRESS_ITEMS.map((item) => (
+            <a className="press-row" href="#" key={item.title}>
+              <span className="pr-src">
+                <span className="news-logo" style={item.logoStyle}>
+                  {item.initials}
+                </span>
+                {item.source}
+              </span>
+              <span className="pr-title">{item.title}</span>
+              <span className="pr-date">{item.date}</span>
+              <span className="pr-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

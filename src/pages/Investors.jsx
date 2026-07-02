@@ -219,14 +219,14 @@ export default function Investors() {
                 <div className="feat-n">
                   04
                 </div>
-                <h3>
+                <h3 className='!text-white'>
                   Always free for buyers
                 </h3>
-                <p>
+                <p className='!text-[#9E9B95]'>
                   No retainers, no finder fees, no hidden charges. We’re paid by the deal — never by you.
                 </p>
                 <div className="feat-big">
-                  ₹0
+                  <span className='!text-[#F0C86C]'>₹0</span>
                 </div>
               </div>
             </div>
@@ -979,7 +979,7 @@ export default function Investors() {
             </a>
           </section>
       </main>
-      <Footer />
+      <Footer theme="light" />
     </>
   );
 }

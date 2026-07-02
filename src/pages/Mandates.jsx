@@ -241,6 +241,7 @@ function MandateCard({ item, featured = false }) {
 function FeaturedSlider({ items }) {
   const [current, setCurrent] = useState(0);
   const trackRef = useRef(null);
+  const pausedRef = useRef(false);
   const n = items.length;
 
   useEffect(() => {
@@ -264,10 +265,21 @@ function FeaturedSlider({ items }) {
     return () => window.removeEventListener('resize', update);
   }, [current]);
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!pausedRef.current) setCurrent((c) => (c + 1) % n);
+    }, 4000);
+    return () => clearInterval(id);
+  }, [n]);
+
   const go = (i) => setCurrent(((i % n) + n) % n);
 
   return (
-    <div className="fslider reveal">
+    <div
+      className="fslider reveal"
+      onMouseEnter={() => { pausedRef.current = true; }}
+      onMouseLeave={() => { pausedRef.current = false; }}
+    >
       <div className="fslider-viewport">
         <div className="fslider-track" ref={trackRef}>
           {items.map((item, i) => (
