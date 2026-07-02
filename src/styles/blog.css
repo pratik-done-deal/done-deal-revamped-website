@@ -76,6 +76,17 @@
    Blog listing page
    ═══════════════════════════════════════════════════════════════ */
 
+@media (max-width: 600px) {
+  .blog-hero {
+    padding-top: calc(var(--nav-h, 72px) + 36px) !important;
+  }
+
+  .blog-hero h1 {
+    white-space: normal !important;
+    text-wrap: balance;
+  }
+}
+
 /* ── Filter chips ──────────────────────────────────────────────── */
 .mand-filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 36px 0 8px; }
 .fchip {

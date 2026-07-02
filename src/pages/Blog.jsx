@@ -210,7 +210,7 @@ export default function Blog() {
 
         {/* ── Hero: featured post ─────────────────────────────── */}
         <section
-          className="section-pad relative"
+          className="blog-hero section-pad relative"
           style={{ paddingTop: 'clamp(112px,13vh,150px)', paddingBottom: 'clamp(48px,6vh,72px)' }}
         >
           <div className="amb">
