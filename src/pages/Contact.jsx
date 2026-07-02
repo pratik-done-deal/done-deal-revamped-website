@@ -55,9 +55,18 @@ function PinIcon() {
   );
 }
 
-function OfficeCard({ office }) {
+function OfficeCard({ office, active, onActiveChange }) {
   return (
-    <article className="loc-card" data-loc={office.id}>
+    <article
+      className={`loc-card${active ? ' active' : ''}`}
+      data-loc={office.id}
+      tabIndex={0}
+      aria-label={`${office.city} office: ${office.address}`}
+      onMouseEnter={() => onActiveChange(office.id)}
+      onMouseLeave={() => onActiveChange(null)}
+      onFocus={() => onActiveChange(office.id)}
+      onBlur={() => onActiveChange(null)}
+    >
       <span className="loc-pin-ic">
         <PinIcon />
       </span>
@@ -89,6 +98,7 @@ function ContactMail() {
 export default function Contact() {
   const panelRef = React.useRef(null);
   const auroraRef = React.useRef(null);
+  const [activeOffice, setActiveOffice] = React.useState(null);
 
   useReveal();
   useParallax();
@@ -124,14 +134,19 @@ export default function Contact() {
                   <span className="cf-locs-label">Our offices</span>
                   <div className="loc-list">
                     {OFFICES.map((office) => (
-                      <OfficeCard key={office.id} office={office} />
+                      <OfficeCard
+                        key={office.id}
+                        office={office}
+                        active={activeOffice === office.id}
+                        onActiveChange={setActiveOffice}
+                      />
                     ))}
                   </div>
                 </div>
               </div>
 
               <div className="cf-right reveal">
-                <IndiaOfficeMap />
+                <IndiaOfficeMap activeOffice={activeOffice} onOfficeActive={setActiveOffice} />
               </div>
             </div>
           </div>

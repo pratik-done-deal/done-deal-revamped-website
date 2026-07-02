@@ -166,6 +166,11 @@
   box-shadow: 0 16px 38px rgba(10, 10, 13, 0.4);
 }
 
+.loc-card:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
+}
+
 .cf-locs .loc-card {
   padding: 12px 14px;
   border-radius: 13px;
@@ -249,6 +254,15 @@
   height: auto;
   display: block;
   margin: 0 auto;
+}
+
+.loc-map .map-pin.active .pin-label rect,
+.loc-map .map-pin.active .pin-label text {
+  opacity: 1;
+}
+
+.loc-map .map-pin.active .pin-halo {
+  opacity: 0.32;
 }
 
 @media (min-width: 1600px) {
