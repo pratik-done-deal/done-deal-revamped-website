@@ -31,6 +31,7 @@
 }
 .ddfaq-tag.founder { color: var(--purple-soft); border: 1px solid rgba(124,138,255,0.4); background: rgba(92,111,255,0.1); }
 .ddfaq-tag.buyer   { color: var(--copper-soft); border: 1px solid rgba(208,155,108,0.42); background: rgba(208,155,108,0.1); }
+.ddfaq-tag.general { color: #c9c4bd; border: 1px solid rgba(201,196,189,0.4); background: rgba(201,196,189,0.1); }
 .ddfaq-q .q-text {
   flex: 1; font-size: clamp(16px,1.7vw,18.5px); font-weight: 500;
   color: var(--bone); letter-spacing: -0.01em; line-height: 1.4;

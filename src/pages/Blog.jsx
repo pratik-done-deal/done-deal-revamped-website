@@ -5,6 +5,7 @@ import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
 import { POSTS } from '../data/posts';
+import LazyImage from '../components/LazyImage';
 import '../styles/blog.css';
 
 const ORB_SM = { width: 200, height: 200, left: '-10%', top: '-18%', opacity: 0.55 };
@@ -39,10 +40,19 @@ function BlogCard({ post }) {
   return (
     <a className="bcard reveal" href={`DoneDeal-Blog-Post.html?p=${post.slug}`}>
       <div className={`cover ${post.cover}`} style={{ height: 160 }}>
-        <div className="cov-grid" />
-        <div className="cov-orb" style={ORB_SM} />
-        <span className="cov-tag">{post.tag}</span>
-        <div className="cov-ic"><svg viewBox="0 0 24 24">{post.icon}</svg></div>
+        {post.image ? (
+          <>
+            <LazyImage src={post.image} alt={post.title} />
+            <span className="cov-tag">{post.tag}</span>
+          </>
+        ) : (
+          <>
+            <div className="cov-grid" />
+            <div className="cov-orb" style={ORB_SM} />
+            <span className="cov-tag">{post.tag}</span>
+            <div className="cov-ic"><svg viewBox="0 0 24 24">{post.icon}</svg></div>
+          </>
+        )}
       </div>
       <div className="bcard-body">
         <h3>{post.title}</h3>
@@ -102,19 +112,9 @@ export default function Blog() {
 
             <div className="blog-feat reveal">
               <span className="ribbon">Featured</span>
-              <div className="cover cov-deal">
-                <div className="cov-grid" />
-                <div className="cov-orb" style={{ width: 300, height: 300, left: '-8%', top: '-12%', opacity: 0.5 }} />
+              <div className="cover cov-deal has-img">
                 <span className="cov-tag">Done Deals</span>
-                <div className="cov-ic">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                    <path d="M4 22h16" />
-                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-                  </svg>
-                </div>
+                <LazyImage src={POSTS[0].image} alt={POSTS[0].title} />
               </div>
               <div className="blog-feat-body">
                 <span className="feat-eyebrow">Editor&apos;s pick</span>

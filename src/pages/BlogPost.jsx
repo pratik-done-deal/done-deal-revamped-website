@@ -6,6 +6,7 @@ import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
 import { POSTS } from '../data/posts';
+import LazyImage from '../components/LazyImage';
 import '../styles/blog.css';
 
 const blogFiles = import.meta.glob('../blogs/*.html', { query: '?raw', import: 'default' });
@@ -147,17 +148,24 @@ export default function BlogPost() {
 
               {/* Cover */}
               <div className="art-cover reveal max-w-[1000px] mx-auto mt-11">
-                <div className={`cover ${post.cover}`}>
-                  <div className="cov-grid" />
-                  <div
-                    className="cov-orb"
-                    style={{ width: 480, height: 420, left: '50%', top: '-14%', transform: 'translateX(-50%)', opacity: 0.5 }}
-                  />
-                  <span className="cov-tag">{post.tag}</span>
-                  <div className="cov-ic">
-                    <svg viewBox="0 0 24 24">{post.icon}</svg>
+                {post.image ? (
+                  <div className={`cover ${post.cover} has-img`}>
+                    <span className="cov-tag">{post.tag}</span>
+                    <LazyImage src={post.image} alt={post.title} />
                   </div>
-                </div>
+                ) : (
+                  <div className={`cover ${post.cover}`}>
+                    <div className="cov-grid" />
+                    <div
+                      className="cov-orb"
+                      style={{ width: 480, height: 420, left: '50%', top: '-14%', transform: 'translateX(-50%)', opacity: 0.5 }}
+                    />
+                    <span className="cov-tag">{post.tag}</span>
+                    <div className="cov-ic">
+                      <svg viewBox="0 0 24 24">{post.icon}</svg>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>

@@ -1,9 +1,95 @@
 import React from 'react';
 
-const HTML = "\n  <div class=\"amb\"><div class=\"glow p\" style=\"width:520px;height:420px;left:8%;top:10%;opacity:.22\"></div><div class=\"glow warm\" style=\"width:440px;height:380px;right:4%;bottom:0;opacity:.34\"></div></div>\n  <div class=\"wrap\">\n  <div class=\"testi-carousel reveal\" id=\"testi-carousel\">\n    <div class=\"testi-ctrl\">\n      <div class=\"testi-dots\" id=\"testi-dots\">\n        <button type=\"button\" class=\"td\" data-i=\"0\" aria-label=\"Testimonial 1\"><i></i></button>\n        <button type=\"button\" class=\"td\" data-i=\"1\" aria-label=\"Testimonial 2\"><i></i></button>\n        <button type=\"button\" class=\"td\" data-i=\"2\" aria-label=\"Testimonial 3\"><i></i></button>\n      </div>\n      <div class=\"testi-nav\">\n        <button type=\"button\" class=\"tnav\" id=\"testi-prev\" aria-label=\"Previous\">←</button>\n        <button type=\"button\" class=\"tnav\" id=\"testi-next\" aria-label=\"Next\">→</button>\n      </div>\n    </div>\n    <div class=\"testi-viewport\">\n      <div class=\"testi-track\" id=\"testi-track\">\n\n        <div class=\"testi-slide\">\n          <div class=\"testi-grid\">\n            <div class=\"testi-portrait\">\n              <image-slot id=\"testi-1\" shape=\"rect\" fit=\"cover\" src=\"assets/ph-portrait.png\" placeholder=\"Drop the founder's photo\"></image-slot>\n              <div class=\"tp-scrim\"></div>\n              <div class=\"tp-cap\"><b>Anuj Verma</b><span>Founder, TTT</span></div>\n            </div>\n            <div class=\"testi-body\">\n              <span class=\"testi-mark\">\"</span>\n              <p class=\"quote\">I'd braced for a year of pain. Instead I had a banker who knew my market, a model that knew my number, and <em>four offers in eleven weeks.</em> It felt less like selling software and more like having a partner.</p>\n              <div class=\"testi-attrib\"><b>Anuj Verma</b><span>Founder &amp; CEO, TTT — acquired by Collective Artists Network</span></div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"testi-slide\">\n          <div class=\"testi-grid\">\n            <div class=\"testi-portrait\">\n              <image-slot id=\"testi-2\" shape=\"rect\" fit=\"cover\" src=\"assets/ph-head-3.png\" placeholder=\"Drop the founder's photo\"></image-slot>\n              <div class=\"tp-scrim\"></div>\n              <div class=\"tp-cap\"><b>Priya Nair</b><span>Co-founder, Loophealth</span></div>\n            </div>\n            <div class=\"testi-body\">\n              <span class=\"testi-mark\">\"</span>\n              <p class=\"quote\">Three banks told me my category was \"too early.\" Done Deal found <em>nineteen strategic buyers</em> who disagreed — and ran a process so tight I never lost a week to chasing paperwork.</p>\n              <div class=\"testi-attrib\"><b>Priya Nair</b><span>Co-founder, Loophealth — acquired by a US healthcare group</span></div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"testi-slide\">\n          <div class=\"testi-grid\">\n            <div class=\"testi-portrait\">\n              <image-slot id=\"testi-3\" shape=\"rect\" fit=\"cover\" src=\"assets/ph-head-5.png\" placeholder=\"Drop the founder's photo\"></image-slot>\n              <div class=\"tp-scrim\"></div>\n              <div class=\"tp-cap\"><b>Marcus Hale</b><span>CEO, Fernweh Labs</span></div>\n            </div>\n            <div class=\"testi-body\">\n              <span class=\"testi-mark\">\"</span>\n              <p class=\"quote\">The valuation model was the unlock. I walked into every conversation knowing my floor, my ceiling, and exactly which buyer would pay it. We <em>closed 23% above my own estimate.</em></p>\n              <div class=\"testi-attrib\"><b>Marcus Hale</b><span>CEO, Fernweh Labs — acquired by a European platform</span></div>\n            </div>\n          </div>\n        </div>\n\n      </div>\n    </div>\n  </div>\n  </div>\n";
+const TESTIMONIALS = [
+  {
+    name: 'Anuj Verma',
+    role: 'Founder, TTT',
+    attribution: 'Founder & CEO, TTT — acquired by Collective Artists Network',
+    portraitSrc: 'assets/ph-portrait.png',
+    quotePre: "I'd braced for a year of pain. Instead I had a banker who knew my market, a model that knew my number, and ",
+    quoteEm: 'four offers in eleven weeks.',
+    quotePost: ' It felt less like selling software and more like having a partner.',
+  },
+  {
+    name: 'Priya Nair',
+    role: 'Co-founder, Loophealth',
+    attribution: 'Co-founder, Loophealth — acquired by a US healthcare group',
+    portraitSrc: 'assets/ph-head-3.png',
+    quotePre: 'Three banks told me my category was "too early." Done Deal found ',
+    quoteEm: 'nineteen strategic buyers',
+    quotePost: ' who disagreed — and ran a process so tight I never lost a week to chasing paperwork.',
+  },
+  {
+    name: 'Marcus Hale',
+    role: 'CEO, Fernweh Labs',
+    attribution: 'CEO, Fernweh Labs — acquired by a European platform',
+    portraitSrc: 'assets/ph-head-5.png',
+    quotePre: 'The valuation model was the unlock. I walked into every conversation knowing my floor, my ceiling, and exactly which buyer would pay it. We ',
+    quoteEm: 'closed 23% above my own estimate.',
+    quotePost: '',
+  },
+];
 
 export default function Testimonials() {
   return (
-    <section className="testimonial framed on-light" id="testimonials" data-screen-label="Testimonial" dangerouslySetInnerHTML={{ __html: HTML }} />
+    <section className="testimonial framed on-light" id="testimonials" data-screen-label="Testimonial">
+      <div className="amb">
+        <div className="glow p" style={{ width: '520px', height: '420px', left: '8%', top: '10%', opacity: 0.22 }} />
+        <div className="glow warm" style={{ width: '440px', height: '380px', right: '4%', bottom: 0, opacity: 0.34 }} />
+      </div>
+      <div className="wrap">
+        <div className="testi-carousel reveal" id="testi-carousel">
+          <div className="testi-ctrl">
+            <div className="testi-dots" id="testi-dots">
+              {TESTIMONIALS.map((t, i) => (
+                <button key={t.name} type="button" className="td" data-i={i} aria-label={`Testimonial ${i + 1}`}>
+                  <i></i>
+                </button>
+              ))}
+            </div>
+            <div className="testi-nav">
+              <button type="button" className="tnav" id="testi-prev" aria-label="Previous">←</button>
+              <button type="button" className="tnav" id="testi-next" aria-label="Next">→</button>
+            </div>
+          </div>
+          <div className="testi-viewport">
+            <div className="testi-track" id="testi-track">
+              {TESTIMONIALS.map((t, i) => (
+                <div className="testi-slide" key={t.name}>
+                  <div className="testi-grid">
+                    <div className="testi-portrait">
+                      <image-slot
+                        id={`testi-${i + 1}`}
+                        shape="rect"
+                        fit="cover"
+                        src={t.portraitSrc}
+                        placeholder="Drop the founder's photo"
+                      ></image-slot>
+                      <div className="tp-scrim" />
+                      <div className="tp-cap">
+                        <b>{t.name}</b>
+                        <span>{t.role}</span>
+                      </div>
+                    </div>
+                    <div className="testi-body">
+                      <span className="testi-mark">"</span>
+                      <p className="quote">
+                        {t.quotePre}
+                        <em>{t.quoteEm}</em>
+                        {t.quotePost}
+                      </p>
+                      <div className="testi-attrib">
+                        <b>{t.name}</b>
+                        <span>{t.attribution}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
