@@ -3,28 +3,28 @@ import React from 'react';
 const FOOTER_LINKS = [
   {
     title: 'Done Deal',
-    links: [{ label: 'Contact us', href: 'DoneDeal-Contact.html' },  { label: 'About us', href: '/about' }],
+    links: [{ label: 'Contact us', href: '/contact' },  { label: 'About us', href: '/about' }],
   },
   {
     title: 'Product',
     links: [
-      { label: 'For investors', href: 'DoneDeal-Investors.html' },
-      { label: 'Mandates', href: 'DoneDeal-Mandates.html' },
+      { label: 'For investors', href: '/investors' },
+      { label: 'Mandates', href: '/mandates' },
     ],
   },
   {
     title: 'Resources',
     links: [
-      { label: 'Blog', href: 'DoneDeal-Blog.html' },
-      { label: 'FAQ', href: 'DoneDeal-FAQ.html' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'FAQ', href: '/faq' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Investor Terms', href: 'DoneDeal-Legal.html#investor' },
-      { label: 'Company Terms', href: 'DoneDeal-Legal.html#company' },
-      { label: 'Privacy Policy', href: 'DoneDeal-Legal.html#privacy' },
+      { label: 'Investor Terms', href: '/legal#investor' },
+      { label: 'Company Terms', href: '/legal#company' },
+      { label: 'Privacy Policy', href: '/legal#privacy' },
     ],
   },
 ];
@@ -32,6 +32,7 @@ const FOOTER_LINKS = [
 const socialLinks = [
   {
     label: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/donedeals/',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.2 8h4.6v13H.2V8zm7.2 0h4.4v1.78h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.48 3.04 5.48 7v6.6h-4.6v-5.85c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1V21H7.4V8z" />
@@ -39,10 +40,23 @@ const socialLinks = [
     ),
   },
   {
-    label: 'X',
+    label: 'Instagram',
+    href: 'https://www.instagram.com/donedeal.club/',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M18.9 1.5h3.7l-8.1 9.2 9.5 12.6h-7.4l-5.8-7.6-6.7 7.6H.4l8.6-9.8L0 1.5h7.6l5.2 6.9 6.1-6.9zm-1.3 19.5h2L6.5 3.4H4.4l13.2 17.6z" />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <circle cx="12" cy="12" r="4.5" />
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@DoneDealClub',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <rect x="1" y="4" width="22" height="16" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M10 8.5l6 3.5-6 3.5v-7z" />
       </svg>
     ),
   },
@@ -107,7 +121,14 @@ export default function Footer({ theme = 'dark' }) {
           </span>
           <div className="flex gap-4">
             {socialLinks.map((link) => (
-              <a key={link.label} className={socialClass} href="#" aria-label={link.label}>
+              <a
+                key={link.label}
+                className={socialClass}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.label}
+              >
                 {link.icon}
               </a>
             ))}

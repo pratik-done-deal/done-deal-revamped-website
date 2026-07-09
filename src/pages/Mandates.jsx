@@ -484,7 +484,7 @@ export default function Mandates() {
                 <h3>Not a fit? No problem.</h3>
                 <p>Our vetted investors are always looking for great companies. Get your valuation and let the right buyers find you — it's completely free.</p>
                 <div className="cta-actions">
-                  <a className="btn btn-primary" href="https://app.done.deals/signup?utm_source=mandate-page">
+                  <a className="btn btn-primary" href="https://app.done.deals/signup?utm_source=mandate-page" target="_blank" rel="noopener noreferrer">
                     Sign up as a company
                   </a>
                   <a className="link" href="https://app.done.deals/valuation-calculator">
@@ -511,7 +511,7 @@ export default function Mandates() {
                 <h3>Have a requirement?</h3>
                 <p>List a mandate and we'll source companies that fit. Our team curates and vets every match before it ever reaches you.</p>
                 <div className="cta-actions">
-                  <a className="btn btn-light" href="https://app.done.deals/buyer/onboarding?utm_source=mandate-page">
+                  <a className="btn btn-light" href="https://app.done.deals/buyer/onboarding?utm_source=mandate-page" target="_blank" rel="noopener noreferrer">
                     List a mandate
                   </a>
                 </div>

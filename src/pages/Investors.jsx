@@ -923,7 +923,7 @@ export default function Investors() {
             <a className="btn btn-primary" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
               Join buyer network
             </a>
-            <a className="link" href="#">
+            <a className="link" href="https://app.done.deals/buyer/login?utm_source=investors" target="_blank" rel="noopener noreferrer">
               {"Already a member? Login "}
               <span className="arrow">
                 →

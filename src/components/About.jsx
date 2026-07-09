@@ -31,6 +31,7 @@ import photoDhrish from "../assets/bankers/dhirish.svg";
 import photoSagar from "../assets/bankers/sagar_parekh.svg";
 import photoRohit from "../assets/founders/rohit.svg";
 import photoAneesh from "../assets/founders/annesh.svg";
+import photoAnkur from "../assets/founders/ankur.svg";
 import photoFoundersGroup from "../assets/founders/founders.png";
 import logoGruhas from "../assets/investors/gruhas.svg";
 import logoWfc from "../assets/investors/wfc.svg";
@@ -88,7 +89,7 @@ const TEAM_GROUPS = [
     members: [
       { initials: "RR", name: "Rohit Raj", role: "Co-Founder", photo: photoRohit, linkedin_url: "https://www.linkedin.com/in/rohitrajkaral/"},
       { initials: "AS", name: "Aneesh Sivakumar", role: "Co-Founder", photo: photoAneesh, linkedin_url: "https://www.linkedin.com/in/aneesh-sivakumar/" },
-      { initials: "AJ", name: "Ankur Jain", role: "Co-Founder" },
+      { initials: "AJ", name: "Ankur Jain", role: "Co-Founder", photo: photoAnkur, linkedin_url: "https://www.linkedin.com/in/kurannija/" },
     ],
   },
   {
@@ -104,14 +105,14 @@ const TEAM_GROUPS = [
   {
     label: "Engineers",
     members: [
-      { initials: "PT", name: "Paras Thappa", role: "Product Designer", photo: photoParas },
-      { initials: "PS", name: "Pratik Singh", role: "Software Engineer", photo: photoPratik },
-      { initials: "AG", name: "Abhijeet Gautam", role: "Software Engineer", photo: photoAbhijeet },
-      { initials: "AP", name: "Anand Prakash", role: "Software Tester", photo: photoAnand },
-      { initials: "CK", name: "Chandan Kumar", role: "Software Tester", photo: photoChandan },
-      { initials: "NS", name: "Navneet Singh", role: "Software Engineer", photo: photoNavneet },
-      { initials: "AA", name: "Anubhav Aaryan", role: "Software Engineer", photo: photoAnubhav },
-      { initials: "AC", name: "Ashutosh Chandra", role: "Product Manager", photo: photoAshutosh },
+      { initials: "PS", name: "Pratik Singh", role: "Software Engineer", photo: photoPratik, linkedin_url: "https://www.linkedin.com/in/pratik-singh-7316591ab/" },
+      { initials: "AG", name: "Abhijeet Gautam", role: "Software Engineer", photo: photoAbhijeet, linkedin_url: "https://www.linkedin.com/in/abhijeet-gautam/" },
+      { initials: "AP", name: "Anand Prakash", role: "Software Tester", photo: photoAnand, linkedin_url: "https://www.linkedin.com/in/anand-prakash-a201b7192/" },
+      { initials: "CK", name: "Chandan Kumar", role: "Software Tester", photo: photoChandan, linkedin_url: "https://www.linkedin.com/in/chandan-kumar-29a624205" },
+      { initials: "NS", name: "Navneet Singh", role: "Software Engineer", photo: photoNavneet, linkedin_url: "https://www.linkedin.com/in/navneet-singh-0b849820b/" },
+      { initials: "AA", name: "Anubhav Aaryan", role: "Software Engineer", photo: photoAnubhav, linkedin_url: "https://www.linkedin.com/in/anubhav-aaryan-099987201/" },
+      { initials: "AC", name: "Ashutosh Chandra", role: "Product Manager", photo: photoAshutosh, linkedin_url: "https://www.linkedin.com/in/ashuc98/" },
+      { initials: "PT", name: "Paras Thappa", role: "Product Designer", photo: photoParas, linkedin_url: "https://www.linkedin.com/in/paras-thappa-49a505201/" },
       // { initials: "KR", name: "Karunanidhi Rajpoot", role: "Product Analyst" },
     ],
   },
@@ -851,7 +852,7 @@ export default function About() {
                 <img
                   src={photoFoundersGroup}
                   alt="The founding team"
-                  className="w-full h-[clamp(300px,32vw,430px)] object-cover rounded-[24px] border border-[rgba(236,233,226,0.12)]"
+                  className="w-full h-[clamp(240px,25.6vw,344px)] object-cover rounded-[24px] border border-[rgba(236,233,226,0.12)]"
                 />
               </Reveal>
 
@@ -1019,7 +1020,7 @@ export default function About() {
         </section>
 
         {/* ── FINAL CTA ────────────────────────────────────── */}
-        {/* <section className="py-[clamp(76px,9vh,132px)]" data-screen-label="Careers CTA">
+        <section className="py-[clamp(76px,9vh,132px)]" data-screen-label="Careers CTA">
           <div className="max-w-[1320px] mx-auto px-[clamp(24px,6.5vw,120px)] relative z-[1]">
             <Reveal className="relative overflow-hidden isolate flex flex-col items-center text-center max-w-[860px] mx-auto rounded-[24px] p-[clamp(32px,4vw,46px)] border border-[rgba(92,111,255,0.28)] bg-[linear-gradient(160deg,rgba(92,111,255,0.16),#0E0C16_62%)]">
               <div className="dd-amb absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -1033,16 +1034,22 @@ export default function About() {
                 We're a small, senior team hiring bankers, engineers and designers who'd rather build the system than work inside the old one.
               </p>
               <div className="relative z-[1] flex gap-[14px] justify-center flex-wrap max-md:flex-col max-md:items-stretch max-md:w-full">
-                <Btn variant="primary" href={GET_STARTED_HREF} className="max-md:w-full max-md:justify-center">
+                <Btn
+                  variant="primary"
+                  href="https://www.linkedin.com/company/donedeals/jobs/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="max-md:w-full max-md:justify-center"
+                >
                   See open roles <span aria-hidden="true">→</span>
                 </Btn>
-                <Btn variant="ghost" href={DEALS} className="max-md:w-full max-md:justify-center">
+                <Btn variant="ghost" href="/contact" className="max-md:w-full max-md:justify-center">
                   Talk to us about a deal
                 </Btn>
               </div>
             </Reveal>
           </div>
-        </section> */}
+        </section>
     </div>
   );
 }
