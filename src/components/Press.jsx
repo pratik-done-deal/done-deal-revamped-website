@@ -5,30 +5,26 @@ const PRESS_ITEMS = [
     source: 'Startup Story Media',
     initials: 'SS',
     logoStyle: { background: 'linear-gradient(135deg,#7C8AFF,#5C6FFF)' },
-    title: "How Done Deal is rebuilding M&A for India's founders",
-    date: 'Mar 2026',
+    title: "Swipe, Match, Acquire: How Done Deal is Building a Tinder for Startup M&As",
+    date: 'Oct 2023',
+    link: "https://startupstorymedia.com/insights-data-driven-platform-done-deal-secures-800000-in-pre-seed-funding/"
   },
   {
     source: 'Outlook',
     initials: 'O',
     logoStyle: { background: '#E11D48' },
-    title: 'The AI-native investment bank taking on legacy advisory',
+    title: "Done Deal Secures $800,000 in Pre-Seed Funding Round",
     date: 'Feb 2026',
+    link: "https://startup.outlookindia.com/sector/saas/done-deal-secures-800-000-in-pre-seed-funding-round-news-9675"
   },
   {
-    source: 'The Economic Times',
-    initials: 'ET',
-    logoStyle: { background: '#2563EB' },
-    title: 'Done Deal closes 30+ founder exits in two years',
-    date: 'Jan 2026',
-  },
-  {
-    source: 'Inc42',
-    initials: 'i',
-    logoStyle: { background: '#EA580C' },
-    title: 'The startup running M&A on autopilot — with a banker in the loop',
-    date: 'Nov 2025',
-  },
+    source: 'Youtube',
+    initials: 'YT',
+    logoStyle: { background: '#E11D48' },
+    title: "A Marketplace Where You Can Buy or Sell Your Startups? Done Deal ✅ | FULL EPISODE",
+    date: 'Mar 2023',
+    link: "https://www.youtube.com/watch?v=STV4s8_QqVw"
+  }
 ];
 
 export default function Press() {
@@ -47,7 +43,13 @@ export default function Press() {
 
         <div className="press-list reveal">
           {PRESS_ITEMS.map((item) => (
-            <a className="press-row" href="#" key={item.title}>
+            <a
+              className="press-row"
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              key={item.title}
+            >
               <span className="pr-src">
                 <span className="news-logo" style={item.logoStyle}>
                   {item.initials}

@@ -7,6 +7,11 @@ import useLightwell from '../hooks/useLightwell';
 import useInvestorsViz from '../hooks/useInvestorsViz';
 import '../styles/investors.css';
 import useHeroAurora from '../hooks/useHeroAurora';
+import { FAQS } from '../data/faqs';
+
+const DISPLAY_FAQS = ['general', 'founder', 'buyer'].flatMap((cat) =>
+  FAQS.filter((faq) => faq.cat === cat).slice(0, 2)
+);
 
 export default function Investors() {
 
@@ -865,84 +870,23 @@ export default function Investors() {
                 </span>
               </h2>
               <div className="faq-list">
-                <div className="faq-item reveal">
-                  <button className="faq-q">
-                    What is Done Deal?
-                    <span className="pm">
-                      +
-                    </span>
-                  </button>
-                  <div className="faq-a">
-                    <div className="faq-a-inner">
-                      An AI-native investment bank for M&A and fundraising. We match ambitious buyers with vetted startups and run the deal end to end.
+                {DISPLAY_FAQS.map((faq) => (
+                  <div className="faq-item reveal" key={faq.id}>
+                    <button className="faq-q" type="button">
+                      {faq.q}
+                      <span className="pm" aria-hidden="true">
+                        +
+                      </span>
+                    </button>
+                    <div className="faq-a">
+                      <div className="faq-a-inner">
+                        {faq.a.map((para, i) => (
+                          <p key={i}>{para}</p>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="faq-item reveal">
-                  <button className="faq-q">
-                    What does Done Deal cost buyers?
-                    <span className="pm">
-                      +
-                    </span>
-                  </button>
-                  <div className="faq-a">
-                    <div className="faq-a-inner">
-                      Nothing. No retainers, no finder fees. We’re paid on the sell-side when a deal closes — never by buyers.
-                    </div>
-                  </div>
-                </div>
-                <div className="faq-item reveal">
-                  <button className="faq-q">
-                    What happens after I join the buyer network?
-                    <span className="pm">
-                      +
-                    </span>
-                  </button>
-                  <div className="faq-a">
-                    <div className="faq-a-inner">
-                      You set your mandate, and our AI starts matching you to relevant startups. You’ll get alerts only on deals that fit your thesis.
-                    </div>
-                  </div>
-                </div>
-                <div className="faq-item reveal">
-                  <button className="faq-q">
-                    Where do the deals come from?
-                    <span className="pm">
-                      +
-                    </span>
-                  </button>
-                  <div className="faq-a">
-                    <div className="faq-a-inner">
-                      From 1100+ verified startups on Done Deal, plus founders we work with directly on sell-side and fundraising mandates.
-                    </div>
-                  </div>
-                </div>
-                <div className="faq-item reveal">
-                  <button className="faq-q">
-                    Can multiple people from my firm join?
-                    <span className="pm">
-                      +
-                    </span>
-                  </button>
-                  <div className="faq-a">
-                    <div className="faq-a-inner">
-                      Yes. Add your team so the right people see the right deals.
-                    </div>
-                  </div>
-                </div>
-                <div className="faq-item reveal">
-                  <button className="faq-q">
-                    How is this different from a deal marketplace?
-                    <span className="pm">
-                      +
-                    </span>
-                  </button>
-                  <div className="faq-a">
-                    <div className="faq-a-inner">
-                      Done Deal isn’t a listings board. It’s an advisory firm with AI doing the matching and a real team running every process. You get curation and execution, not a search bar.
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </section>
