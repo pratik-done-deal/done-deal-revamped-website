@@ -17,6 +17,9 @@ import imgHeritageGetaway from '../assets/heritage-get-a-way.png';
 import imgRitualistic from '../assets/ritualistic-deep-bajaj.png';
 import imgWldd710 from '../assets/wlld-seven-ten.png';
 import imgWlddScoop from '../assets/wldd-scoop-whoop.png';
+import imgMetashot from '../assets/metashot.png';
+import imgCollective from '../assets/collective.png';
+import imgNiyogin from '../assets/niyogen.png';
 
 const DealHandshake = () => (
   <>
@@ -153,6 +156,27 @@ export const POSTS = [
     title: 'WLDD x ScoopWhoop is a Done Deal',
     excerpt: 'WLDD acquires ScoopWhoop to strengthen its digital media play — closed in just 3 weeks.',
     date: 'Mar 12, 2025', readTime: '5 min read',
+    icon: <DealHandshake />,
+  },
+  {
+    slug: 'metashot-x-sharrp-ventures', cat: 'deal', cover: 'cov-deal', tag: 'Done Deals', image: imgMetashot,
+    title: 'Metashot x Sharrp Ventures is a Done Deal',
+    excerpt: 'MetaShot raises ₹11 Cr to scale the future of physical-virtual gaming.',
+    date: 'Mar 1, 2025', readTime: '3 min read',
+    icon: <DealHandshake />,
+  },
+  {
+    slug: 'ttt-x-collective-artists-network', cat: 'deal', cover: 'cov-deal', tag: 'Done Deals', image: imgCollective,
+    title: 'Terribly Tiny Tales x Collective Artists Network is a Done Deal',
+    excerpt: "India's largest storytelling community joins one of India's largest creator companies.",
+    date: 'Jul 15, 2024', readTime: '4 min read',
+    icon: <DealHandshake />,
+  },
+  {
+    slug: 'superscan-orbo-x-niyogin', cat: 'deal', cover: 'cov-deal', tag: 'Done Deals', image: imgNiyogin,
+    title: 'SuperScan by Orbo AI x Niyogin is a Done Deal',
+    excerpt: "Niyogin acquires Orbo's SuperScan to accelerate AI-led transformation in BFSI.",
+    date: 'Jun 10, 2024', readTime: '3 min read',
     icon: <DealHandshake />,
   },
 ];

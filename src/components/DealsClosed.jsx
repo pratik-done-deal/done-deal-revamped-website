@@ -20,12 +20,14 @@ const DEALS = [
     name: 'The Soap Co.',
     desc: 'A soap brand that 6×’d valuation in 18 months.',
     image: '/assets/the-soap-co.png',
+    slug: "150-cr-commitment-bpc-brand"
   },
   {
     tag: 'Fintech · Acquisition',
     name: 'Niyogin x ORBO',
     desc: 'An Al powered solution for BFSI sector meets a listed Fintech. A done deal.',
     image: '/assets/niyogen-orbo.jpeg',
+    slug: 'superscan-orbo-x-niyogin'
   },
   {
     tag: 'Healthcare · Funding',
@@ -39,6 +41,7 @@ const DEALS = [
     name: 'Collective Artists Network × Terribly Tiny Tales',
     desc: 'Short form story telling platform meets india largest creator platform. A Done Deal',
     image: '/assets/collective-tiny-tales.jpeg',
+    slug: 'ttt-x-collective-artists-network'
   },
 ];
 
