@@ -31,11 +31,11 @@ const ClockIcon = () => (
   </svg>
 );
 
-function NavCard({ post, dir }) {
+function NavCard({ post, dir, alone }) {
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className={`art-navcard${dir === 'next' ? ' next' : ''}`}
+      className={`art-navcard${dir === 'next' ? ' next' : ''}${alone ? ' sm:col-start-2' : ''}`}
     >
       <span className="nav-dir">{dir === 'next' ? 'Next →' : '← Previous'}</span>
       <span className="nav-title">{post.title}</span>
@@ -238,7 +238,7 @@ export default function BlogPost() {
                 </div>
                 <div className="reveal max-w-[1000px] mx-auto grid grid-cols-1 sm:grid-cols-2 gap-[22px]">
                   {prev && <NavCard post={prev} dir="prev" />}
-                  {next && <NavCard post={next} dir="next" />}
+                  {next && <NavCard post={next} dir="next" alone={!prev} />}
                 </div>
               </div>
             </section>

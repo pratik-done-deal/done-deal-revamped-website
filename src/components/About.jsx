@@ -822,13 +822,13 @@ export default function About() {
         </section>
 
         {/* ── HERO MEDIA ───────────────────────────────────── */}
-        <section className="pt-[clamp(24px,3vh,40px)] pb-[clamp(64px,9vh,120px)]" data-screen-label="About image">
+        {/* <section className="pt-[clamp(24px,3vh,40px)] pb-[clamp(64px,9vh,120px)]" data-screen-label="About image">
           <div className="max-w-[1320px] mx-auto px-[clamp(24px,6.5vw,120px)] relative z-[1]">
             <Reveal>
               <MediaPlaceholder label="Team / office photo — full-bleed hero" className="h-[clamp(320px,40vw,480px)]" />
             </Reveal>
           </div>
-        </section>
+        </section> */}
 
         {/* ── STATS ────────────────────────────────────────── */}
         <section className="pb-[clamp(76px,9vh,132px)]" data-screen-label="Track record">
