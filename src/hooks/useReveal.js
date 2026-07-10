@@ -183,6 +183,7 @@ export default function useReveal() {
     if (acc) {
       const panels = [].slice.call(acc.querySelectorAll('.acc-panel'));
       const capText = document.getElementById('acc-cap-text');
+      const capLink = document.getElementById('acc-cap-link');
       let idx = 0, timer = null, paused = false;
       const DELAY = 3600;
       const show = (i) => {
@@ -196,6 +197,16 @@ export default function useReveal() {
               ' <span style="color:var(--bone-faint)">· ' + p.getAttribute('data-tag') + '</span>';
             capText.style.opacity = '1';
           }, 200);
+        }
+        if (capLink) {
+          const slug = panels[idx].getAttribute('data-slug');
+          if (slug) {
+            capLink.href = '/blog/' + slug;
+            capLink.style.visibility = 'visible';
+          } else {
+            capLink.removeAttribute('href');
+            capLink.style.visibility = 'hidden';
+          }
         }
       };
       const tick = () => { if (!paused) show(idx + 1); };

@@ -68,9 +68,9 @@ export default function Investors() {
                   </span>
                 </div>
                 <h1 className="h-display hero-h1">
-                  Find your next
-                  <br className="bm" style={{ "display": "none" }} />
-                   acquisition
+                  Find your next acquisition
+                  {/* <br className="bm" style={{ "display": "none" }} />
+                   acquisition */}
                   <br className="bd" />
                   {" "}
                   <span className="hero-line2">

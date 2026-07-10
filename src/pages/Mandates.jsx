@@ -34,36 +34,11 @@ const BankPaths = () => (
     <polygon points="12 2 20 7 4 7" />
   </>
 );
-const BagPaths = () => (
-  <>
-    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-    <path d="M3 6h18" />
-    <path d="M16 10a4 4 0 0 1-8 0" />
-  </>
-);
 const BriefcasePaths = () => (
   <>
     <rect width="20" height="14" x="2" y="7" rx="2" />
     <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
     <path d="M2 13h20" />
-  </>
-);
-const CloudPaths = () => (
-  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
-);
-const HeartPaths = () => (
-  <>
-    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z" />
-    <path d="M3.5 12h5L10 9l2 5 2-7 1.5 5h5" />
-  </>
-);
-const CircuitPaths = () => (
-  <>
-    <rect width="18" height="18" x="3" y="3" rx="2" />
-    <path d="M11 9h4a2 2 0 0 0 2-2V3" />
-    <circle cx="9" cy="9" r="1.6" />
-    <path d="M7 21v-4a2 2 0 0 1 2-2h4" />
-    <circle cx="15" cy="15" r="1.6" />
   </>
 );
 const LayersPaths = () => (
@@ -133,52 +108,7 @@ function mandateFromApi({ id, title, description, category, revenue_min_value, r
 }
 
 /* ── Data ───────────────────────────────────────────────────── */
-const FEATURED = [
-  {
-    id: 'f1', cat: 'fintech', pill: 'Fintech',
-    title: 'B2B payments infrastructure',
-    desc: 'Professional services and accounting focus: advisory, cybersecurity and finance-offshoring businesses, excluding pure IT services and BPO.',
-    rev: '₹0–50 cr+', ebitda: 'Positive',
-    icon: <BankPaths />,
-  },
-  {
-    id: 'f2', cat: 'consumer', pill: 'Consumer Brands',
-    title: 'Beauty & personal care',
-    desc: 'Large FMCG player interested in profitable BP&C and home-care brands, preferably with a pan-India presence.',
-    rev: '₹50–200 cr', ebitda: 'Positive',
-    icon: <BagPaths />,
-  },
-  {
-    id: 'f3', cat: 'b2b', pill: 'B2B Services',
-    title: 'UI/UX & design studios',
-    desc: 'Large media company looking to acquire UI/UX companies generating 70% and more of their revenue from outside India.',
-    rev: '₹30–200 cr', ebitda: 'Open to all',
-    icon: <BriefcasePaths />,
-  },
-  {
-    id: 'f4', cat: 'saas', pill: 'SaaS',
-    title: 'Vertical SaaS platforms',
-    desc: 'Global software group acquiring vertical SaaS companies with sticky, recurring ARR in logistics, healthcare or construction.',
-    rev: '₹10–100 cr', ebitda: 'Open to all',
-    icon: <CloudPaths />,
-  },
-  {
-    id: 'f5', cat: 'healthcare', pill: 'Healthcare',
-    title: 'Diagnostics & healthtech',
-    desc: 'Hospital chain seeking diagnostics, healthtech and home-care companies scaling across tier-2 and tier-3 cities.',
-    rev: '₹10–100 cr', ebitda: 'Open to all',
-    icon: <HeartPaths />,
-  },
-  {
-    id: 'f6', cat: 'ai', pill: 'AI/Deeptech/IOT',
-    title: 'Applied AI & automation',
-    desc: 'Enterprise automation leader acquiring applied-AI and workflow startups with proven enterprise deployments.',
-    rev: '₹0–80 cr', ebitda: 'Open to all',
-    icon: <CircuitPaths />,
-  },
-];
-
-const MANDATES_API = [
+const MANDATES_DATA = [
   {
     id: 235,
     title: 'IT Services, BPO, KPO Companies',
@@ -271,9 +201,11 @@ const MANDATES_API = [
   },
 ];
 
-const MANDATES = MANDATES_API
+const MANDATES = MANDATES_DATA
   .filter((m) => m.status === 'active')
   .map(mandateFromApi);
+
+const FEATURED = MANDATES_DATA.slice(0, 6).map(mandateFromApi);
 
 const FILTERS = [
   { key: 'all', label: 'All mandates' },

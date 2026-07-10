@@ -5,37 +5,40 @@ const DEALS = [
     tag: 'Media · Acquisition',
     name: 'WLDD × ScoopWhoop',
     desc: 'Studio meets India’s biggest content engine.',
-    image: '/assets/8f781d3e4ec2.png',
+    image: '/assets/wldd-scoop.png',
+    slug: 'wldd-x-scoopwhoop',
   },
   {
     tag: 'Consumer · Acquisition',
     name: 'Heritage × Get-A-Way',
     desc: 'Dessert brand meets India’s leading dairy company.',
-    image: '/assets/9eebf2194260.png',
+    image: '/assets/heritage-get-a-way.png',
+    slug: 'heritage-foods-x-get-a-way',
   },
   {
     tag: 'D2C · Exit',
     name: 'The Soap Co.',
     desc: 'A soap brand that 6×’d valuation in 18 months.',
-    image: '/assets/9d35981c3de9.png',
+    image: '/assets/the-soap-co.png',
   },
   {
-    tag: 'SaaS / AI · Acquisition',
-    name: 'ORBO × Niyogin',
-    desc: 'Computer vision meets embedded finance.',
-    image: '/assets/8f781d3e4ec2.png',
+    tag: 'Fintech · Acquisition',
+    name: 'Niyogin x ORBO',
+    desc: 'An Al powered solution for BFSI sector meets a listed Fintech. A done deal.',
+    image: '/assets/niyogen-orbo.jpeg',
   },
   {
-    tag: 'D2C · Acquisition',
-    name: 'Trase × Upscalio',
-    desc: 'A sneaker brand finds its house of brands.',
-    image: '/assets/9eebf2194260.png',
+    tag: 'Healthcare · Funding',
+    name: 'Sekkei × Tenshi Pharma & Ashish Kacholia Family office',
+    desc: 'A platform-driven biologics discovery engine raises their Series A round with strong strategics to fuel their growth. A Done Deal',
+    image: '/assets/sekkei.jpeg',
+    slug: 'sekkei-bio-series-a',
   },
   {
-    tag: 'Consumer · Exit',
-    name: 'Zymrat × Stylcheck',
-    desc: 'Performance wear, acquired in 12 weeks.',
-    image: '/assets/9d35981c3de9.png',
+    tag: 'Media · Acquisition',
+    name: 'Collective Artists Network × Terribly Tiny Tales',
+    desc: 'Short form story telling platform meets india largest creator platform. A Done Deal',
+    image: '/assets/collective-tiny-tales.jpeg',
   },
 ];
 
@@ -84,6 +87,7 @@ export default function DealsClosed() {
               data-tag={deal.tag}
               data-name={deal.name}
               data-desc={deal.desc}
+              data-slug={deal.slug || ''}
               aria-label={deal.name}
               key={deal.name}
             >
@@ -97,7 +101,14 @@ export default function DealsClosed() {
           <p id="acc-cap-text">
             <b>{firstDeal.name}.</b> {firstDeal.desc}
           </p>
-          <a className="link" href="#" id="acc-cap-link">
+          <a
+            className="link"
+            href={firstDeal.slug ? `/blog/${firstDeal.slug}` : undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            id="acc-cap-link"
+            style={{ visibility: firstDeal.slug ? 'visible' : 'hidden' }}
+          >
             Read the story <span className="arrow">→</span>
           </a>
         </div>
