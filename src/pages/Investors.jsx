@@ -18,9 +18,12 @@ const DISPLAY_FAQS = ['general', 'founder', 'buyer'].flatMap((cat) =>
 
 export default function Investors() {
 
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+  const incomingUtmSource = new URLSearchParams(search).get('utm_source');
   const pageSlug = pathname.replace(/^\/+|\/+$/g, '').replace(/\//g, '-') || 'home';
-  const buyerOnboardingUrl = `https://app.done.deals/buyer/onboarding?utm_source=${encodeURIComponent(pageSlug)}`;
+  const utmSource = incomingUtmSource || pageSlug;
+  const buyerOnboardingUrl = `https://app.done.deals/buyer/onboarding?utm_source=${encodeURIComponent(utmSource)}`;
+  const buyerLoginUrl = `https://app.done.deals/buyer/login?utm_source=${encodeURIComponent(utmSource)}`;
 
   const panelRef = React.useRef(null);
   const auroraRef = React.useRef(null);
@@ -923,7 +926,7 @@ export default function Investors() {
             <a className="btn btn-primary" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
               Join buyer network
             </a>
-            <a className="link" href="https://app.done.deals/buyer/login?utm_source=investors" target="_blank" rel="noopener noreferrer">
+            <a className="link" href={buyerLoginUrl} target="_blank" rel="noopener noreferrer">
               {"Already a member? Login "}
               <span className="arrow">
                 →

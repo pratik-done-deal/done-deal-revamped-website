@@ -36,12 +36,15 @@ const ROLE_OPTIONS = [
 
 // "Get started" role modal + the click interception that opens it.
 export default function RoleModal() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const [open, setOpen] = useState(false);
 
-  // utm_source reflects the page the visitor clicked "Get started" from.
+  // If the visitor already arrived with a utm_source (e.g. from LinkedIn), keep it.
+  // Otherwise fall back to the page they clicked "Get started" from.
+  const incomingUtmSource = new URLSearchParams(search).get('utm_source');
   const pageSlug = pathname.replace(/^\/+|\/+$/g, '').replace(/\//g, '-') || 'home';
-  const withUtm = (base) => `${base}?utm_source=${encodeURIComponent(pageSlug)}`;
+  const utmSource = incomingUtmSource || pageSlug;
+  const withUtm = (base) => `${base}?utm_source=${encodeURIComponent(utmSource)}`;
 
   // Lock page scroll while the modal is open.
   useEffect(() => {

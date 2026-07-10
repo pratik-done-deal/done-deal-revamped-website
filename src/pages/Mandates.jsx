@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import useReveal from '../hooks/useReveal';
@@ -214,7 +215,7 @@ const FILTERS = [
 ];
 
 /* ── Mandate card ───────────────────────────────────────────── */
-function MandateCard({ item, featured = false }) {
+function MandateCard({ item, featured = false, signupUrl }) {
   return (
     <article className={`mcard${featured ? ' featured' : ''}`} data-cat={item.cat}>
       {featured && <span className="fbadge">Featured</span>}
@@ -239,7 +240,7 @@ function MandateCard({ item, featured = false }) {
             <span className="v">{item.ebitda}</span>
           </div>
         </div>
-        <a className="btn-express" href="https://app.done.deals/signup?utm_source=mandate-page">
+        <a className="btn-express" href={signupUrl} target="_blank" rel="noopener noreferrer">
           Express interest
         </a>
       </div>
@@ -248,7 +249,7 @@ function MandateCard({ item, featured = false }) {
 }
 
 /* ── Featured slider ────────────────────────────────────────── */
-function FeaturedSlider({ items }) {
+function FeaturedSlider({ items, signupUrl }) {
   const [current, setCurrent] = useState(() => {
     const saasIndex = items.findIndex((item) => item.cat === 'saas');
     return saasIndex >= 0 ? saasIndex : 0;
@@ -297,7 +298,7 @@ function FeaturedSlider({ items }) {
         <div className="fslider-track" ref={trackRef}>
           {items.map((item, i) => (
             <div key={item.id} className={`mcard-shell${i === current ? ' active' : ''}`}>
-              <MandateCard item={item} featured />
+              <MandateCard item={item} featured signupUrl={signupUrl} />
             </div>
           ))}
         </div>
@@ -333,6 +334,11 @@ export default function Mandates() {
   useReveal();
   useParallax();
   useLightwell();
+
+  const { search } = useLocation();
+  const utmSource = new URLSearchParams(search).get('utm_source') || 'mandate-page';
+  const signupUrl = `https://app.done.deals/signup?utm_source=${encodeURIComponent(utmSource)}`;
+  const buyerOnboardingUrl = `https://app.done.deals/buyer/onboarding?utm_source=${encodeURIComponent(utmSource)}`;
 
   const [filter, setFilter] = useState('all');
   const visible = filter === 'all' ? MANDATES : MANDATES.filter((m) => m.cat === filter);
@@ -376,7 +382,7 @@ export default function Mandates() {
           </div>
 
           <div className="wrap">
-            <FeaturedSlider items={FEATURED} />
+            <FeaturedSlider items={FEATURED} signupUrl={signupUrl} />
           </div>
         </section>
 
@@ -438,7 +444,7 @@ export default function Mandates() {
             <div className="mand-grid">
               {visible.map((m) => (
                 <div key={m.id} className="mcard-shell">
-                  <MandateCard item={m} />
+                  <MandateCard item={m} signupUrl={signupUrl} />
                 </div>
               ))}
             </div>
@@ -492,7 +498,7 @@ export default function Mandates() {
                 <h3>Not a fit? No problem.</h3>
                 <p>Our vetted investors are always looking for great companies. Get your valuation and let the right buyers find you — it's completely free.</p>
                 <div className="cta-actions">
-                  <a className="btn btn-primary" href="https://app.done.deals/signup?utm_source=mandate-page" target="_blank" rel="noopener noreferrer">
+                  <a className="btn btn-primary" href={signupUrl} target="_blank" rel="noopener noreferrer">
                     Sign up as a company
                   </a>
                   <a className="link" href="https://app.done.deals/valuation-calculator">
@@ -519,7 +525,7 @@ export default function Mandates() {
                 <h3>Have a requirement?</h3>
                 <p>List a mandate and we'll source companies that fit. Our team curates and vets every match before it ever reaches you.</p>
                 <div className="cta-actions">
-                  <a className="btn btn-light" href="https://app.done.deals/buyer/onboarding?utm_source=mandate-page" target="_blank" rel="noopener noreferrer">
+                  <a className="btn btn-light" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
                     List a mandate
                   </a>
                 </div>
