@@ -1,6 +1,8 @@
 import React from 'react';
-import imgTestimonialAjith from '../assets/testimonial/testimonial-ajith.svg';
-import imgTestimonialArihant from '../assets/testimonial/testimonial-arihant.svg';
+import { cdnUrl } from '../config/cdn';
+
+const imgTestimonialAjith = cdnUrl('testimonial-ajith.svg');
+const imgTestimonialArihant = cdnUrl('testimonial-arihant.svg');
 
 const TESTIMONIALS = [
   // {

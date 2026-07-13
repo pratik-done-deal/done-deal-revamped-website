@@ -1,25 +1,27 @@
 import React from 'react';
-import imgManagingMultipleDeal from '../assets/managing-multiple-deal.png';
-import imgHowToReadCuecard from '../assets/how-to-read-cuecard.png';
-import imgStrategicGrowth from '../assets/strategic-growth.png';
-import imgEssentialSteps from '../assets/essential-steps.png';
-import imgPrivateEquity from '../assets/growing-role-of-private-equity.png';
-import imgCIM from '../assets/confidential-information-memorandum.png';
-import imgHowToWriteCuecard from '../assets/how-to-write-a-cuecard.png';
-import imgKeepIdentitySecret from '../assets/how-does-donedeal-keep-your-identity-secret.png';
-import imgInsightsFnB from '../assets/insights-from-f&b-founders.png';
-import imgAttractInvestors from '../assets/attract-strategic-investors.png';
-import imgDueDiligence from '../assets/role-of-due-diligence.png';
-import imgSportsRevolution from '../assets/embracing-the-sports-revolution.png';
-import img150CrDeal from '../assets/150-cr-commitment.png';
-import imgSekkeiSeries from '../assets/SEKKEI-raise-funds.png';
-import imgHeritageGetaway from '../assets/heritage-get-a-way.png';
-import imgRitualistic from '../assets/ritualistic-deep-bajaj.png';
-import imgWldd710 from '../assets/wlld-seven-ten.png';
-import imgWlddScoop from '../assets/wldd-scoop-whoop.png';
-import imgMetashot from '../assets/metashot.png';
-import imgCollective from '../assets/collective.png';
-import imgNiyogin from '../assets/niyogen.png';
+import { cdnUrl } from '../config/cdn';
+
+const imgManagingMultipleDeal = cdnUrl('managing-multiple-deal.png');
+const imgHowToReadCuecard = cdnUrl('how-to-read-cuecard.png');
+const imgStrategicGrowth = cdnUrl('strategic-growth.png');
+const imgEssentialSteps = cdnUrl('essential-steps.png');
+const imgPrivateEquity = cdnUrl('growing-role-of-private-equity.png');
+const imgCIM = cdnUrl('confidential-information-memorandum.png');
+const imgHowToWriteCuecard = cdnUrl('how-to-write-a-cuecard.png');
+const imgKeepIdentitySecret = cdnUrl('how-does-donedeal-keep-your-identity-secret.png');
+const imgInsightsFnB = cdnUrl('insights-from-f&b-founders.png');
+const imgAttractInvestors = cdnUrl('attract-strategic-investors.png');
+const imgDueDiligence = cdnUrl('role-of-due-diligence.png');
+const imgSportsRevolution = cdnUrl('embracing-the-sports-revolution.png');
+const img150CrDeal = cdnUrl('150-cr-commitment.png');
+const imgSekkeiSeries = cdnUrl('SEKKEI-raise-funds.png');
+const imgHeritageGetaway = cdnUrl('heritage-get-a-way.png');
+const imgRitualistic = cdnUrl('ritualistic-deep-bajaj.png');
+const imgWldd710 = cdnUrl('wlld-seven-ten.png');
+const imgWlddScoop = cdnUrl('wldd-scoop-whoop.png');
+const imgMetashot = cdnUrl('metashot.png');
+const imgCollective = cdnUrl('collective.png');
+const imgNiyogin = cdnUrl('niyogen.png');
 
 const DealHandshake = () => (
   <>

@@ -1,9 +1,11 @@
 import React from 'react';
-import logoGruhas from '../assets/investors/gruhas.svg';
-import logoWfc from '../assets/investors/wfc.svg';
-import logoBarbershop from '../assets/investors/barbershop.svg';
-import logoDezerv from '../assets/investors/dezerv.svg';
-import logoCapitalA from '../assets/investors/capitalA.svg';
+import { cdnUrl } from '../config/cdn';
+
+const logoGruhas = cdnUrl('gruhas.svg');
+const logoWfc = cdnUrl('wfc.svg');
+const logoBarbershop = cdnUrl('barbershop.svg');
+const logoDezerv = cdnUrl('dezerv.svg');
+const logoCapitalA = cdnUrl('capitalA.svg');
 
 const INVESTOR_LOGOS = [
   { src: logoGruhas, alt: 'Gruhas' },

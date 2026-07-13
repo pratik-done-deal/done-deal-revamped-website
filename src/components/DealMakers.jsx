@@ -1,10 +1,12 @@
 import React from 'react';
-import photoGaurav from '../assets/bankers/gaurav.svg';
-import photoVinit from '../assets/bankers/vinit.svg';
-import photoDhrish from '../assets/bankers/dhirish.svg';
-import photoSagar from '../assets/bankers/sagar_parekh.svg';
-import photoDeepty from '../assets/bankers/deepty.svg';
-import photoDhairya from '../assets/bankers/dhairya.svg';
+import { cdnUrl } from '../config/cdn';
+
+const photoGaurav = cdnUrl('gaurav.png');
+const photoVinit = cdnUrl('vinit.png');
+const photoDhrish = cdnUrl('dhrish.png');
+const photoSagar = cdnUrl('sagar.png');
+const photoDeepty = cdnUrl('deepty.png');
+const photoDhairya = cdnUrl('dhairya.png');
 
 const MAKERS = [
   { id: 'mk-1', sector: 'Media', photoSrc: photoGaurav, name: 'Gaurav Jha', role: 'Lead, Media | Consumer | F&B', linkedin: 'https://www.linkedin.com/in/gaurav-jha1910' },

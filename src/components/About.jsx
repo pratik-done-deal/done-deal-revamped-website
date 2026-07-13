@@ -16,28 +16,30 @@
  * Usage:  import About from "./About";  … <About />
  */
 import React, { useState, useEffect, useRef } from "react";
-import photoParas from "../assets/paras.svg";
-import photoPratik from "../assets/pratik.svg";
-import photoAnand from "../assets/anand.svg";
-import photoChandan from "../assets/chadan.svg";
-import photoNavneet from "../assets/navneet.svg";
-import photoAnubhav from "../assets/anubhav.svg";
-import photoAshutosh from "../assets/ashutosh.svg";
-import photoAbhijeet from "../assets/abhijeet.svg";
-import photoGaurav from "../assets/bankers/gaurav.svg";
-import photoVinit from "../assets/bankers/vinit.svg";
-import photoDeepty from "../assets/bankers/deepty.svg";
-import photoDhrish from "../assets/bankers/dhirish.svg";
-import photoSagar from "../assets/bankers/sagar_parekh.svg";
-import photoRohit from "../assets/founders/rohit.svg";
-import photoAneesh from "../assets/founders/annesh.svg";
-import photoAnkur from "../assets/founders/ankur.svg";
-import photoFoundersGroup from "../assets/founders/founders.png";
-import logoGruhas from "../assets/investors/gruhas.svg";
-import logoWfc from "../assets/investors/wfc.svg";
-import logoBarbershop from "../assets/investors/barbershop.svg";
-import logoDezerv from "../assets/investors/dezerv.svg";
-import logoCapitalA from "../assets/investors/capitalA.svg";
+import { cdnUrl } from "../config/cdn";
+const logoGruhas = cdnUrl("gruhas.svg");
+const logoWfc = cdnUrl("wfc.svg");
+const logoBarbershop = cdnUrl("barbershop.svg");
+const logoDezerv = cdnUrl("dezerv.svg");
+const logoCapitalA = cdnUrl("capitalA.svg");
+
+const photoParas = cdnUrl("paras.png");
+const photoPratik = cdnUrl("pratik.png");
+const photoAnand = cdnUrl("anand.png");
+const photoChandan = cdnUrl("chandan.png");
+const photoNavneet = cdnUrl("navneet.png");
+const photoAnubhav = cdnUrl("anubhav.png");
+const photoAshutosh = cdnUrl("ashutosh.png");
+const photoAbhijeet = cdnUrl("abhijeet.png");
+const photoGaurav = cdnUrl("gaurav.png");
+const photoVinit = cdnUrl("vinit.png");
+const photoDeepty = cdnUrl("deepty.png");
+const photoDhrish = cdnUrl("dhrish.png");
+const photoSagar = cdnUrl("sagar.png");
+const photoRohit = cdnUrl("rohit.png");
+const photoAneesh = cdnUrl("aneesh.png");
+const photoAnkur = cdnUrl("ankur.png");
+const photoFoundersGroup = cdnUrl("founders.png");
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */

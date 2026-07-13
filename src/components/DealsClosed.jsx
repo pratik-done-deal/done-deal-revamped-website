@@ -1,46 +1,47 @@
 import React from 'react';
+import { cdnUrl } from '../config/cdn';
 
 const DEALS = [
   {
     tag: 'Media · Acquisition',
     name: 'WLDD × ScoopWhoop',
     desc: 'Studio meets India’s biggest content engine.',
-    image: '/assets/wldd-scoop.png',
+    image: cdnUrl('wldd-scoop.png'),
     slug: 'wldd-x-scoopwhoop',
   },
   {
     tag: 'Consumer · Acquisition',
     name: 'Heritage × Get-A-Way',
     desc: 'Dessert brand meets India’s leading dairy company.',
-    image: '/assets/heritage-get-a-way.png',
+    image: cdnUrl('heritage-get-a-way.png'),
     slug: 'heritage-foods-x-get-a-way',
   },
   {
     tag: 'D2C · Exit',
     name: 'The Soap Co.',
     desc: 'A soap brand that 6×’d valuation in 18 months.',
-    image: '/assets/the-soap-co.png',
+    image: cdnUrl('the-soap-co.png'),
     slug: "150-cr-commitment-bpc-brand"
   },
   {
     tag: 'Fintech · Acquisition',
     name: 'Niyogin x ORBO',
     desc: 'An Al powered solution for BFSI sector meets a listed Fintech. A done deal.',
-    image: '/assets/niyogen-orbo.jpeg',
+    image: cdnUrl('niyogen-orbo.jpeg'),
     slug: 'superscan-orbo-x-niyogin'
   },
   {
     tag: 'Healthcare · Funding',
     name: 'Sekkei × Tenshi Pharma & Ashish Kacholia Family office',
     desc: 'A platform-driven biologics discovery engine raises their Series A round with strong strategics to fuel their growth. A Done Deal',
-    image: '/assets/sekkei.jpeg',
+    image: cdnUrl('sekkei.jpeg'),
     slug: 'sekkei-bio-series-a',
   },
   {
     tag: 'Media · Acquisition',
     name: 'Collective Artists Network × Terribly Tiny Tales',
     desc: 'Short form story telling platform meets india largest creator platform. A Done Deal',
-    image: '/assets/collective-tiny-tales.jpeg',
+    image: cdnUrl('collective-tiny-tales.jpeg'),
     slug: 'ttt-x-collective-artists-network'
   },
 ];

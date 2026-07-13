@@ -9,20 +9,22 @@ import '../styles/mandates.css';
 import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
 
-import iconAgency from '../assets/mandates/agency.svg';
-import iconAi from '../assets/mandates/ai.svg';
-import iconB2b from '../assets/mandates/b2b-Services.svg';
-import iconConsumer from '../assets/mandates/consumer_brands.svg';
-import iconEdTech from '../assets/mandates/ed-Tech.svg';
-import iconFintechImg from '../assets/mandates/fintech.svg';
-import iconGaming from '../assets/mandates/gaming.svg';
-import iconHealthcareImg from '../assets/mandates/healthcare.svg';
-import iconHospitality from '../assets/mandates/hospitality.svg';
-import iconItServices from '../assets/mandates/it-services.svg';
-import iconMarketplaceImg from '../assets/mandates/marketplace.svg';
-import iconOthers from '../assets/mandates/others.svg';
-import iconRenewables from '../assets/mandates/renewables.svg';
-import iconSaasImg from '../assets/mandates/saas.svg';
+import { cdnUrl } from '../config/cdn';
+
+const iconAgency = cdnUrl('agency.svg');
+const iconAi = cdnUrl('ai.svg');
+const iconB2b = cdnUrl('b2b-Services.svg');
+const iconConsumer = cdnUrl('consumer_brands.svg');
+const iconEdTech = cdnUrl('ed-Tech.svg');
+const iconFintechImg = cdnUrl('fintech.svg');
+const iconGaming = cdnUrl('gaming.svg');
+const iconHealthcareImg = cdnUrl('healthcare.svg');
+const iconHospitality = cdnUrl('hospitality.svg');
+const iconItServices = cdnUrl('it-services.svg');
+const iconMarketplaceImg = cdnUrl('marketplace.svg');
+const iconOthers = cdnUrl('others.svg');
+const iconRenewables = cdnUrl('renewables.svg');
+const iconSaasImg = cdnUrl('saas.svg');
 
 /* ── SVG icon fragments ─────────────────────────────────────── */
 const BankPaths = () => (
