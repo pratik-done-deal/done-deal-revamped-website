@@ -118,7 +118,7 @@
 .mcard[data-cat="saas"]        { --c: #3CC9DE; }
 .mcard[data-cat="it-services-products"] { --c: #9D6BFF; }
 .mcard[data-cat="healthcare-services"]  { --c: #FB6F84; }
-.mcard[data-cat="others"]               { --c: #3CC9DE; }
+.mcard[data-cat="others"]               { --c: #A856F6; }
 
 /* ── Express interest button ────────────────────────────────── */
 .btn-express {
