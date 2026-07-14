@@ -242,7 +242,7 @@ function MandateCard({ item, featured = false, signupUrl }) {
             <span className="v">{item.ebitda}</span>
           </div>
         </div>
-        <a className="btn-express" href={signupUrl} target="_blank" rel="noopener noreferrer">
+        <a className="btn-express" href={`${signupUrl}&mandate=${item.id}`} target="_blank" rel="noopener noreferrer">
           Express interest
         </a>
       </div>

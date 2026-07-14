@@ -7,14 +7,19 @@ const photoDhrish = cdnUrl('dhrish.png');
 const photoSagar = cdnUrl('sagar.png');
 const photoDeepty = cdnUrl('deepty.png');
 const photoDhairya = cdnUrl('dhairya.png');
+const photoAneesh = cdnUrl("aneesh.png");
+const photoRohit = cdnUrl("rohit.png");
+
 
 const MAKERS = [
-  { id: 'mk-1', sector: 'Media', photoSrc: photoGaurav, name: 'Gaurav Jha', role: 'Lead, Media | Consumer | F&B', linkedin: 'https://www.linkedin.com/in/gaurav-jha1910' },
-  { id: 'mk-2', sector: 'Logistics', photoSrc: photoVinit, name: 'Vinit Jain', role: 'Lead, Logistics | Consumer', linkedin: 'https://www.linkedin.com/in/win-it-jain' },
-  { id: 'mk-3', sector: 'Edtech', photoSrc: photoDhrish, name: 'Dhrish Saggi', role: 'Lead, Edtech | IT Services | SaaS', linkedin: 'https://www.linkedin.com/in/dhrishsaggi/' },
-  { id: 'mk-4', sector: 'Fintech', photoSrc: photoSagar, name: 'Sagar Parekh', role: 'Lead, Fintech | Logistics | ESG', linkedin: 'https://www.linkedin.com/in/parekh-sagar/' },
-  { id: 'mk-5', sector: 'Fundraising', photoSrc: photoDeepty, name: 'Deepty Chopra', role: 'Lead, Fundraising', linkedin: 'https://www.linkedin.com/in/deepty-chopra/' },
+  { id: 'mk-1', sector: 'M&A Lead', photoSrc: photoAneesh, name: 'Aneesh Sivakumar', role: 'M&A Lead', linkedin: 'https://www.linkedin.com/in/aneesh-sivakumar/' },
+  { id: 'mk-1', sector: 'M&A Lead', photoSrc: photoRohit, name: 'Rohit Raj', role: 'M&A Lead', linkedin: 'https://www.linkedin.com/in/rohitrajkaral/' },
   { id: 'mk-6', sector: 'M&A', photoSrc: photoDhairya, name: 'Dhairya Borar', role: 'M&A Lead', linkedin: "https://www.linkedin.com/in/dhairya-borar/" },
+  { id: 'mk-1', sector: 'Media', photoSrc: photoGaurav, name: 'Gaurav Jha', role: 'Lead, Media | Consumer | F&B', linkedin: 'https://www.linkedin.com/in/gaurav-jha1910' },
+  { id: 'mk-4', sector: 'Fintech', photoSrc: photoSagar, name: 'Sagar Parekh', role: 'Lead, Fintech | Logistics | ESG', linkedin: 'https://www.linkedin.com/in/parekh-sagar/' },
+  { id: 'mk-3', sector: 'Edtech', photoSrc: photoDhrish, name: 'Dhrish Saggi', role: 'Lead, Edtech | IT Services | SaaS', linkedin: 'https://www.linkedin.com/in/dhrishsaggi/' },
+  { id: 'mk-2', sector: 'Logistics', photoSrc: photoVinit, name: 'Vinit Jain', role: 'Lead, Logistics | Consumer', linkedin: 'https://www.linkedin.com/in/win-it-jain' },
+  { id: 'mk-5', sector: 'Fundraising', photoSrc: photoDeepty, name: 'Deepty Chopra', role: 'Lead, Fundraising', linkedin: 'https://www.linkedin.com/in/deepty-chopra/' },
 ];
 
 function LinkedInGlyph() {

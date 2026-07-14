@@ -22,6 +22,7 @@ const imgWlddScoop = cdnUrl('wldd-scoop-whoop.png');
 const imgMetashot = cdnUrl('metashot.png');
 const imgCollective = cdnUrl('collective.png');
 const imgNiyogin = cdnUrl('niyogen.png');
+const imgStyched = cdnUrl('flathead-zymrat-styched-blog.png');
 
 const DealHandshake = () => (
   <>
@@ -179,6 +180,13 @@ export const POSTS = [
     title: 'SuperScan by Orbo AI x Niyogin is a Done Deal',
     excerpt: "Niyogin acquires Orbo's SuperScan to accelerate AI-led transformation in BFSI.",
     date: 'Jun 10, 2024', readTime: '3 min read',
+    icon: <DealHandshake />,
+  },
+  {
+    slug: 'styched-flatheads-zymrat', cat: 'deal', cover: 'cov-deal', tag: 'Done Deals', image: imgStyched,
+    title: 'Styched enters Footwear and Athleisure',
+    excerpt: 'Styched acquires Flatheads and Zymrat to enter footwear and athleisure.',
+    date: 'May 28, 2024', readTime: '4 min read',
     icon: <DealHandshake />,
   },
 ];

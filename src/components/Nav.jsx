@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import useNav from '../hooks/useNav';
 
 const NAV_LINKS = [
-  { key: 'investors', label: 'For investors', href: '/investors' },
+  { key: 'investors', label: 'For Investors', href: '/investors' },
   { key: 'mandates', label: 'Mandates', href: '/mandates' },
   { key: 'faq', label: 'FAQ', href: '/faq' },
   { key: 'blog', label: 'Blog', href: '/blog' },

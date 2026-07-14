@@ -6,8 +6,8 @@ const SIGNUP_URL = 'https://app.done.deals/signup';
 const ROLE_OPTIONS = [
   {
     key: 'seller',
-    title: "I'm raising or selling",
-    desc: 'Get acquired or raise capital for your company.',
+    title: "Get acquired or Fundraise ",
+    desc: 'Run a structured fundraise or M&A process ',
     newTab: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -23,8 +23,8 @@ const ROLE_OPTIONS = [
     key: 'investor',
     base: 'https://app.done.deals/buyer/onboarding',
     newTab: true,
-    title: "I'm an investor",
-    desc: 'Discover and back vetted companies.',
+    title: "Invest or acquire",
+    desc: 'Access vetted companies aligned with your goals.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 17l6-6 4 4 7-7" />
@@ -89,8 +89,8 @@ export default function RoleModal() {
       <div className="ddrm-card">
         <button type="button" className="ddrm-close" onClick={close} aria-label="Close">✕</button>
         <div className="ddrm-eyebrow">Get started</div>
-        <div className="ddrm-title">How do you want to use Done Deal?</div>
-        <div className="ddrm-sub">Tell us who you are and we'll take you to the right place. 🤝</div>
+        <div className="ddrm-title">What are you looking for?</div>
+        <div className="ddrm-sub">Tell us what you're here for  and we'll set up the right process from the start.</div>
         <div className="ddrm-opts">
           {ROLE_OPTIONS.map((opt) => (
             <a
