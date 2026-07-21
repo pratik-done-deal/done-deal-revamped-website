@@ -15,6 +15,7 @@ export default function Legal() {
 
   const VALID_TABS = ['investor', 'company', 'privacy'];
   const tabFromHash = () => {
+    if (typeof window === 'undefined') return 'investor';
     const hash = window.location.hash.replace('#', '');
     return VALID_TABS.includes(hash) ? hash : 'investor';
   };
