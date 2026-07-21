@@ -6,7 +6,7 @@ const NAV_LINKS = [
   { key: 'mandates', label: 'Mandates', href: '/mandates' },
   { key: 'faq', label: 'FAQ', href: '/faq' },
   { key: 'blog', label: 'Blog', href: '/blog' },
-  { key: 'about', label: 'About', href: '/about' },
+  { key: 'about', label: 'About Us', href: '/about' },
 ];
 
 const brandLogoClass = 'brand-logo h-[26px] w-auto [body.is-light_&]:invert';
