@@ -97,8 +97,13 @@ export default function useProcessScenes() {
     const sticky = stage.closest('.proc3-sticky');
     const fit = () => {
       if (!sticky) return;
-      const sc = Math.min(1, sticky.clientHeight / 520, sticky.clientWidth / 480);
-      stage.style.transform = sc < 0.999 ? 'scale(' + sc.toFixed(3) + ')' : '';
+      // On tall viewports, scale the visual up so it fills its (now taller) box
+      // rather than floating in empty space. hFill is exactly 1 at <=940px
+      // viewport height (keeps 1440x900 unchanged) and rises to 1.4 on big
+      // screens. The container-fit min() still prevents overflow either way.
+      const hFill = Math.min(2.3, Math.max(1, window.innerHeight / 860));
+      const sc = Math.min(hFill, sticky.clientHeight / 520, sticky.clientWidth / 480);
+      stage.style.transform = Math.abs(sc - 1) > 0.002 ? 'scale(' + sc.toFixed(3) + ')' : '';
       drawFlows();
     };
     window.addEventListener('resize', fit);

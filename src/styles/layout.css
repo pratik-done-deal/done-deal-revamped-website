@@ -533,7 +533,7 @@ section > .wrap, section > .amb ~ * { position: relative; }
 
 /* ── Deal makers (pinned horizontal scroll) ──────────────────── */
 .makers-h { position: relative; margin-top: clamp(52px,7.5vh,116px); }
-.makers-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden;
+.makers-sticky { position: sticky; top: 0; height: 100svh; max-height: 820px; min-height: 560px; overflow: hidden;
   display: flex; flex-direction: column; }
 .makers-head { padding-top: clamp(44px, 5.5vh, 84px); padding-bottom: clamp(14px, 2vh, 28px); }
 .makers-head.wrap { max-width: none; margin: 0; }

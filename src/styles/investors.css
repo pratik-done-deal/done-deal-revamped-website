@@ -229,7 +229,7 @@ body.page-investors #bgwash::before { content: ""; position: absolute; inset: 0;
    ════════════════════════════════════════════════════════════ */
 
 /* Hero — nav + hero = one full screen, content centered */
-body.page-investors .hero { min-height: 90svh;
+body.page-investors .hero { min-height: 50svh;
   padding: calc(var(--nav-h, 66px) + 4px) var(--gutter) clamp(20px,3vh,40px);
   display: flex; flex-direction: column; justify-content: center; }
 

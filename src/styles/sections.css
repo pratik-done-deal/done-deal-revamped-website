@@ -358,9 +358,16 @@ section.proc3 { padding-bottom: 0; }
 .proc3-pin { position: relative; }
 @media (min-width: 901px){
   .proc3-pin { height: 300vh; margin-top: clamp(52px,6.5vh,80px); }
-  .proc3-stage-wrap { position: sticky; top: 0; height: min(100vh, 680px); display: flex; align-items: center; }
+  .proc3-stage-wrap { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
   .proc3-stage-wrap .proc3-grid { margin-top: 0; width: 100%; align-items: center; }
-  .proc3-vis .proc3-sticky { position: relative; top: 0; height: min(76vh, 600px); }
+  .proc3-vis .proc3-sticky { position: relative; top: 0; height: min(66vh, 900px); }
+}
+/* Large screens: give the visual column more width so the (near-square) stage
+   can scale taller before hitting its width limit — this is the real lever for
+   shrinking the centred top/bottom margins. Only ≥1500px wide, so 1440×900 is
+   untouched. */
+@media (min-width: 1500px){
+  .proc3-grid { grid-template-columns: 0.8fr 1.2fr; gap: clamp(36px, 3vw, 68px); }
 }
 .proc3-cards { display: flex; flex-direction: column; gap: 12px; justify-content: center; padding: 0 !important; }
 .vstep { display: block; width: 100%; text-align: left; border: 1px solid var(--line); border-radius: 16px;
@@ -394,6 +401,15 @@ section.proc3 { padding-bottom: 0; }
 .vstep.on { transform: none; padding: 26px 28px; border-color: rgba(208,155,108,0.55);
   background: linear-gradient(152deg, rgba(208,155,108,0.22) 0%, rgba(208,155,108,0.07) 34%, var(--ink-1) 66%);
   box-shadow: 0 0 0 1px rgba(208,155,108,0.24), 0 20px 54px rgba(208,155,108,0.18); }
+/* On tall viewports, grow the card stack so the pinned content fills more of
+   the centred viewport and the top/bottom margins shrink. All values are
+   vh-keyed, so at ≤900px tall they collapse to the base sizes (1440×900 stays
+   pixel-identical) and only expand on larger screens. */
+@media (min-width: 901px){
+  .proc3-cards { gap: clamp(12px, 2.2vh, 40px); }
+  .vstep { padding-top: clamp(15px, 2.2vh, 38px); padding-bottom: clamp(15px, 2.2vh, 38px); }
+  .vstep.on { padding-top: clamp(26px, 4.4vh, 78px); padding-bottom: clamp(26px, 4.4vh, 78px); }
+}
 .vstep.on .vs-role { display: inline-flex; }
 .vstep.on .vs-ico { width: 42px; height: 42px; border-radius: 10px; background: rgba(208,155,108,0.16); }
 .vstep.on .vs-ico svg { width: 19px; height: 19px; }
@@ -708,13 +724,13 @@ section.proc3 { padding-bottom: 0; }
   line-height: 1.4; letter-spacing: -0.014em; max-width: 880px; margin: 0 auto; text-align: center; text-wrap: pretty; }
 
 /* Density trims throughout */
-.section-pad { padding: clamp(76px,9vh,132px) 0; }
+.section-pad { padding: clamp(76px,9vh,40px) 0; }
 .duo { margin-top: 64px; }
 .cmpx { margin-top: clamp(52px,6.5vh,80px); }
 section.assurance { padding: clamp(76px,9vh,132px) 0; }
 .assurance .stack { margin-top: clamp(52px,6.5vh,80px); }
 /* testimonial + track-record share one full-viewport band */
-.ttband { min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+.ttband {  display: flex; flex-direction: column; justify-content: center;
   gap: clamp(36px,6vh,96px); padding: clamp(40px,5vh,72px) 0; }
 .ttband .testimonial,
 .ttband .track { padding-top: 0; padding-bottom: 0; min-height: 0; }

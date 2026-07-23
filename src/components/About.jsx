@@ -355,23 +355,26 @@ function useNavScroll() {
 // Falls back to a native horizontal-snap scroller on small screens / reduced motion.
 function useHorizontalPin() {
   const sectionRef = useRef(null);
+  const pinRef = useRef(null);
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
   const [noPin, setNoPin] = useState(false);
   useEffect(() => {
     const section = sectionRef.current;
+    const pin = pinRef.current;
     const viewport = viewportRef.current;
     const track = trackRef.current;
-    if (!section || !viewport || !track) return;
+    if (!section || !pin || !viewport || !track) return;
     const small = window.matchMedia("(max-width: 900px)");
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     let maxX = 0;
+    let pinHeight = 0;
     let queued = false;
 
     const tick = () => {
       if (small.matches || reduce.matches) return;
       const rect = section.getBoundingClientRect();
-      const total = section.offsetHeight - window.innerHeight;
+      const total = section.offsetHeight - pinHeight;
       const scrolled = Math.min(Math.max(-rect.top, 0), total);
       const progress = total > 0 ? scrolled / total : 0;
       track.style.transform = `translate3d(${(-progress * maxX).toFixed(1)}px,0,0)`;
@@ -385,8 +388,13 @@ function useHorizontalPin() {
         track.style.transform = "";
         return;
       }
+      // Measure the pinned box itself — its height is capped in CSS so it
+      // stays sane on tall/large viewports — instead of raw window.innerHeight,
+      // so the scroll-driven translate distance always matches how long the
+      // box is actually pinned on screen.
+      pinHeight = pin.offsetHeight;
       maxX = Math.max(0, track.scrollWidth - viewport.clientWidth);
-      section.style.height = window.innerHeight + maxX + "px";
+      section.style.height = pinHeight + maxX + "px";
       tick();
     };
 
@@ -410,7 +418,7 @@ function useHorizontalPin() {
       clearTimeout(t);
     };
   }, []);
-  return { sectionRef, viewportRef, trackRef, noPin };
+  return { sectionRef, pinRef, viewportRef, trackRef, noPin };
 }
 
 // Lock page scroll while a modal / mobile menu is open.
@@ -788,7 +796,7 @@ function GetStartedModal({ open, onClose }) {
 
 export default function About() {
   useBrandChrome();
-  const { sectionRef, viewportRef, trackRef, noPin } = useHorizontalPin();
+  const { sectionRef, pinRef, viewportRef, trackRef, noPin } = useHorizontalPin();
 
   return (
     <div className="relative z-[1] font-['Instrument_Sans',system-ui,-apple-system,sans-serif] text-[#ECE9E2] text-[17px] leading-[1.6] tracking-[-0.005em] antialiased [overflow-x:clip]">
@@ -899,7 +907,12 @@ export default function About() {
 
         {/* ── VALUES (pinned horizontal scroll) ────────────── */}
         <section ref={sectionRef} className="relative" data-screen-label="Values">
-          <div className={`flex flex-col ${noPin ? "" : "sticky top-0 h-screen overflow-hidden"}`}>
+          <div
+            ref={pinRef}
+            className={`flex flex-col ${
+              noPin ? "" : "sticky top-0 h-[100svh] max-h-[820px] min-h-[560px] overflow-hidden"
+            }`}
+          >
             <div className="max-w-[1320px] mx-auto px-[clamp(24px,6.5vw,120px)] w-full text-left pt-[clamp(74px,11vh,120px)] pb-[clamp(18px,2.6vh,34px)]">
               <Reveal>
                 <Kicker className="mb-[18px]">
