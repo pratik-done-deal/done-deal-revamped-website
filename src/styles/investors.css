@@ -555,9 +555,12 @@ body.page-investors .hero .trust-check svg { stroke: #1b1547; }
   .halfcircle,
   .glow,
   .drift,
-  .proc3-vis,
   .makers-progress,
   .scroll-hint { display: none !important; }
+  /* NOTE: .proc3-vis is intentionally NOT hidden here — on mobile the scene
+     graphic sits above the horizontal card gallery (see the max-width:900px
+     block in sections.css) and swaps scenes as the cards scroll. Kept in sync
+     with the sections.css copy of this override. */
 
   /* ---- Hero: tighten panel + downscale type ---- */
   .hero-panel { padding: 24px 18px 22px !important; border-radius: 20px !important; }
@@ -572,9 +575,9 @@ body.page-investors .hero .trust-check svg { stroke: #1b1547; }
   .section-pad { padding: 48px 0 !important; }
   .h-sec { font-size: clamp(27px, 7vw, 38px) !important; }
   .h-sub, .proc2-h { font-size: clamp(23px, 6vw, 32px) !important; }
-  /* Only the expanded card gets the large heading; collapsed cards stay compact
-     so the accordion reads one active step at a time (see sections.css note). */
-  .proc3 .vstep.on .vs-head h4 { font-size: clamp(23px, 6vw, 32px) !important; }
+  /* Mobile horizontal gallery: every card is expanded, so they all get the
+     large title (kept in sync with the sections.css copy). */
+  .proc3 .vstep .vs-head h4 { font-size: clamp(23px, 6vw, 28px) !important; }
   .sec-lede, .proc2-lede { font-size: 16px !important; }
   .eyebrow-row { margin-bottom: 20px !important; }
 

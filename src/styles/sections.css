@@ -453,47 +453,79 @@ section.proc3 { padding-bottom: 0 !important; }
 .vstep.on .vs-detail { grid-template-rows: 1fr; opacity: 1; margin-top: 14px; }
 @media (max-width: 900px){
   .proc3-grid { grid-template-columns: 1fr; }
-  .proc3-vis { display: none; }
-  /* Pinned scroll accordion on mobile — mirror the desktop behaviour: the
-     section pins to the viewport and the active card expands as you scroll,
-     one at a time (driven by useProcessScenes' track()). Cards stay COLLAPSED
-     by default; only the .on card opens (see the .vstep.on rules above). */
-  /* ~150vh of scroll per card (6 cards → 100vh sticky + 6·150vh = 1000vh) so
-     each card needs a couple of deliberate swipes before it hands off to the
-     next, and the section stays pinned until the 6th card has been reached —
-     only then does it release to the following section. Requires the pin to
-     actually be sticky on mobile: see the note in the max-width:800px block
-     where proc3 is deliberately excluded from the un-pin override. */
-  .proc3-pin { height: 1000vh; margin-top: clamp(40px,6vh,64px); }
-  /* Only the CARD GRID pins — the heading scrolls away above it, so once the
-     cards pin they get the FULL viewport and all six are visible at a glance
-     (instead of the heading eating the top of the screen). Dissolving the
-     stage-wrap box makes the heading + grid direct flow children of the 1000vh
-     pin: the heading flows at the top and scrolls off, and the grid stickies at
-     top:0 for the rest of the pin's scroll while the cards expand in place. */
+
+  /* ── Mobile: horizontal-scroll gallery with a live graphic on top ──
+     The whole section pins to the viewport. The desktop scene graphic sits
+     ABOVE a row of cards; as you scroll down, the card row translates from
+     card 1 → 6 and the graphic swaps to the matching scene (track() → setActive
+     toggles .p3scene.on, exactly as on desktop). Once the 6th card is reached
+     the pin releases and normal vertical scrolling resumes. All six cards stay
+     fully expanded. The pin must stay sticky on mobile — see the note in the
+     max-width:800px block where proc3 is deliberately excluded from the un-pin
+     override. */
+  .proc3-pin { height: 480vh; margin-top: clamp(40px,6vh,64px); }
+
+  /* Only the GRAPHIC + CARDS pin in a 100vh box — the heading/subheading flow
+     above it and scroll away first (like desktop). Dissolving the stage-wrap
+     makes the heading and the grid direct flow children of the 480vh pin: the
+     heading sits at the top and scrolls off, then the grid stickies at top:0
+     for the rest of the pin's scroll. */
   .proc3-stage-wrap { display: contents; }
   .proc3-head { margin-bottom: clamp(16px,3vh,28px); }
-  /* Grid = the sticky 100vh card viewport. Cards flow from the top and are
-     translated inside it by useProcessScenes' centerActive() only when an
-     expanded card would overflow — when all six fit, they simply sit in view. */
+  .proc3 .sec-lede .p3-hoverhint { display: none; }  /* "hover" hint is desktop-only */
+  /* height !important overrides the global `.proc3-grid { height:auto!important }`
+     (line ~111) — without it the grid collapses to content height and pins at
+     the top, so justify-content has no spare height to centre into. */
   .proc3-stage-wrap .proc3-grid { margin-top: 0; position: sticky; top: 0;
-    height: 100vh; overflow: hidden; }
-  .proc3-cards { gap: clamp(8px,1.1vh,14px); justify-content: flex-start;
-    position: relative; will-change: transform;
-    /* Same duration/easing/delay as the card expand (.vs-detail) so the stack
-       shift and the card opening move together as one motion — no jerk. */
-    transition: transform .5s var(--ease-out) .1s; }
-  .vstep { flex-shrink: 0; padding: 11px 20px;
-    transition: padding .5s var(--ease-out) .1s, background .5s var(--ease-out) .1s,
-      border-color .5s var(--ease-out) .1s, box-shadow .5s var(--ease-out) .1s; }
-  .vstep.on { padding: 14px 22px; }
-  /* Gentle, single-card expand/collapse. With ~150vh of scroll per step (above)
-     only one card transitions at a time, so a moderate .5s reveal completes
-     before the next card is ever reached — no overlapping half-open cards. */
-  .vstep .vs-detail { transition: grid-template-rows .5s var(--ease-out) .1s,
-    opacity .45s var(--ease-out) .1s, margin .5s var(--ease-out) .1s; }
-  .vstep .vs-head h4 { transition: color .45s var(--ease-out) .1s, font-size .45s var(--ease-out) .1s; }
-  .vstep .vs-ico { transition: width .45s var(--ease-out) .1s, height .45s var(--ease-out) .1s, background .45s var(--ease-out) .1s; }
+    height: 100vh !important; height: 100dvh !important; padding: 10px 0; overflow: hidden;
+    display: flex; flex-direction: column;
+    justify-content: center; gap: clamp(4px,1vh,12px); }
+
+  /* Graphic strip on top: the desktop scene stage spans the FULL width of the
+     section. useProcessScenes' fit() scales the stage so its width fills the
+     container and sets this strip's height to the scaled graphic height, so the
+     strip wraps it exactly. Scene swaps are driven by scroll. */
+  .proc3-vis { display: block !important; order: -1; flex: 0 0 auto; width: 100%;
+    overflow: hidden; }
+  .proc3-vis .proc3-sticky { position: static; top: auto; height: 100%; width: 100%; }
+  .proc3-vis .p3v { max-width: none; }  /* let fit()'s transform own the sizing */
+  .proc3-num, .proc3-cap { display: none; }  /* declutter the compact strip */
+
+  /* Horizontal card row below the graphic. GSAP owns the translate (x), so no
+     CSS transform transition here — it would fight the tween. */
+  /* Row hugs its content and sits directly under the graphic; the graphic+cards
+     group is centred vertically by the grid's justify-content, so the cards keep
+     a static, content-sized height instead of being stretched to fill the
+     viewport. */
+  .proc3-cards { order: 1; flex: 0 0 auto;
+    display: flex; flex-direction: row; flex-wrap: nowrap;
+    align-items: stretch; justify-content: flex-start; gap: 16px; padding: 0 !important;
+    position: relative; will-change: transform; }
+
+  /* align-items:stretch above makes every card match the tallest card's content
+     height — one static height across all six, hugging the content (no forced
+     100% fill). */
+  .vstep, .proc3 .vstep.on { flex: 0 0 84vw; max-width: 380px;
+    display: flex; flex-direction: column; overflow: hidden; padding: 15px 17px;
+    transition: background .45s var(--ease-out), border-color .45s var(--ease-out),
+      box-shadow .45s var(--ease-out); }
+
+  /* Every card reads as expanded — detail always open, big title, role shown. */
+  .proc3 .vstep .vs-detail { display: block; grid-template-rows: none;
+    overflow: hidden; height: auto; opacity: 1; margin-top: 12px; transition: none; }
+  .proc3 .vstep .vs-detail-inner { display: block; padding-top: 12px; }
+  .proc3 .vstep .vs-face { grid-area: auto; }
+  .proc3 .vstep .vs-front, .proc3 .vstep .vs-machine { opacity: 1; visibility: visible; }
+  .proc3 .vstep .vs-role { display: inline-flex; }
+  .proc3 .vstep .vs-ico { width: 40px; height: 40px; border-radius: 10px; background: rgba(208,155,108,0.16); }
+  .proc3 .vstep .vs-ico svg { width: 19px; height: 19px; }
+  .proc3 .vstep .vs-head h4 { order: 4; flex-basis: 100%; color: var(--bone);
+    margin-top: 2px; font-size: clamp(23px, 6vw, 28px); }
+
+  /* Compact the expanded body so a full card fits one screen height. */
+  .proc3 .vstep .vs-mlead { font-size: clamp(17px, 4.6vw, 20px); }
+  .proc3 .vstep .vs-detail p, .proc3 .vstep .vs-machine p { font-size: 14px; line-height: 1.45; }
+  .proc3 .vstep .hint { display: none; }  /* "hover for the machine" — desktop-only */
 }
 
 /* ── Process right graphic → translucent panel · gold/blue elements on dark ── */
@@ -897,9 +929,11 @@ section.assurance { padding: clamp(76px,9vh,132px) 0; }
   .halfcircle,
   .glow,
   .drift,
-  .proc3-vis,
   .makers-progress,
   .scroll-hint { display: none !important; }
+  /* NOTE: .proc3-vis is intentionally NOT hidden here — on mobile the scene
+     graphic sits above the horizontal card gallery (see the max-width:900px
+     block) and swaps scenes as the cards scroll. */
 
   /* ---- Hero: tighten panel + downscale type ---- */
   .hero-panel { padding: 24px 18px 22px !important; border-radius: 20px !important; }
@@ -915,9 +949,9 @@ section.assurance { padding: clamp(76px,9vh,132px) 0; }
   .h-sec, .proc2-h, .ready-l h2, section.fees > h2 { font-size: clamp(32px, 8vw, 48px) !important; }
   .sc-head h3 { font-size: clamp(24px, 6vw, 30px) !important; }
   .h-sub { font-size: clamp(28px, 6.6vw, 40px) !important; }
-  /* Only the expanded card gets the large heading; collapsed cards keep the
-     compact 19px title so the accordion reads one active step at a time. */
-  .proc3 .vstep.on .vs-head h4 { font-size: clamp(26px, 6.4vw, 32px) !important; }
+  /* Mobile horizontal gallery: every card is expanded, so they all get the
+     large title (kept modest so a full card fits one screen height). */
+  .proc3 .vstep .vs-head h4 { font-size: clamp(23px, 6vw, 28px) !important; }
   .sec-lede, .proc2-lede { font-size: 16px !important; }
   .eyebrow-row { margin-bottom: 20px !important; }
 

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import gsap from 'gsap';
 
 /**
  * Guided process (proc3): as the pinned section scrolls, the active step card
@@ -19,63 +20,20 @@ export default function useProcessScenes() {
     const capN = document.getElementById('proc3-cap-n');
     const capT = document.getElementById('proc3-cap-t');
     const caps = ['Readiness', 'Mandate', 'Materials', 'Outreach', 'Negotiation', 'Close'];
-    const grid = wrap.parentElement; // .proc3-grid — the mobile clipping viewport
+    const details = cards.map((c) => c.querySelector('.vs-detail'));
     const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
     let active = -1;
-    let heights = []; // per-card { collapsed, expanded } — measured up front
+    let tl = null; // reserved for a card-change tween
 
-    // Measure each card's collapsed AND expanded height once (with transitions
-    // suppressed so the toggles are instant and invisible). centerActive then
-    // computes the SETTLED layout analytically, so the stack's translate targets
-    // its final position immediately — the card expansion and the stack shift
-    // animate together in a single motion instead of the two-step hop (measure
-    // collapsed → re-measure after settle) that read as a jerk.
-    const measureHeights = () => {
-      if (!isMobile()) return;
-      wrap.classList.add('proc3-measuring');
-      const prevOn = cards.map((c) => c.classList.contains('on'));
-      cards.forEach((c, k) => {
-        c.classList.remove('on');
-        const collapsed = c.offsetHeight;
-        c.classList.add('on');
-        const expanded = c.offsetHeight;
-        heights[k] = { collapsed, expanded };
-        if (!prevOn[k]) c.classList.remove('on');
-      });
-      wrap.classList.remove('proc3-measuring');
-    };
-
-    // MOBILE: slide the card stack so the expanded card stays in view. When the
-    // whole stack fits it's centred (all six visible at a glance); when an
-    // expanded card overflows, the active card is centred, clamped so the stack
-    // ends never pull inward and leave a gap.
-    const centerActive = (i) => {
-      if (!grid || !isMobile()) { wrap.style.transform = ''; return; }
-      if (!cards[i] || !heights.length) return;
-      const viewH = grid.clientHeight;
-      const gap = parseFloat(getComputedStyle(wrap).rowGap) || 0;
-      const base = wrap.offsetTop;
-      // Lay the cards out with card i expanded, the rest collapsed, using the
-      // pre-measured FINAL heights.
-      const tops = new Array(cards.length);
-      let y = 0;
-      for (let k = 0; k < cards.length; k++) {
-        tops[k] = y;
-        y += (k === i ? heights[k].expanded : heights[k].collapsed) + (k < cards.length - 1 ? gap : 0);
-      }
-      const stackH = y;
-      let ty;
-      if (stackH <= viewH) {
-        ty = (viewH - stackH) / 2 - base;
-      } else {
-        const activeMid = base + tops[i] + heights[i].expanded / 2;
-        ty = viewH / 2 - activeMid;
-        const maxTy = -base;
-        const minTy = viewH - (base + stackH);
-        if (ty > maxTy) ty = maxTy;
-        if (ty < minTy) ty = minTy;
-      }
-      wrap.style.transform = 'translateY(' + ty.toFixed(1) + 'px)';
+    // MOBILE (horizontal gallery): all six cards stay expanded in a row, and the
+    // row's translate (x) is driven from scroll progress in track() — there's
+    // nothing per-card to animate here. DESKTOP: cards expand via CSS, so
+    // render() only clears any inline transform left over from a mobile layout.
+    const render = () => {
+      if (tl) { tl.kill(); tl = null; }
+      if (isMobile()) return;
+      gsap.set(wrap, { clearProps: 'transform' });
+      details.forEach((d) => d && gsap.set(d, { clearProps: 'height' }));
     };
 
     const setActive = (i) => {
@@ -87,15 +45,10 @@ export default function useProcessScenes() {
       if (numEl) numEl.textContent = label;
       if (capN) capN.textContent = label;
       if (capT) capT.textContent = caps[i];
-      centerActive(i); // single motion to the settled position
+      render();
     };
 
     const track = () => {
-      // DESKTOP only: map scroll progress across the 300vh pin onto the active
-      // step. On mobile the address bar resizes the viewport mid-scroll, which
-      // makes this scroll math jitter — so phones use the IntersectionObserver
-      // below (immune to that resize) instead.
-      if (window.innerWidth < 901) return;
       const pin = document.getElementById('proc3-pin');
       if (!pin) return;
       const n = cards.length;
@@ -104,6 +57,18 @@ export default function useProcessScenes() {
       const top = pin.getBoundingClientRect().top;
       const scrolled = Math.min(Math.max(-top, 0), total);
       const p = total > 0 ? scrolled / total : 0;
+
+      // MOBILE: translate the card row horizontally across the pin's scroll so it
+      // advances from card 1 → 6; once it bottoms out the pin releases and normal
+      // vertical scroll resumes. The card nearest centre gets the .on highlight.
+      if (isMobile()) {
+        const maxX = Math.max(0, wrap.scrollWidth - wrap.clientWidth);
+        gsap.set(wrap, { x: -(p * maxX) });
+        setActive(Math.min(n - 1, Math.max(0, Math.round(p * (n - 1)))));
+        return;
+      }
+
+      // DESKTOP: map scroll progress across the 300vh pin onto the active step.
       let raw = p * n;
       if (raw < 0) raw = 0;
       if (raw > n - 0.0001) raw = n - 0.0001;
@@ -127,27 +92,6 @@ export default function useProcessScenes() {
     const onScroll = () => { if (!q) { q = true; requestAnimationFrame(() => { track(); q = false; }); } };
     window.addEventListener('scroll', onScroll, { passive: true });
     track();
-
-    // MOBILE: drive the active card from the scroll sentinels that tile the pin.
-    // rootMargin collapses the viewport to a single centre line, and the
-    // sentinels tile the whole pin, so exactly one is crossing that line at any
-    // scroll position — its data-i is the active step. Threshold crossings don't
-    // jitter with the address-bar resize the way the scroll math does, so the
-    // accordion advances one clean card at a time.
-    const triggers = [].slice.call(document.querySelectorAll('#proc3-pin .proc3-trigger'));
-    let io = null;
-    if (triggers.length && 'IntersectionObserver' in window) {
-      io = new IntersectionObserver(
-        (entries) => {
-          if (!isMobile()) return;
-          entries.forEach((e) => {
-            if (e.isIntersecting) setActive(Number(e.target.getAttribute('data-i')));
-          });
-        },
-        { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
-      );
-      triggers.forEach((t) => io.observe(t));
-    }
 
     const drawFlows = () => {
       scenes.forEach((s) => {
@@ -192,17 +136,37 @@ export default function useProcessScenes() {
     };
 
     const sticky = stage.closest('.proc3-sticky');
+    const vis = stage.closest('.proc3-vis');
     const fit = () => {
+      // MOBILE: the graphic spans the FULL width of its strip, but never more
+      // than the space the card row leaves — so the graphic + cards always fit
+      // inside the 100dvh box and the grid's justify-content can centre them
+      // vertically (instead of the group overflowing and clipping at the top).
+      // Scale by whichever is smaller (width fill vs. the leftover height), then
+      // size the strip to the scaled graphic height.
+      if (isMobile()) {
+        const gridEl = stage.closest('.proc3-grid');
+        const availW = (sticky || vis || stage).clientWidth;
+        const contentH = gridEl ? gridEl.clientHeight - 20 : window.innerHeight; // minus 10px top+bottom padding
+        const cardsH = wrap ? wrap.offsetHeight : 0;
+        const availH = Math.max(140, contentH - cardsH - 12); // 12px = graphic↔cards gap
+        const sc = availW ? Math.min(2.4, availW / 480, availH / 500) : 1;
+        stage.style.transform = 'scale(' + sc.toFixed(3) + ')';
+        if (vis) vis.style.height = Math.round(500 * sc) + 'px';
+        drawFlows();
+        render();
+        track();
+        return;
+      }
       if (!sticky) return;
-      // The visual's container is now the grid cell, which flexes to fill the
-      // pinned viewport height beside the heading. So scale the stage to FILL
-      // that cell — bounded by its width — instead of capping at 1x. The gentle
-      // 2.4x ceiling just guards against extreme scaling on very tall windows.
+      if (vis) vis.style.height = '';  // drop the mobile inline height on desktop
+      // Scale the scene stage to FILL its grid cell, bounded by its width. The
+      // gentle 2.4x ceiling guards against extreme scaling on tall windows.
       const sc = Math.min(2.4, sticky.clientHeight / 520, sticky.clientWidth / 480);
       stage.style.transform = Math.abs(sc - 1) > 0.002 ? 'scale(' + sc.toFixed(3) + ')' : '';
       drawFlows();
-      measureHeights();     // card heights depend on width — re-measure on resize
-      centerActive(active); // re-centre the active card when the viewport resizes
+      render();
+      track();
     };
     window.addEventListener('resize', fit);
     window.addEventListener('load', fit);
@@ -234,7 +198,7 @@ export default function useProcessScenes() {
       window.removeEventListener('resize', fit);
       window.removeEventListener('load', fit);
       clearTimeout(t);
-      if (io) io.disconnect();
+      if (tl) tl.kill();
       cardHandlers.forEach(([card, onClick, onKey]) => { card.removeEventListener('click', onClick); card.removeEventListener('keydown', onKey); });
     };
   }, []);

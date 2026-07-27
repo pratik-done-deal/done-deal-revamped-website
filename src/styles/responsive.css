@@ -70,13 +70,20 @@
   .vstep.on .vs-role{ display:inline-flex !important; }
   .vstep .vs-ico, .vstep.on .vs-ico{ width:36px !important; height:36px !important; }
   .vstep.on .vs-head h4{ order:4 !important; flex-basis:100% !important; font-size:24px !important; color:var(--bone) !important; margin-top:4px !important; }
-  /* Active card expands and shows BOTH faces stacked (no hover on mobile). */
-  .vstep.on .vs-detail{ grid-template-rows:1fr !important; opacity:1 !important; margin-top:12px !important; }
-  .vstep.on .vs-detail-inner{ display:block !important; }
-  .vstep.on .vs-face{ grid-area:auto !important; }
-  .vstep.on .vs-front, .vstep.on .vs-machine{ opacity:1 !important; visibility:visible !important; }
+  /* The detail is a GSAP height-animated block (NOT grid-template-rows, which
+     mobile browsers interpolate choppily). Content is always laid out; collapsed
+     cards clip it via height:0 + overflow. useProcessScenes' GSAP timeline owns
+     the height, so the open/close is smooth and shares one easing with the
+     stack recenter. Spacing above the content lives in the inner's padding so
+     it's part of the animated height (a margin would pop in un-animated). */
+  .vstep .vs-detail{ display:block !important; grid-template-rows:none !important;
+    overflow:hidden !important; height:0; opacity:1 !important; margin:0 !important;
+    transition:none !important; }
+  .vstep .vs-detail-inner{ display:block !important; padding-top:12px; }
+  .vstep .vs-face{ grid-area:auto !important; }
+  .vstep .vs-front, .vstep .vs-machine{ opacity:1 !important; visibility:visible !important; }
   .vstep .hint, .p3-hoverhint{ display:none !important; }
-  .vstep.on .vs-machine{ margin-top:14px !important; padding-top:14px !important; border-top:1px solid var(--line) !important; }
+  .vstep .vs-machine{ margin-top:14px !important; padding-top:14px !important; border-top:1px solid var(--line) !important; }
   .cmpx .cmpx-alt{ display:none !important; }
   .cmpx{ margin-top:36px !important; }
   .faq-a-inner{ padding-right:0 !important; }
