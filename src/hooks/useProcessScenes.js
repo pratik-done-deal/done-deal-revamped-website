@@ -22,38 +22,56 @@ export default function useProcessScenes() {
     const grid = wrap.parentElement; // .proc3-grid — the mobile clipping viewport
     const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
     let active = -1;
-    let centerTimer = null;
+    let heights = []; // per-card { collapsed, expanded } — measured up front
 
-    // MOBILE: slide the card stack so the active card is vertically centred in
-    // the viewport under the heading, so its expanded content is fully readable
-    // instead of running off the bottom. offsetTop/offsetHeight are transform-
-    // independent, so we never have to reset the transform to measure (which
-    // would make the CSS transition jump). ty is clamped ≤ 0 so early cards stay
-    // put at the top rather than leaving a gap below the heading.
+    // Measure each card's collapsed AND expanded height once (with transitions
+    // suppressed so the toggles are instant and invisible). centerActive then
+    // computes the SETTLED layout analytically, so the stack's translate targets
+    // its final position immediately — the card expansion and the stack shift
+    // animate together in a single motion instead of the two-step hop (measure
+    // collapsed → re-measure after settle) that read as a jerk.
+    const measureHeights = () => {
+      if (!isMobile()) return;
+      wrap.classList.add('proc3-measuring');
+      const prevOn = cards.map((c) => c.classList.contains('on'));
+      cards.forEach((c, k) => {
+        c.classList.remove('on');
+        const collapsed = c.offsetHeight;
+        c.classList.add('on');
+        const expanded = c.offsetHeight;
+        heights[k] = { collapsed, expanded };
+        if (!prevOn[k]) c.classList.remove('on');
+      });
+      wrap.classList.remove('proc3-measuring');
+    };
+
+    // MOBILE: slide the card stack so the expanded card stays in view. When the
+    // whole stack fits it's centred (all six visible at a glance); when an
+    // expanded card overflows, the active card is centred, clamped so the stack
+    // ends never pull inward and leave a gap.
     const centerActive = (i) => {
-      if (!grid) return;
-      if (!isMobile()) { wrap.style.transform = ''; return; }
-      const card = cards[i];
-      if (!card) return;
+      if (!grid || !isMobile()) { wrap.style.transform = ''; return; }
+      if (!cards[i] || !heights.length) return;
       const viewH = grid.clientHeight;
-      const first = cards[0];
-      const last = cards[cards.length - 1];
-      const stackTop = wrap.offsetTop + first.offsetTop;
-      const stackBottom = wrap.offsetTop + last.offsetTop + last.offsetHeight;
-      const stackH = stackBottom - stackTop;
+      const gap = parseFloat(getComputedStyle(wrap).rowGap) || 0;
+      const base = wrap.offsetTop;
+      // Lay the cards out with card i expanded, the rest collapsed, using the
+      // pre-measured FINAL heights.
+      const tops = new Array(cards.length);
+      let y = 0;
+      for (let k = 0; k < cards.length; k++) {
+        tops[k] = y;
+        y += (k === i ? heights[k].expanded : heights[k].collapsed) + (k < cards.length - 1 ? gap : 0);
+      }
+      const stackH = y;
       let ty;
       if (stackH <= viewH) {
-        // Whole stack fits → centre all six cards in the viewport so they're
-        // visible at a glance; the active one just expands in place.
-        ty = (viewH - stackH) / 2 - stackTop;
+        ty = (viewH - stackH) / 2 - base;
       } else {
-        // Expanded card overflows → centre the ACTIVE card, clamped so the stack
-        // ends never pull inward and leave a gap (top card can't drop below the
-        // viewport top; bottom card can't rise above the viewport bottom).
-        const cardMid = wrap.offsetTop + card.offsetTop + card.offsetHeight / 2;
-        ty = viewH / 2 - cardMid;
-        const maxTy = -stackTop;
-        const minTy = viewH - stackBottom;
+        const activeMid = base + tops[i] + heights[i].expanded / 2;
+        ty = viewH / 2 - activeMid;
+        const maxTy = -base;
+        const minTy = viewH - (base + stackH);
         if (ty > maxTy) ty = maxTy;
         if (ty < minTy) ty = minTy;
       }
@@ -69,11 +87,7 @@ export default function useProcessScenes() {
       if (numEl) numEl.textContent = label;
       if (capN) capN.textContent = label;
       if (capT) capT.textContent = caps[i];
-      // Centre now (card heights are still mid-expand) and again once the
-      // expand animation has settled, so the final position is accurate.
-      centerActive(i);
-      if (centerTimer) clearTimeout(centerTimer);
-      centerTimer = setTimeout(() => { if (active === i) centerActive(i); }, 560);
+      centerActive(i); // single motion to the settled position
     };
 
     const track = () => {
@@ -187,6 +201,7 @@ export default function useProcessScenes() {
       const sc = Math.min(2.4, sticky.clientHeight / 520, sticky.clientWidth / 480);
       stage.style.transform = Math.abs(sc - 1) > 0.002 ? 'scale(' + sc.toFixed(3) + ')' : '';
       drawFlows();
+      measureHeights();     // card heights depend on width — re-measure on resize
       centerActive(active); // re-centre the active card when the viewport resizes
     };
     window.addEventListener('resize', fit);
@@ -219,7 +234,6 @@ export default function useProcessScenes() {
       window.removeEventListener('resize', fit);
       window.removeEventListener('load', fit);
       clearTimeout(t);
-      if (centerTimer) clearTimeout(centerTimer);
       if (io) io.disconnect();
       cardHandlers.forEach(([card, onClick, onKey]) => { card.removeEventListener('click', onClick); card.removeEventListener('keydown', onKey); });
     };

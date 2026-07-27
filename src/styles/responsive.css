@@ -64,9 +64,9 @@
   .makers-track{ padding-left:var(--gutter) !important; padding-right:var(--gutter) !important; }
   /* Mobile Process is a pinned scroll accordion (mirrors desktop): collapsed by
      default, only the active .on card expands. Keep collapsed cards compact. */
-  .vstep{ padding:15px 20px !important; transform:none !important; box-shadow:none !important; }
+  .vstep{ padding:11px 20px !important; transform:none !important; box-shadow:none !important; }
   .vstep:not(.on){ background:var(--ink-1) !important; border-color:var(--line) !important; }
-  .vstep.on{ padding:20px 22px !important; }
+  .vstep.on{ padding:14px 22px !important; }
   .vstep.on .vs-role{ display:inline-flex !important; }
   .vstep .vs-ico, .vstep.on .vs-ico{ width:36px !important; height:36px !important; }
   .vstep.on .vs-head h4{ order:4 !important; flex-basis:100% !important; font-size:24px !important; color:var(--bone) !important; margin-top:4px !important; }
