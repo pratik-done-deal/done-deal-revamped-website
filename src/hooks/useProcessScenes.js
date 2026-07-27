@@ -36,9 +36,27 @@ export default function useProcessScenes() {
       const card = cards[i];
       if (!card) return;
       const viewH = grid.clientHeight;
-      const cardMid = wrap.offsetTop + card.offsetTop + card.offsetHeight / 2;
-      let ty = viewH / 2 - cardMid;
-      if (ty > 0) ty = 0;
+      const first = cards[0];
+      const last = cards[cards.length - 1];
+      const stackTop = wrap.offsetTop + first.offsetTop;
+      const stackBottom = wrap.offsetTop + last.offsetTop + last.offsetHeight;
+      const stackH = stackBottom - stackTop;
+      let ty;
+      if (stackH <= viewH) {
+        // Whole stack fits → centre all six cards in the viewport so they're
+        // visible at a glance; the active one just expands in place.
+        ty = (viewH - stackH) / 2 - stackTop;
+      } else {
+        // Expanded card overflows → centre the ACTIVE card, clamped so the stack
+        // ends never pull inward and leave a gap (top card can't drop below the
+        // viewport top; bottom card can't rise above the viewport bottom).
+        const cardMid = wrap.offsetTop + card.offsetTop + card.offsetHeight / 2;
+        ty = viewH / 2 - cardMid;
+        const maxTy = -stackTop;
+        const minTy = viewH - stackBottom;
+        if (ty > maxTy) ty = maxTy;
+        if (ty < minTy) ty = minTy;
+      }
       wrap.style.transform = 'translateY(' + ty.toFixed(1) + 'px)';
     };
 

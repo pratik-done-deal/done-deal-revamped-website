@@ -109,7 +109,10 @@ body.is-light .brand-mark { background: linear-gradient(180deg, #FFFFFF, #F1EEE7
   padding: clamp(18px, 3.5vh, 48px) 0 clamp(110px, 18vh, 200px); }
 /* guard: stray editor-applied inline heights must never collapse this section */
 .proc3-grid, .proc3-cards { height: auto !important; min-height: 0 !important; }
-section.proc3 { padding-bottom: 0; }
+/* !important so it beats the mobile `.section-pad { padding: 48px 0 !important }`
+   rule — the pin already provides the section's bottom spacing, so an extra
+   48px just opened a large gap after the 6th card. */
+section.proc3 { padding-bottom: 0 !important; }
 .vstep.flip { height: 224px; cursor: pointer; transition: transform .42s var(--ease-out); transform-origin: center center; }
 .vstep.on { transform: scale(1.08); z-index: 3; }
 .proc3 .flip-front { background: linear-gradient(152deg, rgba(208,155,108,0.13) 0%, rgba(208,155,108,0.02) 30%, var(--ink-1) 60%); border-color: rgba(208,155,108,0.18); justify-content: flex-start; padding: 26px 28px 22px; }
@@ -459,16 +462,19 @@ section.proc3 { padding-bottom: 0; }
      actually be sticky on mobile: see the note in the max-width:800px block
      where proc3 is deliberately excluded from the un-pin override. */
   .proc3-pin { height: 1000vh; margin-top: clamp(40px,6vh,64px); }
-  .proc3-stage-wrap { position: sticky; top: 0; height: 100vh; display: flex;
-    flex-direction: column; justify-content: flex-start; gap: clamp(16px,3vh,34px);
-    padding: clamp(14px,3vh,28px) 0; }
-  .proc3-head { flex: none; }
-  /* The grid is a fixed clipping viewport filling the space under the heading;
-     the card stack is translated inside it (by useProcessScenes' centerActive)
-     so the expanded card sits vertically centred and its content is fully
-     readable, while neighbours clip at the edges instead of running off-screen. */
-  .proc3-stage-wrap .proc3-grid { margin-top: 0; flex: 1 1 auto; min-height: 0;
-    overflow: hidden; position: relative; }
+  /* Only the CARD GRID pins — the heading scrolls away above it, so once the
+     cards pin they get the FULL viewport and all six are visible at a glance
+     (instead of the heading eating the top of the screen). Dissolving the
+     stage-wrap box makes the heading + grid direct flow children of the 1000vh
+     pin: the heading flows at the top and scrolls off, and the grid stickies at
+     top:0 for the rest of the pin's scroll while the cards expand in place. */
+  .proc3-stage-wrap { display: contents; }
+  .proc3-head { margin-bottom: clamp(16px,3vh,28px); }
+  /* Grid = the sticky 100vh card viewport. Cards flow from the top and are
+     translated inside it by useProcessScenes' centerActive() only when an
+     expanded card would overflow — when all six fit, they simply sit in view. */
+  .proc3-stage-wrap .proc3-grid { margin-top: 0; position: sticky; top: 0;
+    height: 100vh; overflow: hidden; }
   .proc3-cards { gap: clamp(8px,1.1vh,14px); justify-content: flex-start;
     position: relative; will-change: transform;
     transition: transform .5s var(--ease-out); }
