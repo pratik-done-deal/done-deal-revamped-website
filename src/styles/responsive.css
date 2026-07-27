@@ -62,16 +62,21 @@
   .eyebrow-row .ln{ display:none !important; }
   .makers-viewport{ scroll-padding-left:var(--gutter); }
   .makers-track{ padding-left:var(--gutter) !important; padding-right:var(--gutter) !important; }
-  .vstep, .vstep.on{ padding:20px 22px !important; transform:none !important; background:var(--ink-1) !important; border-color:var(--line) !important; box-shadow:none !important; }
-  .vstep .vs-role{ display:inline-flex !important; }
+  /* Mobile Process is a pinned scroll accordion (mirrors desktop): collapsed by
+     default, only the active .on card expands. Keep collapsed cards compact. */
+  .vstep{ padding:15px 20px !important; transform:none !important; box-shadow:none !important; }
+  .vstep:not(.on){ background:var(--ink-1) !important; border-color:var(--line) !important; }
+  .vstep.on{ padding:20px 22px !important; }
+  .vstep.on .vs-role{ display:inline-flex !important; }
   .vstep .vs-ico, .vstep.on .vs-ico{ width:36px !important; height:36px !important; }
-  .vs-head h4, .vstep.on .vs-head h4{ order:4 !important; flex-basis:100% !important; font-size:24px !important; color:var(--bone) !important; margin-top:4px !important; }
-  .vs-detail, .vstep.on .vs-detail{ grid-template-rows:1fr !important; opacity:1 !important; margin-top:12px !important; }
-  .vs-detail-inner{ display:block !important; }
-  .vs-face{ grid-area:auto !important; }
-  .vs-front, .vs-machine{ opacity:1 !important; visibility:visible !important; }
+  .vstep.on .vs-head h4{ order:4 !important; flex-basis:100% !important; font-size:24px !important; color:var(--bone) !important; margin-top:4px !important; }
+  /* Active card expands and shows BOTH faces stacked (no hover on mobile). */
+  .vstep.on .vs-detail{ grid-template-rows:1fr !important; opacity:1 !important; margin-top:12px !important; }
+  .vstep.on .vs-detail-inner{ display:block !important; }
+  .vstep.on .vs-face{ grid-area:auto !important; }
+  .vstep.on .vs-front, .vstep.on .vs-machine{ opacity:1 !important; visibility:visible !important; }
   .vstep .hint, .p3-hoverhint{ display:none !important; }
-  .vs-machine{ margin-top:14px !important; padding-top:14px !important; border-top:1px solid var(--line) !important; }
+  .vstep.on .vs-machine{ margin-top:14px !important; padding-top:14px !important; border-top:1px solid var(--line) !important; }
   .cmpx .cmpx-alt{ display:none !important; }
   .cmpx{ margin-top:36px !important; }
   .faq-a-inner{ padding-right:0 !important; }

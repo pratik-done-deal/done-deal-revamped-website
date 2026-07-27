@@ -1,8 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { appUrl } from '../config/app';
 import useUtmSource from '../hooks/useUtmSource';
 
 const SIGNUP_URL = appUrl('signup');
+
+// utm_source used when the modal is opened from the Nav "Get started" CTA (the
+// header): the current page slug + "_header" (e.g. "investors_header",
+// "home_header"). Other CTAs keep the generic page-slug source.
+function headerUtmSource(pathname) {
+  const slug = pathname.replace(/^\/+|\/+$/g, '').replace(/\//g, '-') || 'home';
+  return `${slug}_header`;
+}
 
 const ROLE_OPTIONS = [
   {
@@ -42,7 +51,17 @@ export default function RoleModal() {
   // If the visitor already arrived with a utm_source (e.g. from LinkedIn), keep it.
   // Otherwise fall back to the page they clicked "Get started" from.
   const utmSource = useUtmSource();
-  const withUtm = (base) => `${base}?utm_source=${encodeURIComponent(utmSource)}`;
+
+  // When the modal is opened from the header CTA (and no incoming utm_source),
+  // tag the source with the current page, e.g. "Homepage-Header". Kept in a ref
+  // so the (mount-only) click handler always sees the current path's label.
+  const { pathname } = useLocation();
+  const headerLabelRef = useRef(headerUtmSource(pathname));
+  headerLabelRef.current = headerUtmSource(pathname);
+  const [headerSource, setHeaderSource] = useState(null);
+
+  const activeSource = headerSource || utmSource;
+  const withUtm = (base) => `${base}?utm_source=${encodeURIComponent(activeSource)}`;
 
   // Lock page scroll while the modal is open.
   useEffect(() => {
@@ -56,8 +75,17 @@ export default function RoleModal() {
       const a = e.target.closest && e.target.closest('a,button');
       if (!a || a.closest('#dd-role-modal')) return;
       const txt = (a.textContent || '').trim().toLowerCase();
-      const gs = txt === 'get started' || a.classList.contains('nav-cta') || a.classList.contains('dd-mn-cta') || a.classList.contains('cmpx-cta');
-      if (gs) { e.preventDefault(); e.stopPropagation(); setOpen(true); }
+      const isHeaderCta = a.classList.contains('nav-cta') || a.classList.contains('dd-mn-cta');
+      const gs = txt === 'get started' || isHeaderCta || a.classList.contains('cmpx-cta');
+      if (gs) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Header CTA on a mapped page → page-specific "…-Header" source, unless
+        // the visitor arrived with a utm_source already on the URL (that wins).
+        const incoming = new URLSearchParams(window.location.search).get('utm_source');
+        setHeaderSource(isHeaderCta && !incoming ? headerLabelRef.current : null);
+        setOpen(true);
+      }
     };
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
     document.addEventListener('click', onClick, true);

@@ -425,6 +425,25 @@ export default function Process() {
 
       <div className="wrap">
         <div className="proc3-pin" id="proc3-pin">
+          {/* Mobile scroll sentinels: tile the pinned section's scroll range,
+              one per step. useProcessScenes observes them with an
+              IntersectionObserver — whichever tile sits at the viewport centre
+              is the active card. This drives the accordion from clean threshold
+              crossings rather than scroll math, so the mobile address-bar
+              resize can't jitter the active step. Inert on desktop. */}
+          <div className="proc3-triggers" aria-hidden="true">
+            {PROCESS_STEPS.map((_, index) => (
+              <span
+                className="proc3-trigger"
+                data-i={index}
+                key={index}
+                style={{
+                  top: `${(index / PROCESS_STEPS.length) * 100}%`,
+                  height: `${100 / PROCESS_STEPS.length}%`,
+                }}
+              />
+            ))}
+          </div>
           <div className="proc3-stage-wrap">
             <div className="proc3-head">
               <div className="eyebrow-row reveal">

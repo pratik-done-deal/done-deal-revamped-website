@@ -571,7 +571,10 @@ body.page-investors .hero .trust-check svg { stroke: #1b1547; }
   /* ---- Section rhythm + headings ---- */
   .section-pad { padding: 48px 0 !important; }
   .h-sec { font-size: clamp(27px, 7vw, 38px) !important; }
-  .h-sub, .proc2-h, .proc3 .vs-head h4 { font-size: clamp(23px, 6vw, 32px) !important; }
+  .h-sub, .proc2-h { font-size: clamp(23px, 6vw, 32px) !important; }
+  /* Only the expanded card gets the large heading; collapsed cards stay compact
+     so the accordion reads one active step at a time (see sections.css note). */
+  .proc3 .vstep.on .vs-head h4 { font-size: clamp(23px, 6vw, 32px) !important; }
   .sec-lede, .proc2-lede { font-size: 16px !important; }
   .eyebrow-row { margin-bottom: 20px !important; }
 
@@ -589,9 +592,12 @@ body.page-investors .hero .trust-check svg { stroke: #1b1547; }
   /* ---- "Six steps" flip cards: drop fixed height, show front cleanly ---- */
   .flip { height: auto !important; min-height: 150px; perspective: none !important; }
 
-  /* ---- How-it-works (proc2/proc3) → unpin, no full-viewport sticky ---- */
-  .proc2-pin .proc2-sticky, .proc2-sticky,
-  .proc3-pin, .proc3-stage-wrap { position: static !important; height: auto !important; overflow: visible !important; }
+  /* ---- How-it-works (proc2) → unpin, no full-viewport sticky ----
+     NOTE: proc3 is intentionally NOT unpinned — on mobile it keeps the pinned
+     scroll accordion (sticky pin, one card expanded at a time) set up in the
+     max-width:900px block of sections.css. This override is DUPLICATED from
+     sections.css; both copies must exclude proc3 or the pin breaks. */
+  .proc2-pin .proc2-sticky, .proc2-sticky { position: static !important; height: auto !important; overflow: visible !important; }
   .proc3-cards { padding: 0 !important; }
 
   /* ---- Deal makers: drop pinned horizontal scroll → simple swipe ---- */

@@ -19,7 +19,28 @@ export default function useProcessScenes() {
     const capN = document.getElementById('proc3-cap-n');
     const capT = document.getElementById('proc3-cap-t');
     const caps = ['Readiness', 'Mandate', 'Materials', 'Outreach', 'Negotiation', 'Close'];
+    const grid = wrap.parentElement; // .proc3-grid — the mobile clipping viewport
+    const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
     let active = -1;
+    let centerTimer = null;
+
+    // MOBILE: slide the card stack so the active card is vertically centred in
+    // the viewport under the heading, so its expanded content is fully readable
+    // instead of running off the bottom. offsetTop/offsetHeight are transform-
+    // independent, so we never have to reset the transform to measure (which
+    // would make the CSS transition jump). ty is clamped ≤ 0 so early cards stay
+    // put at the top rather than leaving a gap below the heading.
+    const centerActive = (i) => {
+      if (!grid) return;
+      if (!isMobile()) { wrap.style.transform = ''; return; }
+      const card = cards[i];
+      if (!card) return;
+      const viewH = grid.clientHeight;
+      const cardMid = wrap.offsetTop + card.offsetTop + card.offsetHeight / 2;
+      let ty = viewH / 2 - cardMid;
+      if (ty > 0) ty = 0;
+      wrap.style.transform = 'translateY(' + ty.toFixed(1) + 'px)';
+    };
 
     const setActive = (i) => {
       if (i === active) return;
@@ -30,20 +51,43 @@ export default function useProcessScenes() {
       if (numEl) numEl.textContent = label;
       if (capN) capN.textContent = label;
       if (capT) capT.textContent = caps[i];
+      // Centre now (card heights are still mid-expand) and again once the
+      // expand animation has settled, so the final position is accurate.
+      centerActive(i);
+      if (centerTimer) clearTimeout(centerTimer);
+      centerTimer = setTimeout(() => { if (active === i) centerActive(i); }, 560);
     };
 
     const track = () => {
+      // DESKTOP only: map scroll progress across the 300vh pin onto the active
+      // step. On mobile the address bar resizes the viewport mid-scroll, which
+      // makes this scroll math jitter — so phones use the IntersectionObserver
+      // below (immune to that resize) instead.
       if (window.innerWidth < 901) return;
       const pin = document.getElementById('proc3-pin');
       if (!pin) return;
+      const n = cards.length;
       const vh = window.innerHeight;
       const total = pin.offsetHeight - vh;
       const top = pin.getBoundingClientRect().top;
       const scrolled = Math.min(Math.max(-top, 0), total);
       const p = total > 0 ? scrolled / total : 0;
-      let idx = Math.floor(p * cards.length);
+      let raw = p * n;
+      if (raw < 0) raw = 0;
+      if (raw > n - 0.0001) raw = n - 0.0001;
+      // Hysteresis: only switch cards once the scroll clears a step boundary by
+      // H (~25% of a step). On mobile the address bar shows/hides while
+      // scrolling, which changes innerHeight and makes `raw` jitter across a
+      // boundary — the dead band stops that from oscillating the active card.
+      // On a fast fling `idx = floor(raw)` jumps straight to the target card, so
+      // intermediate cards are skipped rather than flashed. First run snaps.
+      const H = 0.25;
+      let idx = active;
+      if (active < 0) idx = Math.floor(raw);
+      else if (raw >= active + 1 + H) idx = Math.floor(raw);
+      else if (raw < active - H) idx = Math.floor(raw);
       if (idx < 0) idx = 0;
-      if (idx > cards.length - 1) idx = cards.length - 1;
+      if (idx > n - 1) idx = n - 1;
       setActive(idx);
     };
 
@@ -51,6 +95,27 @@ export default function useProcessScenes() {
     const onScroll = () => { if (!q) { q = true; requestAnimationFrame(() => { track(); q = false; }); } };
     window.addEventListener('scroll', onScroll, { passive: true });
     track();
+
+    // MOBILE: drive the active card from the scroll sentinels that tile the pin.
+    // rootMargin collapses the viewport to a single centre line, and the
+    // sentinels tile the whole pin, so exactly one is crossing that line at any
+    // scroll position — its data-i is the active step. Threshold crossings don't
+    // jitter with the address-bar resize the way the scroll math does, so the
+    // accordion advances one clean card at a time.
+    const triggers = [].slice.call(document.querySelectorAll('#proc3-pin .proc3-trigger'));
+    let io = null;
+    if (triggers.length && 'IntersectionObserver' in window) {
+      io = new IntersectionObserver(
+        (entries) => {
+          if (!isMobile()) return;
+          entries.forEach((e) => {
+            if (e.isIntersecting) setActive(Number(e.target.getAttribute('data-i')));
+          });
+        },
+        { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+      );
+      triggers.forEach((t) => io.observe(t));
+    }
 
     const drawFlows = () => {
       scenes.forEach((s) => {
@@ -104,6 +169,7 @@ export default function useProcessScenes() {
       const sc = Math.min(2.4, sticky.clientHeight / 520, sticky.clientWidth / 480);
       stage.style.transform = Math.abs(sc - 1) > 0.002 ? 'scale(' + sc.toFixed(3) + ')' : '';
       drawFlows();
+      centerActive(active); // re-centre the active card when the viewport resizes
     };
     window.addEventListener('resize', fit);
     window.addEventListener('load', fit);
@@ -135,6 +201,8 @@ export default function useProcessScenes() {
       window.removeEventListener('resize', fit);
       window.removeEventListener('load', fit);
       clearTimeout(t);
+      if (centerTimer) clearTimeout(centerTimer);
+      if (io) io.disconnect();
       cardHandlers.forEach(([card, onClick, onKey]) => { card.removeEventListener('click', onClick); card.removeEventListener('keydown', onKey); });
     };
   }, []);
