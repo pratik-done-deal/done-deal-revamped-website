@@ -62,25 +62,29 @@
   .eyebrow-row .ln{ display:none !important; }
   .makers-viewport{ scroll-padding-left:var(--gutter); }
   .makers-track{ padding-left:var(--gutter) !important; padding-right:var(--gutter) !important; }
-  /* Mobile Process = SCROLL-DRIVEN accordion (see useProcessScenes): each card's
-     open amount is a continuous --o (0→1) written from scroll position, and
-     every property is a calc() of --o with no transition, so it tracks scroll
-     1:1 and never reflows (title always on its own row, both faces always
-     stacked). Mirrors the sections.css mobile rules, winning with !important
-     over the older card styles. --o is set inline by JS so it beats these. */
-  .vstep{ --o:0; transform:none !important; transition:none !important;
+  /* Mobile Process = SINGLE-OPEN accordion (see useProcessScenes): JS sets
+     exactly one card's --o to 1 and every other to 0 — never a half-open or
+     two-open state. Each property is a calc() of --o and TRANSITIONS on the
+     0↔1 flip, so the one open card animates smoothly and nothing reflows (title
+     always on its own row, both faces always stacked). Mirrors the sections.css
+     mobile rules, winning with !important. --o is set inline by JS. */
+  .vstep{ --o:0; transform:none !important;
+    transition:padding .3s var(--ease-out), border-color .3s var(--ease-out), background .3s var(--ease-out), box-shadow .3s var(--ease-out) !important;
     padding:calc(11px + var(--o) * 3px) calc(20px + var(--o) * 2px) !important;
     border-color:color-mix(in srgb, var(--line), rgba(208,155,108,0.55) calc(var(--o) * 100%)) !important;
     background:color-mix(in srgb, var(--ink-1), rgba(208,155,108,0.13) calc(var(--o) * 100%)) !important;
     box-shadow:0 0 0 1px rgba(208,155,108, calc(var(--o) * 0.24)), 0 18px 46px rgba(208,155,108, calc(var(--o) * 0.14)) !important; }
-  .vstep .vs-role{ display:inline-flex !important; transition:none !important;
-    opacity:var(--o); max-width:calc(var(--o) * 160px); overflow:hidden; white-space:nowrap; }
-  .vstep .vs-ico{ width:36px !important; height:36px !important; transition:none !important; }
-  .vstep .vs-head h4{ order:4 !important; flex-basis:100% !important; margin-top:2px !important; transition:none !important;
+  .vstep .vs-role{ display:inline-flex !important; overflow:hidden; white-space:nowrap;
+    transition:opacity .3s var(--ease-out), max-width .3s var(--ease-out) !important;
+    opacity:var(--o); max-width:calc(var(--o) * 160px); }
+  .vstep .vs-ico{ width:36px !important; height:36px !important; }
+  .vstep .vs-head h4{ order:4 !important; flex-basis:100% !important; margin-top:2px !important;
+    transition:font-size .3s var(--ease-out), color .3s var(--ease-out) !important;
     font-size:calc(19px + var(--o) * 5px) !important;
     color:color-mix(in srgb, var(--bone-dim), var(--bone) calc(var(--o) * 100%)) !important; }
   /* Reveal = detail height + opacity, both driven by --o; both faces stacked. */
-  .vstep .vs-detail{ transition:none !important; opacity:var(--o) !important;
+  .vstep .vs-detail{ opacity:var(--o) !important;
+    transition:grid-template-rows .3s var(--ease-out), opacity .3s var(--ease-out), margin .3s var(--ease-out) !important;
     grid-template-rows:calc(var(--o) * var(--dh, 0px)) !important; margin-top:calc(var(--o) * 12px) !important; }
   .vstep .vs-detail-inner{ display:block !important; }
   .vstep .vs-face{ grid-area:auto !important; }

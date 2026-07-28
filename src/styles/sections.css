@@ -478,29 +478,30 @@ section.proc3 { padding-bottom: 0 !important; }
      expanded card would overflow — when all six fit, they simply sit in view. */
   .proc3-stage-wrap .proc3-grid { margin-top: 0; position: sticky; top: 0;
     height: 100vh; overflow: hidden; }
-  /* ── Scroll-driven accordion (mobile) ──────────────────────────────────
-     useProcessScenes writes each card a continuous open amount (--o, 0→1)
-     straight from scroll position, plus its measured detail height (--dh).
-     Every open/close property is a calc() of --o with NO transition, so the
-     cards track the scroll 1:1 (no time-based animation to interrupt on a fast
-     fling). The layout is stable at every --o — the title always sits on its
-     own row and both detail faces are always stacked — so nothing REFLOWS as a
-     card opens; only sizes, colours, opacity and the reveal height interpolate.
-     That stable-layout rule is what makes the motion perfectly smooth. */
+  /* ── Single-open accordion (mobile) ────────────────────────────────────
+     useProcessScenes sets exactly ONE card's open amount (--o) to 1 and every
+     other card to 0 — never a half-open or two-open state. Each open/close
+     property is a calc() of --o and TRANSITIONS on --o's 0↔1 flip, so the one
+     open card animates smoothly. Layout is stable at both ends (title always on
+     its own row, both detail faces always stacked) so nothing reflows. */
   .proc3-cards { gap: clamp(8px,1.1vh,14px); justify-content: flex-start;
-    position: relative; will-change: transform; transition: none; }
-  .vstep { --o: 0; flex-shrink: 0; transition: none;
+    position: relative; will-change: transform; transition: transform .3s var(--ease-out); }
+  .vstep { --o: 0; flex-shrink: 0;
+    transition: padding .3s var(--ease-out), border-color .3s var(--ease-out),
+      background .3s var(--ease-out), box-shadow .3s var(--ease-out);
     padding: calc(11px + var(--o) * 3px) calc(20px + var(--o) * 2px);
     border-color: color-mix(in srgb, var(--line), rgba(208,155,108,0.55) calc(var(--o) * 100%));
     background: color-mix(in srgb, var(--ink-1), rgba(208,155,108,0.13) calc(var(--o) * 100%));
     box-shadow: 0 0 0 1px rgba(208,155,108, calc(var(--o) * 0.24)),
       0 18px 46px rgba(208,155,108, calc(var(--o) * 0.14)); }
-  .vstep .vs-head h4 { order: 4; flex-basis: 100%; margin-top: 2px; transition: none;
+  .vstep .vs-head h4 { order: 4; flex-basis: 100%; margin-top: 2px;
+    transition: font-size .3s var(--ease-out), color .3s var(--ease-out);
     font-size: calc(19px + var(--o) * 5px);
     color: color-mix(in srgb, var(--bone-dim), var(--bone) calc(var(--o) * 100%)); }
-  .vstep .vs-role { display: inline-flex; transition: none; overflow: hidden;
-    white-space: nowrap; opacity: var(--o); max-width: calc(var(--o) * 160px); }
-  .vstep .vs-ico { width: 36px; height: 36px; transition: none; }
+  .vstep .vs-role { display: inline-flex; overflow: hidden; white-space: nowrap;
+    transition: opacity .3s var(--ease-out), max-width .3s var(--ease-out);
+    opacity: var(--o); max-width: calc(var(--o) * 160px); }
+  .vstep .vs-ico { width: 36px; height: 36px; }
   /* Both faces always stacked (no hover on mobile); the reveal is the detail
      height + opacity, both driven by --o. */
   .vstep .vs-detail-inner { display: block; }
@@ -508,7 +509,8 @@ section.proc3 { padding-bottom: 0 !important; }
   .vstep .vs-front, .vstep .vs-machine { opacity: 1; visibility: visible; }
   .vstep .vs-machine { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
   .vstep .hint, .p3-hoverhint { display: none; }
-  .vstep .vs-detail { transition: none; opacity: var(--o);
+  .vstep .vs-detail { opacity: var(--o);
+    transition: grid-template-rows .3s var(--ease-out), opacity .3s var(--ease-out), margin .3s var(--ease-out);
     grid-template-rows: calc(var(--o) * var(--dh, 0px)); margin-top: calc(var(--o) * 12px); }
 }
 
@@ -963,9 +965,13 @@ section.assurance { padding: clamp(76px,9vh,132px) 0; }
   .makers-h { margin-top: 48px !important; }
   .makers-sticky { position: static !important; height: auto !important; padding-bottom: 14px !important; }
   .makers-head { padding-top: 0 !important; }
-  .makers-viewport { overflow-x: auto !important; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-  .makers-track { transform: none !important; }
-  .maker-card { flex: 0 0 78vw !important; scroll-snap-align: start; }
+  /* Snapping is driven in JS (useMakersPin) by swipe direction, so native snap
+     is OFF to avoid it fighting the JS (snapping back on a slight swipe). */
+  .makers-viewport { overflow-x: auto !important; scroll-snap-type: none; -webkit-overflow-scrolling: touch; }
+  .makers-track { transform: none !important; gap: var(--gutter); }
+  /* One full card per view (no peeking neighbour): card fills the viewport minus
+     its gutters; JS then always settles it on a whole card. */
+  .maker-card { flex: 0 0 calc(100vw - 2 * var(--gutter)) !important; }
 
   /* ---- Stacked assurance cards: un-stick so they don't pile/overlap ---- */
   .stack { display: flex !important; flex-direction: column !important; gap: 20px !important; }

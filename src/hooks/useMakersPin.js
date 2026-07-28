@@ -56,28 +56,40 @@ export default function useMakersPin() {
     measure();
     const t = setTimeout(measure, 400);
 
-    // MOBILE auto-advance: every 4s, smooth-scroll the native card strip to the
-    // NEXT card, looping back to the first at the end. The next index is derived
-    // from the live scrollLeft each tick (not a stored counter), so a manual
-    // swipe just changes where the auto-advance picks up. Only runs where the
-    // section is a native swipe strip (small screens) and not with reduced
-    // motion; a finger on the strip pauses it, resuming 4s after release.
+    // MOBILE carousel: the strip is a native swipe area, but snapping is driven
+    // in JS so a card is ALWAYS fully shown. On release we read the swipe
+    // direction (the sign of how far scrollLeft moved) and scroll to the
+    // next/previous card index — a slight swipe still completes to a whole card,
+    // and it never rests on a half card. A 4s timer auto-advances when idle.
     const STEP_MS = 4000;
+    const SWIPE_RATIO = 0.12; // fraction of a card that counts as a directional swipe
     let autoTimer = null;
     let resumeTimer = null;
+    let dragging = false;
+    let dragStartLeft = 0;
+    let dragStartIdx = 0;
+
+    const cardEls = () => [].slice.call(track.querySelectorAll('.maker-card'));
+    // scrollLeft that centres card i (base = the track's leading gutter, which
+    // equals (viewport − card)/2, so left-aligning to offsetLeft−base centres it).
+    const leftFor = (cards, i) => cards[i].offsetLeft - cards[0].offsetLeft;
+    const nearestIndex = (cards) => {
+      const cur = viewport.scrollLeft;
+      let idx = 0, best = Infinity;
+      cards.forEach((c, i) => { const d = Math.abs(leftFor(cards, i) - cur); if (d < best) { best = d; idx = i; } });
+      return idx;
+    };
+    const scrollToIndex = (i) => {
+      const cards = cardEls();
+      if (!cards.length) return;
+      const clamped = Math.max(0, Math.min(cards.length - 1, i));
+      viewport.scrollTo({ left: leftFor(cards, clamped), behavior: 'smooth' });
+    };
 
     const advance = () => {
-      const cards = [].slice.call(track.querySelectorAll('.maker-card'));
+      const cards = cardEls();
       if (cards.length < 2) return;
-      const base = cards[0].offsetLeft; // track's leading padding
-      const cur = viewport.scrollLeft;
-      let curIdx = 0, best = Infinity;
-      cards.forEach((c, i) => {
-        const d = Math.abs((c.offsetLeft - base) - cur);
-        if (d < best) { best = d; curIdx = i; }
-      });
-      const next = (curIdx + 1) % cards.length;
-      viewport.scrollTo({ left: cards[next].offsetLeft - base, behavior: 'smooth' });
+      scrollToIndex((nearestIndex(cards) + 1) % cards.length); // loop at the end
     };
 
     const startAuto = () => {
@@ -92,10 +104,35 @@ export default function useMakersPin() {
     // e.g. after a resize crosses the mobile breakpoint.
     const syncAuto = () => { stopAuto(); startAuto(); };
 
-    const onHold = () => { stopAuto(); window.clearTimeout(resumeTimer); };
-    // Release is bound to window so a finger lifted outside the strip still
-    // resumes the auto-advance.
-    const onRelease = () => { window.clearTimeout(resumeTimer); resumeTimer = window.setTimeout(startAuto, STEP_MS); };
+    // A touch starts a drag: pause auto and remember where we began.
+    const onHold = () => {
+      stopAuto();
+      window.clearTimeout(resumeTimer);
+      const cards = cardEls();
+      if (!cards.length) return;
+      dragging = true;
+      dragStartLeft = viewport.scrollLeft;
+      dragStartIdx = nearestIndex(cards);
+    };
+    // On release, snap to the next/previous card by swipe direction (bound to
+    // window so a finger lifted outside the strip still settles it), then queue
+    // the auto-advance to resume.
+    const onRelease = () => {
+      if (dragging) {
+        dragging = false;
+        const cards = cardEls();
+        if (cards.length) {
+          const step = cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : viewport.clientWidth;
+          const delta = viewport.scrollLeft - dragStartLeft;
+          let target = dragStartIdx;
+          if (delta > step * SWIPE_RATIO) target = dragStartIdx + 1;       // swiped forward
+          else if (delta < -step * SWIPE_RATIO) target = dragStartIdx - 1; // swiped back
+          scrollToIndex(target);
+        }
+      }
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(startAuto, STEP_MS);
+    };
     viewport.addEventListener('pointerdown', onHold, { passive: true });
     window.addEventListener('pointerup', onRelease, { passive: true });
     window.addEventListener('pointercancel', onRelease, { passive: true });

@@ -568,9 +568,10 @@ section > .wrap, section > .amb ~ * { position: relative; }
 /* Fallback: small screens / reduced motion → normal horizontal swipe, no pin */
 .makers-h.no-pin .makers-sticky { position: static; height: auto; padding-bottom: 20px; }
 .makers-h.no-pin .makers-head { padding-top: 0; }
-.makers-h.no-pin .makers-viewport { overflow-x: auto; scroll-snap-type: x mandatory; padding: 12px 0; -webkit-overflow-scrolling: touch; }
-.makers-h.no-pin .makers-track { transform: none !important; }
-.makers-h.no-pin .maker-card { scroll-snap-align: start; flex-basis: 78vw; }
+.makers-h.no-pin .makers-viewport { overflow-x: auto; scroll-snap-type: none; padding: 12px 0; -webkit-overflow-scrolling: touch; }
+.makers-h.no-pin .makers-track { transform: none !important; gap: var(--gutter); }
+/* One full card per view (no peeking neighbour); JS handles the snap — see the ≤800px block. */
+.makers-h.no-pin .maker-card { flex-basis: calc(100vw - 2 * var(--gutter)); }
 .makers-h.no-pin .makers-progress { display: none; }
 @media (max-width: 860px){ .makers-headrow { flex-wrap: wrap; } .makers-headrow .scroll-hint { display: none; } .makers-cta .micro { display: none; } }
 .makers-cta { display: inline-flex; align-items: center; gap: 18px; padding-bottom: 8px; }
