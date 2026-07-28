@@ -78,44 +78,20 @@ export default function useProcessScenes() {
       wrap.style.transform = 'translateY(' + ty.toFixed(1) + 'px)';
     };
 
-    // The card open is SEQUENCED after the old card's close: when the active
-    // index changes we first strip .on from every card (collapsing whichever
-    // was open), then — once that collapse has run — expand the new one. A
-    // rapid scroll that changes the index again cancels the pending open, so
-    // during a fling the cards stay collapsed and only the card you land on
-    // opens. CLOSE_MS tracks the .vs-detail collapse (.1s delay + .5s ease-out);
-    // ease-out lands most of the motion early, so we open a touch before the
-    // tail fully settles to keep the hand-off from feeling dead.
-    const CLOSE_MS = 480;
-    let openTimer = null;
-
-    const openCard = (i) => {
-      cards.forEach((c, k) => c.classList.toggle('on', k === i));
-      centerActive(i); // single motion to the settled position
-    };
-
+    // Open the new card and close the old one SIMULTANEOUSLY: a single .on
+    // toggle lets the outgoing card collapse while the incoming card expands in
+    // the same .25s window, so scrolling flows straight from one card to the
+    // next with no wait in between.
     const setActive = (i) => {
       if (i === active) return;
-      const prev = active;
       active = i;
-
-      // The scene + captions swap immediately; only the CARD open waits.
+      cards.forEach((c, k) => c.classList.toggle('on', k === i));
       scenes.forEach((s, k) => s.classList.toggle('on', k === i));
       const label = ('0' + (i + 1)).slice(-2);
       if (numEl) numEl.textContent = label;
       if (capN) capN.textContent = label;
       if (capT) capT.textContent = caps[i];
-
-      if (openTimer) { clearTimeout(openTimer); openTimer = null; }
-
-      if (prev < 0) {
-        openCard(i); // first activation — nothing to close, open straight away
-        return;
-      }
-
-      // Close the currently-open card, then open the new one after it collapses.
-      cards.forEach((c) => c.classList.remove('on'));
-      openTimer = setTimeout(() => { openTimer = null; openCard(i); }, CLOSE_MS);
+      centerActive(i); // single motion to the settled position
     };
 
     const track = () => {
@@ -262,7 +238,6 @@ export default function useProcessScenes() {
       window.removeEventListener('resize', fit);
       window.removeEventListener('load', fit);
       clearTimeout(t);
-      if (openTimer) clearTimeout(openTimer);
       if (io) io.disconnect();
       cardHandlers.forEach(([card, onClick, onKey]) => { card.removeEventListener('click', onClick); card.removeEventListener('keydown', onKey); });
     };
