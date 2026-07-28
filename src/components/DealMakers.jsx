@@ -34,6 +34,25 @@ function LinkedInGlyph() {
   );
 }
 
+function MakerCard({ maker }) {
+  return (
+    <div className="maker-card">
+      <div className="mph">
+        <image-slot id={maker.id} shape="rect" fit="cover" src={maker.photoSrc}></image-slot>
+        <div className="mscrim" />
+        <span className="mph-sector">{maker.sector}</span>
+        {maker.linkedin && (
+          <a className="mln" href={maker.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
+            <LinkedInGlyph />
+          </a>
+        )}
+      </div>
+      <div className="mn">{maker.name}</div>
+      <div className="mr">{maker.role}</div>
+    </div>
+  );
+}
+
 export default function DealMakers() {
   return (
     <section className="makers-h" id="makers" data-screen-label="Deal makers">
@@ -57,21 +76,8 @@ export default function DealMakers() {
         </div>
         <div className="makers-viewport">
           <div className="makers-track">
-            {MAKERS.map((m) => (
-              <div className="maker-card" key={m.id}>
-                <div className="mph">
-                  <image-slot id={m.id} shape="rect" fit="cover" src={m.photoSrc}></image-slot>
-                  <div className="mscrim" />
-                  <span className="mph-sector">{m.sector}</span>
-                  {m.linkedin && (
-                    <a className="mln" href={m.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
-                      <LinkedInGlyph />
-                    </a>
-                  )}
-                </div>
-                <div className="mn">{m.name}</div>
-                <div className="mr">{m.role}</div>
-              </div>
+            {MAKERS.map((m, i) => (
+              <MakerCard maker={m} key={`m-${i}`} />
             ))}
           </div>
         </div>

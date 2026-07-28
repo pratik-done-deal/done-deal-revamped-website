@@ -56,10 +56,63 @@ export default function useMakersPin() {
     measure();
     const t = setTimeout(measure, 400);
 
+    // MOBILE auto-advance: every 4s, smooth-scroll the native card strip to the
+    // NEXT card, looping back to the first at the end. The next index is derived
+    // from the live scrollLeft each tick (not a stored counter), so a manual
+    // swipe just changes where the auto-advance picks up. Only runs where the
+    // section is a native swipe strip (small screens) and not with reduced
+    // motion; a finger on the strip pauses it, resuming 4s after release.
+    const STEP_MS = 4000;
+    let autoTimer = null;
+    let resumeTimer = null;
+
+    const advance = () => {
+      const cards = [].slice.call(track.querySelectorAll('.maker-card'));
+      if (cards.length < 2) return;
+      const base = cards[0].offsetLeft; // track's leading padding
+      const cur = viewport.scrollLeft;
+      let curIdx = 0, best = Infinity;
+      cards.forEach((c, i) => {
+        const d = Math.abs((c.offsetLeft - base) - cur);
+        if (d < best) { best = d; curIdx = i; }
+      });
+      const next = (curIdx + 1) % cards.length;
+      viewport.scrollTo({ left: cards[next].offsetLeft - base, behavior: 'smooth' });
+    };
+
+    const startAuto = () => {
+      if (autoTimer) return;
+      if (!small.matches || reduceMo.matches) return;
+      autoTimer = window.setInterval(advance, STEP_MS);
+    };
+    const stopAuto = () => {
+      if (autoTimer) { window.clearInterval(autoTimer); autoTimer = null; }
+    };
+    // Re-evaluate whether the auto-advance should run whenever we (re)measure —
+    // e.g. after a resize crosses the mobile breakpoint.
+    const syncAuto = () => { stopAuto(); startAuto(); };
+
+    const onHold = () => { stopAuto(); window.clearTimeout(resumeTimer); };
+    // Release is bound to window so a finger lifted outside the strip still
+    // resumes the auto-advance.
+    const onRelease = () => { window.clearTimeout(resumeTimer); resumeTimer = window.setTimeout(startAuto, STEP_MS); };
+    viewport.addEventListener('pointerdown', onHold, { passive: true });
+    window.addEventListener('pointerup', onRelease, { passive: true });
+    window.addEventListener('pointercancel', onRelease, { passive: true });
+
+    startAuto();
+    window.addEventListener('resize', syncAuto);
+
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', measure);
       window.removeEventListener('load', measure);
+      window.removeEventListener('resize', syncAuto);
+      viewport.removeEventListener('pointerdown', onHold);
+      window.removeEventListener('pointerup', onRelease);
+      window.removeEventListener('pointercancel', onRelease);
+      stopAuto();
+      window.clearTimeout(resumeTimer);
       clearTimeout(t);
     };
   }, []);
