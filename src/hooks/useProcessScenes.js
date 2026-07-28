@@ -22,66 +22,90 @@ export default function useProcessScenes() {
     const grid = wrap.parentElement; // .proc3-grid — the mobile clipping viewport
     const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
     let active = -1;
-    let heights = []; // per-card { collapsed, expanded } — measured up front
+    let heights = []; // per-card { collapsed, expanded } (mobile) — measured up front
+    let gapPx = 0;    // .proc3-cards row-gap, cached in measureHeights
+    let baseTop = 0;  // wrap.offsetTop within the sticky grid, cached in measureHeights
 
-    // Measure each card's collapsed AND expanded height once (with transitions
-    // suppressed so the toggles are instant and invisible). centerActive then
-    // computes the SETTLED layout analytically, so the stack's translate targets
-    // its final position immediately — the card expansion and the stack shift
-    // animate together in a single motion instead of the two-step hop (measure
-    // collapsed → re-measure after settle) that read as a jerk.
+    // MOBILE: measure each card's collapsed & fully-open height plus its detail
+    // panel's natural height (--dh), with transitions suppressed so it's
+    // instant and invisible. trackMobile interpolates from these every frame.
     const measureHeights = () => {
       if (!isMobile()) return;
       wrap.classList.add('proc3-measuring');
-      const prevOn = cards.map((c) => c.classList.contains('on'));
+      gapPx = parseFloat(getComputedStyle(wrap).rowGap) || 0;
+      baseTop = wrap.offsetTop;
       cards.forEach((c, k) => {
-        c.classList.remove('on');
+        const inner = c.querySelector('.vs-detail-inner');
+        const prev = c.style.getPropertyValue('--o');
+        c.style.setProperty('--dh', (inner ? inner.scrollHeight : 0) + 'px');
+        c.style.setProperty('--o', '0');
         const collapsed = c.offsetHeight;
-        c.classList.add('on');
+        c.style.setProperty('--o', '1');
         const expanded = c.offsetHeight;
         heights[k] = { collapsed, expanded };
-        if (!prevOn[k]) c.classList.remove('on');
+        c.style.setProperty('--o', prev || '0');
       });
       wrap.classList.remove('proc3-measuring');
     };
 
-    // MOBILE: slide the card stack so the expanded card stays in view. When the
-    // whole stack fits it's centred (all six visible at a glance); when an
-    // expanded card overflows, the active card is centred, clamped so the stack
-    // ends never pull inward and leave a gap.
-    const centerActive = (i) => {
-      if (!grid || !isMobile()) { wrap.style.transform = ''; return; }
-      if (!cards[i] || !heights.length) return;
+    // MOBILE: SCROLL-DRIVEN accordion. Each card's open amount (--o, 0→1) is
+    // written straight from scroll position — the cards ARE the scrollbar. Card
+    // k is fully open when the continuous index `raw` equals k and fully closed
+    // a whole step away; between steps two neighbours share the opening — a true
+    // scroll-linked cross-fade. Nothing is time-based, so motion tracks the
+    // finger 1:1 both ways and can't be interrupted on a fast fling; and the
+    // slow drift of --o under the mobile address-bar resize is invisible (unlike
+    // the old discrete card flips, which jittered across it).
+    const trackMobile = () => {
+      const pin = document.getElementById('proc3-pin');
+      if (!pin || !grid) return;
+      if (!isMobile()) { wrap.style.transform = ''; return; }
+      if (!heights.length) return;
+      const n = cards.length;
       const viewH = grid.clientHeight;
-      const gap = parseFloat(getComputedStyle(wrap).rowGap) || 0;
-      const base = wrap.offsetTop;
-      // Lay the cards out with card i expanded, the rest collapsed, using the
-      // pre-measured FINAL heights.
-      const tops = new Array(cards.length);
+      const total = pin.offsetHeight - viewH;
+      const top = pin.getBoundingClientRect().top;
+      const scrolled = Math.min(Math.max(-top, 0), total);
+      const p = total > 0 ? scrolled / total : 0;
+      const raw = p * (n - 1); // 0 → n-1; card k fully open at raw === k
+
+      const liveH = new Array(n);
+      const tops = new Array(n);
       let y = 0;
-      for (let k = 0; k < cards.length; k++) {
-        tops[k] = y;
-        y += (k === i ? heights[k].expanded : heights[k].collapsed) + (k < cards.length - 1 ? gap : 0);
+      for (let k = 0; k < n; k++) {
+        let o = 1 - Math.abs(raw - k);
+        o = o < 0 ? 0 : o > 1 ? 1 : o;
+        cards[k].style.setProperty('--o', o.toFixed(4));
+        liveH[k] = heights[k].collapsed + o * (heights[k].expanded - heights[k].collapsed);
       }
+      for (let k = 0; k < n; k++) { tops[k] = y; y += liveH[k] + (k < n - 1 ? gapPx : 0); }
       const stackH = y;
+
       let ty;
       if (stackH <= viewH) {
-        ty = (viewH - stackH) / 2 - base;
+        ty = (viewH - stackH) / 2 - baseTop; // whole stack fits: centre it
       } else {
-        const activeMid = base + tops[i] + heights[i].expanded / 2;
-        ty = viewH / 2 - activeMid;
-        const maxTy = -base;
-        const minTy = viewH - (base + stackH);
+        // Keep the focus point — interpolated between the two currently-opening
+        // card centres — on the viewport midline, clamped so the stack ends
+        // never pull inward and leave a gap.
+        const fi = Math.max(0, Math.min(n - 1, Math.floor(raw)));
+        const ni = Math.min(n - 1, fi + 1);
+        const fr = raw - fi;
+        const cFi = tops[fi] + liveH[fi] / 2;
+        const cNi = tops[ni] + liveH[ni] / 2;
+        const focus = baseTop + cFi + (cNi - cFi) * fr;
+        ty = viewH / 2 - focus;
+        const maxTy = -baseTop;
+        const minTy = viewH - (baseTop + stackH);
         if (ty > maxTy) ty = maxTy;
         if (ty < minTy) ty = minTy;
       }
       wrap.style.transform = 'translateY(' + ty.toFixed(1) + 'px)';
     };
 
-    // Open the new card and close the old one SIMULTANEOUSLY: a single .on
-    // toggle lets the outgoing card collapse while the incoming card expands in
-    // the same .25s window, so scrolling flows straight from one card to the
-    // next with no wait in between.
+    // DESKTOP: discrete active-card toggle, driven by track() below. Mobile never
+    // calls this (it uses trackMobile); the scenes/captions it updates live in
+    // the stage, which is display:none on mobile.
     const setActive = (i) => {
       if (i === active) return;
       active = i;
@@ -91,7 +115,7 @@ export default function useProcessScenes() {
       if (numEl) numEl.textContent = label;
       if (capN) capN.textContent = label;
       if (capT) capT.textContent = caps[i];
-      centerActive(i); // single motion to the settled position
+      wrap.style.transform = ''; // desktop never translates the stack
     };
 
     const track = () => {
@@ -128,30 +152,13 @@ export default function useProcessScenes() {
     };
 
     let q = false;
-    const onScroll = () => { if (!q) { q = true; requestAnimationFrame(() => { track(); q = false; }); } };
+    // Desktop advances the active card in track(); mobile drives the continuous
+    // scroll-linked accordion in trackMobile(). Each self-guards by breakpoint,
+    // so only one does work per frame.
+    const onScroll = () => { if (!q) { q = true; requestAnimationFrame(() => { track(); trackMobile(); q = false; }); } };
     window.addEventListener('scroll', onScroll, { passive: true });
     track();
-
-    // MOBILE: drive the active card from the scroll sentinels that tile the pin.
-    // rootMargin collapses the viewport to a single centre line, and the
-    // sentinels tile the whole pin, so exactly one is crossing that line at any
-    // scroll position — its data-i is the active step. Threshold crossings don't
-    // jitter with the address-bar resize the way the scroll math does, so the
-    // accordion advances one clean card at a time.
-    const triggers = [].slice.call(document.querySelectorAll('#proc3-pin .proc3-trigger'));
-    let io = null;
-    if (triggers.length && 'IntersectionObserver' in window) {
-      io = new IntersectionObserver(
-        (entries) => {
-          if (!isMobile()) return;
-          entries.forEach((e) => {
-            if (e.isIntersecting) setActive(Number(e.target.getAttribute('data-i')));
-          });
-        },
-        { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
-      );
-      triggers.forEach((t) => io.observe(t));
-    }
+    trackMobile();
 
     const drawFlows = () => {
       scenes.forEach((s) => {
@@ -205,8 +212,8 @@ export default function useProcessScenes() {
       const sc = Math.min(2.4, sticky.clientHeight / 520, sticky.clientWidth / 480);
       stage.style.transform = Math.abs(sc - 1) > 0.002 ? 'scale(' + sc.toFixed(3) + ')' : '';
       drawFlows();
-      measureHeights();     // card heights depend on width — re-measure on resize
-      centerActive(active); // re-centre the active card when the viewport resizes
+      measureHeights(); // card heights depend on width — re-measure on resize
+      trackMobile();    // re-apply the scroll-linked openness for the new size
     };
     window.addEventListener('resize', fit);
     window.addEventListener('load', fit);
@@ -238,7 +245,6 @@ export default function useProcessScenes() {
       window.removeEventListener('resize', fit);
       window.removeEventListener('load', fit);
       clearTimeout(t);
-      if (io) io.disconnect();
       cardHandlers.forEach(([card, onClick, onKey]) => { card.removeEventListener('click', onClick); card.removeEventListener('keydown', onKey); });
     };
   }, []);

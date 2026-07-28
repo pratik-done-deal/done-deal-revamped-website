@@ -62,21 +62,31 @@
   .eyebrow-row .ln{ display:none !important; }
   .makers-viewport{ scroll-padding-left:var(--gutter); }
   .makers-track{ padding-left:var(--gutter) !important; padding-right:var(--gutter) !important; }
-  /* Mobile Process is a pinned scroll accordion (mirrors desktop): collapsed by
-     default, only the active .on card expands. Keep collapsed cards compact. */
-  .vstep{ padding:11px 20px !important; transform:none !important; box-shadow:none !important; }
-  .vstep:not(.on){ background:var(--ink-1) !important; border-color:var(--line) !important; }
-  .vstep.on{ padding:14px 22px !important; }
-  .vstep.on .vs-role{ display:inline-flex !important; }
-  .vstep .vs-ico, .vstep.on .vs-ico{ width:36px !important; height:36px !important; }
-  .vstep.on .vs-head h4{ order:4 !important; flex-basis:100% !important; font-size:24px !important; color:var(--bone) !important; margin-top:4px !important; }
-  /* Active card expands and shows BOTH faces stacked (no hover on mobile). */
-  .vstep.on .vs-detail{ grid-template-rows:1fr !important; opacity:1 !important; margin-top:12px !important; }
-  .vstep.on .vs-detail-inner{ display:block !important; }
-  .vstep.on .vs-face{ grid-area:auto !important; }
-  .vstep.on .vs-front, .vstep.on .vs-machine{ opacity:1 !important; visibility:visible !important; }
+  /* Mobile Process = SCROLL-DRIVEN accordion (see useProcessScenes): each card's
+     open amount is a continuous --o (0→1) written from scroll position, and
+     every property is a calc() of --o with no transition, so it tracks scroll
+     1:1 and never reflows (title always on its own row, both faces always
+     stacked). Mirrors the sections.css mobile rules, winning with !important
+     over the older card styles. --o is set inline by JS so it beats these. */
+  .vstep{ --o:0; transform:none !important; transition:none !important;
+    padding:calc(11px + var(--o) * 3px) calc(20px + var(--o) * 2px) !important;
+    border-color:color-mix(in srgb, var(--line), rgba(208,155,108,0.55) calc(var(--o) * 100%)) !important;
+    background:color-mix(in srgb, var(--ink-1), rgba(208,155,108,0.13) calc(var(--o) * 100%)) !important;
+    box-shadow:0 0 0 1px rgba(208,155,108, calc(var(--o) * 0.24)), 0 18px 46px rgba(208,155,108, calc(var(--o) * 0.14)) !important; }
+  .vstep .vs-role{ display:inline-flex !important; transition:none !important;
+    opacity:var(--o); max-width:calc(var(--o) * 160px); overflow:hidden; white-space:nowrap; }
+  .vstep .vs-ico{ width:36px !important; height:36px !important; transition:none !important; }
+  .vstep .vs-head h4{ order:4 !important; flex-basis:100% !important; margin-top:2px !important; transition:none !important;
+    font-size:calc(19px + var(--o) * 5px) !important;
+    color:color-mix(in srgb, var(--bone-dim), var(--bone) calc(var(--o) * 100%)) !important; }
+  /* Reveal = detail height + opacity, both driven by --o; both faces stacked. */
+  .vstep .vs-detail{ transition:none !important; opacity:var(--o) !important;
+    grid-template-rows:calc(var(--o) * var(--dh, 0px)) !important; margin-top:calc(var(--o) * 12px) !important; }
+  .vstep .vs-detail-inner{ display:block !important; }
+  .vstep .vs-face{ grid-area:auto !important; }
+  .vstep .vs-front, .vstep .vs-machine{ opacity:1 !important; visibility:visible !important; }
+  .vstep .vs-machine{ margin-top:14px !important; padding-top:14px !important; border-top:1px solid var(--line) !important; }
   .vstep .hint, .p3-hoverhint{ display:none !important; }
-  .vstep.on .vs-machine{ margin-top:14px !important; padding-top:14px !important; border-top:1px solid var(--line) !important; }
   .cmpx .cmpx-alt{ display:none !important; }
   .cmpx{ margin-top:36px !important; }
   .faq-a-inner{ padding-right:0 !important; }

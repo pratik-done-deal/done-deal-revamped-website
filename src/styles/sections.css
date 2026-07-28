@@ -478,23 +478,38 @@ section.proc3 { padding-bottom: 0 !important; }
      expanded card would overflow — when all six fit, they simply sit in view. */
   .proc3-stage-wrap .proc3-grid { margin-top: 0; position: sticky; top: 0;
     height: 100vh; overflow: hidden; }
+  /* ── Scroll-driven accordion (mobile) ──────────────────────────────────
+     useProcessScenes writes each card a continuous open amount (--o, 0→1)
+     straight from scroll position, plus its measured detail height (--dh).
+     Every open/close property is a calc() of --o with NO transition, so the
+     cards track the scroll 1:1 (no time-based animation to interrupt on a fast
+     fling). The layout is stable at every --o — the title always sits on its
+     own row and both detail faces are always stacked — so nothing REFLOWS as a
+     card opens; only sizes, colours, opacity and the reveal height interpolate.
+     That stable-layout rule is what makes the motion perfectly smooth. */
   .proc3-cards { gap: clamp(8px,1.1vh,14px); justify-content: flex-start;
-    position: relative; will-change: transform;
-    /* Same duration/easing as the card expand (.vs-detail) so the stack shift
-       and the card opening move together as one motion — no jerk. */
-    transition: transform .25s var(--ease-out); }
-  .vstep { flex-shrink: 0; padding: 11px 20px;
-    transition: padding .25s var(--ease-out), background .25s var(--ease-out),
-      border-color .25s var(--ease-out), box-shadow .25s var(--ease-out); }
-  .vstep.on { padding: 14px 22px; }
-  /* Snappy, single-card expand/collapse. With ~83vh of scroll per step (above)
-     only one card transitions at a time; the .25s open/close (matched by
-     CLOSE_MS in useProcessScenes) completes before the next card is reached —
-     no overlapping half-open cards. */
-  .vstep .vs-detail { transition: grid-template-rows .25s var(--ease-out),
-    opacity .25s var(--ease-out), margin .25s var(--ease-out); }
-  .vstep .vs-head h4 { transition: color .25s var(--ease-out), font-size .25s var(--ease-out); }
-  .vstep .vs-ico { transition: width .25s var(--ease-out), height .25s var(--ease-out), background .25s var(--ease-out); }
+    position: relative; will-change: transform; transition: none; }
+  .vstep { --o: 0; flex-shrink: 0; transition: none;
+    padding: calc(11px + var(--o) * 3px) calc(20px + var(--o) * 2px);
+    border-color: color-mix(in srgb, var(--line), rgba(208,155,108,0.55) calc(var(--o) * 100%));
+    background: color-mix(in srgb, var(--ink-1), rgba(208,155,108,0.13) calc(var(--o) * 100%));
+    box-shadow: 0 0 0 1px rgba(208,155,108, calc(var(--o) * 0.24)),
+      0 18px 46px rgba(208,155,108, calc(var(--o) * 0.14)); }
+  .vstep .vs-head h4 { order: 4; flex-basis: 100%; margin-top: 2px; transition: none;
+    font-size: calc(19px + var(--o) * 5px);
+    color: color-mix(in srgb, var(--bone-dim), var(--bone) calc(var(--o) * 100%)); }
+  .vstep .vs-role { display: inline-flex; transition: none; overflow: hidden;
+    white-space: nowrap; opacity: var(--o); max-width: calc(var(--o) * 160px); }
+  .vstep .vs-ico { width: 36px; height: 36px; transition: none; }
+  /* Both faces always stacked (no hover on mobile); the reveal is the detail
+     height + opacity, both driven by --o. */
+  .vstep .vs-detail-inner { display: block; }
+  .vstep .vs-face { grid-area: auto; }
+  .vstep .vs-front, .vstep .vs-machine { opacity: 1; visibility: visible; }
+  .vstep .vs-machine { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .vstep .hint, .p3-hoverhint { display: none; }
+  .vstep .vs-detail { transition: none; opacity: var(--o);
+    grid-template-rows: calc(var(--o) * var(--dh, 0px)); margin-top: calc(var(--o) * 12px); }
 }
 
 /* ── Process right graphic → translucent panel · gold/blue elements on dark ── */
