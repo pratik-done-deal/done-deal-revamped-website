@@ -13,6 +13,20 @@ function headerUtmSource(pathname) {
   return `${slug}_header`;
 }
 
+// utm_source used when the modal is opened from the homepage hero "Get started"
+// button (the primary CTA in the hero, not the header). Applies to both the
+// seller and investor options.
+const HERO_UTM_SOURCE = 'home-get-started';
+
+// utm_source used when the modal is opened from the homepage comparison
+// section "Get started" button (class "cmpx-cta"). Applies to both options.
+const COMPARISON_UTM_SOURCE = 'home-comparision';
+
+// utm_source used when the modal is opened from the homepage CTA band that
+// sits after the Investors section (class "dd-cta-band"). Applies to both
+// options.
+const CTA_BAND_UTM_SOURCE = 'home-footer';
+
 const ROLE_OPTIONS = [
   {
     key: 'seller',
@@ -52,15 +66,15 @@ export default function RoleModal() {
   // Otherwise fall back to the page they clicked "Get started" from.
   const utmSource = useUtmSource();
 
-  // When the modal is opened from the header CTA (and no incoming utm_source),
-  // tag the source with the current page, e.g. "Homepage-Header". Kept in a ref
+  // When the modal is opened from a specific CTA (header or hero) and there's no
+  // incoming utm_source, tag the source with a CTA-specific label. Kept in a ref
   // so the (mount-only) click handler always sees the current path's label.
   const { pathname } = useLocation();
   const headerLabelRef = useRef(headerUtmSource(pathname));
   headerLabelRef.current = headerUtmSource(pathname);
-  const [headerSource, setHeaderSource] = useState(null);
+  const [ctaSource, setCtaSource] = useState(null);
 
-  const activeSource = headerSource || utmSource;
+  const activeSource = ctaSource || utmSource;
   const withUtm = (base) => `${base}?utm_source=${encodeURIComponent(activeSource)}`;
 
   // Lock page scroll while the modal is open.
@@ -76,14 +90,28 @@ export default function RoleModal() {
       if (!a || a.closest('#dd-role-modal')) return;
       const txt = (a.textContent || '').trim().toLowerCase();
       const isHeaderCta = a.classList.contains('nav-cta') || a.classList.contains('dd-mn-cta');
-      const gs = txt === 'get started' || isHeaderCta || a.classList.contains('cmpx-cta');
+      const isComparisonCta = a.classList.contains('cmpx-cta');
+      const isCtaBand = a.classList.contains('dd-cta-band');
+      const isHeroCta = txt === 'get started' && !!a.closest('.hero');
+      const gs = txt === 'get started' || isHeaderCta || isComparisonCta;
       if (gs) {
         e.preventDefault();
         e.stopPropagation();
-        // Header CTA on a mapped page → page-specific "…-Header" source, unless
-        // the visitor arrived with a utm_source already on the URL (that wins).
+        // CTA-specific source, unless the visitor arrived with a utm_source
+        // already on the URL (that always wins):
+        //   header CTA → page-specific "…_header"
+        //   homepage hero CTA → "home-get-started"
+        //   homepage comparison CTA → "home-comparision"
+        //   homepage CTA band (after Investors) → "home-footer"
         const incoming = new URLSearchParams(window.location.search).get('utm_source');
-        setHeaderSource(isHeaderCta && !incoming ? headerLabelRef.current : null);
+        let source = null;
+        if (!incoming) {
+          if (isHeaderCta) source = headerLabelRef.current;
+          else if (isComparisonCta) source = COMPARISON_UTM_SOURCE;
+          else if (isCtaBand) source = CTA_BAND_UTM_SOURCE;
+          else if (isHeroCta) source = HERO_UTM_SOURCE;
+        }
+        setCtaSource(source);
         setOpen(true);
       }
     };

@@ -26,7 +26,7 @@ export default function CtaBand({ variant = 'default', hidden = false }) {
       data-screen-label="CTA"
       style={hidden ? { display: 'none' } : undefined}
     >
-      <a className={ctaClass} href="#">
+      <a className={`dd-cta-band ${ctaClass}`} href="#">
         {copy.label}
       </a>
       <span className={`text-[13.5px] tracking-[0.01em]${light ? ' text-[var(--ink-text-dim)]' : ' text-[var(--bone-faint)]'}`}>

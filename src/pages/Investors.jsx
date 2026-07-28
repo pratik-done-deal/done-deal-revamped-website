@@ -19,9 +19,22 @@ const DISPLAY_FAQS = ['general', 'founder', 'buyer'].flatMap((cat) =>
 
 export default function Investors() {
 
-  const utmSource = useUtmSource();
-  const buyerOnboardingUrl = `${appUrl('buyer/onboarding')}?utm_source=${encodeURIComponent(utmSource)}`;
-  const buyerLoginUrl = `${appUrl('buyer/login')}?utm_source=${encodeURIComponent(utmSource)}`;
+  // The buyer-type section ("Built for buyers who move with conviction") "Join
+  // buyer network" CTA tags its own source (an incoming utm_source on the URL
+  // still wins).
+  const buyerTypeUtmSource = useUtmSource('investor-buyer-type');
+  const buyerOnboardingBuyerTypeUrl = `${appUrl('buyer/onboarding')}?utm_source=${encodeURIComponent(buyerTypeUtmSource)}`;
+
+  // The hero "Join buyer network" CTA tags its own source (an incoming
+  // utm_source on the URL still wins).
+  const heroUtmSource = useUtmSource('investor-Hero');
+  const buyerOnboardingHeroUrl = `${appUrl('buyer/onboarding')}?utm_source=${encodeURIComponent(heroUtmSource)}`;
+
+  // The footer CTA band ("Ready to see deals…") tags its own source (an
+  // incoming utm_source on the URL still wins).
+  const footerUtmSource = useUtmSource('investor-footer');
+  const buyerOnboardingFooterUrl = `${appUrl('buyer/onboarding')}?utm_source=${encodeURIComponent(footerUtmSource)}`;
+  const buyerLoginFooterUrl = `${appUrl('buyer/login')}?utm_source=${encodeURIComponent(footerUtmSource)}`;
 
   const panelRef = React.useRef(null);
   const auroraRef = React.useRef(null);
@@ -86,7 +99,7 @@ export default function Investors() {
                   We use AI to match you with startups that fit your exact mandate — then send you only the deals worth your time. No retainers. No finder fees. No noise.
                 </p>
                 <div className="cta-row">
-                  <a className="btn btn-primary" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
+                  <a className="btn btn-primary" href={buyerOnboardingHeroUrl} target="_blank" rel="noopener noreferrer">
                     Join buyer network
                   </a>
                   <a className="link" href="#how">
@@ -633,7 +646,7 @@ export default function Investors() {
                 </div>
               </div>
               <div style={{ "marginTop": "40px" }} className="reveal">
-                <a className="btn btn-primary" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
+                <a className="btn btn-primary" href={buyerOnboardingBuyerTypeUrl} target="_blank" rel="noopener noreferrer">
                   Join buyer network
                 </a>
               </div>
@@ -921,10 +934,10 @@ export default function Investors() {
             </div>
           </section>
           <section className="cta-band" data-screen-label="CTA actions">
-            <a className="btn btn-primary" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
+            <a className="btn btn-primary" href={buyerOnboardingFooterUrl} target="_blank" rel="noopener noreferrer">
               Join buyer network
             </a>
-            <a className="link" href={buyerLoginUrl} target="_blank" rel="noopener noreferrer">
+            <a className="link" href={buyerLoginFooterUrl} target="_blank" rel="noopener noreferrer">
               {"Already a member? Login "}
               <span className="arrow">
                 →
