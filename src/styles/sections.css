@@ -458,13 +458,13 @@ section.proc3 { padding-bottom: 0 !important; }
      section pins to the viewport and the active card expands as you scroll,
      one at a time (driven by useProcessScenes' track()). Cards stay COLLAPSED
      by default; only the .on card opens (see the .vstep.on rules above). */
-  /* ~150vh of scroll per card (6 cards → 100vh sticky + 6·150vh = 1000vh) so
-     each card needs a couple of deliberate swipes before it hands off to the
-     next, and the section stays pinned until the 6th card has been reached —
-     only then does it release to the following section. Requires the pin to
-     actually be sticky on mobile: see the note in the max-width:800px block
-     where proc3 is deliberately excluded from the un-pin override. */
-  .proc3-pin { height: 1000vh; margin-top: clamp(40px,6vh,64px); }
+  /* ~83vh of scroll per card (6 cards → 6·83vh ≈ 500vh) so a single deliberate
+     swipe hands off to the next card — one scroll, one card — while the section
+     stays pinned until the 6th card has been reached, only then releasing to the
+     following section. Requires the pin to actually be sticky on mobile: see the
+     note in the max-width:800px block where proc3 is deliberately excluded from
+     the un-pin override. */
+  .proc3-pin { height: 500vh; margin-top: clamp(40px,6vh,64px); }
   /* Only the CARD GRID pins — the heading scrolls away above it, so once the
      cards pin they get the FULL viewport and all six are visible at a glance
      (instead of the heading eating the top of the screen). Dissolving the
@@ -487,7 +487,7 @@ section.proc3 { padding-bottom: 0 !important; }
     transition: padding .5s var(--ease-out) .1s, background .5s var(--ease-out) .1s,
       border-color .5s var(--ease-out) .1s, box-shadow .5s var(--ease-out) .1s; }
   .vstep.on { padding: 14px 22px; }
-  /* Gentle, single-card expand/collapse. With ~150vh of scroll per step (above)
+  /* Gentle, single-card expand/collapse. With ~83vh of scroll per step (above)
      only one card transitions at a time, so a moderate .5s reveal completes
      before the next card is ever reached — no overlapping half-open cards. */
   .vstep .vs-detail { transition: grid-template-rows .5s var(--ease-out) .1s,
