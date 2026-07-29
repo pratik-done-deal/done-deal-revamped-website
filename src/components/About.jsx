@@ -23,23 +23,23 @@ const logoBarbershop = cdnUrl("barbershop.svg");
 const logoDezerv = cdnUrl("dezerv.svg");
 const logoCapitalA = cdnUrl("capitalA.svg");
 
-const photoParas = cdnUrl("paras.png");
-const photoPratik = cdnUrl("pratik.png");
-const photoAnand = cdnUrl("anand.png");
-const photoChandan = cdnUrl("chandan.png");
-const photoNavneet = cdnUrl("navneet.png");
-const photoAnubhav = cdnUrl("anubhav.png");
-const photoAshutosh = cdnUrl("ashutosh.png");
-const photoAbhijeet = cdnUrl("abhijeet.png");
-const photoGaurav = cdnUrl("gaurav.png");
-const photoVinit = cdnUrl("vinit.png");
-const photoDeepty = cdnUrl("deepty.png");
-const photoDhrish = cdnUrl("dhrish.png");
-const photoSagar = cdnUrl("sagar.png");
-const photoRohit = cdnUrl("rohit.png");
-const photoAneesh = cdnUrl("aneesh.png");
-const photoAnkur = cdnUrl("ankur.png");
-const photoFoundersGroup = cdnUrl("founders.png");
+const photoParas = cdnUrl("paras.webp");
+const photoPratik = cdnUrl("pratik.webp");
+const photoAnand = cdnUrl("anand.webp");
+const photoChandan = cdnUrl("chandan.webp");
+const photoNavneet = cdnUrl("navneet.webp");
+const photoAnubhav = cdnUrl("anubhav.webp");
+const photoAshutosh = cdnUrl("ashutosh.webp");
+const photoAbhijeet = cdnUrl("abhijeet.webp");
+const photoGaurav = cdnUrl("gaurav.webp");
+const photoVinit = cdnUrl("vinit.webp");
+const photoDeepty = cdnUrl("deepty.webp");
+const photoDhrish = cdnUrl("dhrish.webp");
+const photoSagar = cdnUrl("sagar.webp");
+const photoRohit = cdnUrl("rohit.webp");
+const photoAneesh = cdnUrl("aneesh.webp");
+const photoAnkur = cdnUrl("ankur.webp");
+const photoFoundersGroup = cdnUrl("founders.webp");
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -52,7 +52,7 @@ const GET_STARTED_HREF = "https://www.done.deals/get-started";
 const STATS = [
   { target: 35, caption: "Closed transactions — track record, not talk" },
   { target: 400, prefix: "₹", suffix: " Cr+", caption: "In enterprise value transacted" },
-  { target: 1000, suffix: "+", caption: "Verified, structured buyers — not a Rolodex" },
+  { target: 100, suffix: "+", caption: "Verified, structured buyers — not a Rolodex" },
   { target: 14, caption: "weeks, mandate to close" },
 ];
 

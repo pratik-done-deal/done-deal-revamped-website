@@ -3,14 +3,16 @@ import { cdnUrl } from '../config/cdn';
 import rohitDealMaker from '../assets/rohit-deal-maker.png';
 import aneeshDealMaker from '../assets/aneesh-deal-maker.png';
 
-const photoGaurav = cdnUrl('gaurav.png');
-const photoVinit = cdnUrl('vinit.png');
-const photoDhrish = cdnUrl('dhrish.png');
-const photoSagar = cdnUrl('sagar.png');
-const photoDeepty = cdnUrl('deepty.png');
-const photoDhairya = cdnUrl('dhairya.png');
-const photoAneesh = aneeshDealMaker;
-const photoRohit = rohitDealMaker;
+const photoGaurav = cdnUrl('gaurav.webp');
+const photoVinit = cdnUrl('vinit.webp');
+const photoDhrish = cdnUrl('dhrish.webp');
+const photoSagar = cdnUrl('sagar.webp');
+const photoDeepty = cdnUrl('deepty.webp');
+const photoDhairya = cdnUrl('dhairya.webp');
+// const photoAneesh = aneeshDealMaker;
+// const photoRohit = rohitDealMaker;
+const photoAneesh = cdnUrl('aneesh-deal-maker.webp');;
+const photoRohit = cdnUrl('rohit-deal-maker.webp');
 
 
 const MAKERS = [

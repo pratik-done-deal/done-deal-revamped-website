@@ -1,8 +1,8 @@
 import React from 'react';
 import { cdnUrl } from '../config/cdn';
 
-const imgTestimonialAjith = cdnUrl('testimonial-ajith.svg');
-const imgTestimonialArihant = cdnUrl('testimonial-arihant.svg');
+const imgTestimonialAjith = cdnUrl('testimonial-ajith.webp');
+const imgTestimonialArihant = cdnUrl('testimonial-arihant.webp');
 
 const TESTIMONIALS = [
   // {
