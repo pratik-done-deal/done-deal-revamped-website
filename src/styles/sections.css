@@ -916,7 +916,6 @@ section.assurance { padding: clamp(76px,9vh,132px) 0; }
   .glow,
   .drift,
   .proc3-vis,
-  .makers-progress,
   .scroll-hint { display: none !important; }
 
   /* ---- Hero: tighten panel + downscale type ---- */
@@ -961,17 +960,50 @@ section.assurance { padding: clamp(76px,9vh,132px) 0; }
   .proc2-pin .proc2-sticky, .proc2-sticky { position: static !important; height: auto !important; overflow: visible !important; }
   .proc3-cards { padding: 0 !important; }
 
-  /* ---- Deal makers: drop pinned horizontal scroll → simple swipe ---- */
+  /* ---- Deal makers: KEEP the desktop scroll-pinned horizontal track ----
+     The section sticks for a vertical scroll budget (sized in useMakersPin)
+     during which the strip translates horizontally; when the last card lands,
+     vertical scrolling resumes into the next section. Cards sit at 78vw so the
+     next one peeks in and the horizontal travel reads as travel. Only reduced
+     motion (.no-pin) degrades to a plain native swipe strip. */
   .makers-h { margin-top: 48px !important; }
-  .makers-sticky { position: static !important; height: auto !important; padding-bottom: 14px !important; }
-  .makers-head { padding-top: 0 !important; }
-  /* Snapping is driven in JS (useMakersPin) by swipe direction, so native snap
-     is OFF to avoid it fighting the JS (snapping back on a slight swipe). */
-  .makers-viewport { overflow-x: auto !important; scroll-snap-type: none; -webkit-overflow-scrolling: touch; }
-  .makers-track { transform: none !important; gap: var(--gutter); }
-  /* One full card per view (no peeking neighbour): card fills the viewport minus
-     its gutters; JS then always settles it on a whole card. */
-  .maker-card { flex: 0 0 calc(100vw - 2 * var(--gutter)) !important; }
+  /* The sticky box HUGS its content — head + strip + progress, nothing more — so
+     the pinned section takes only the height it needs. A full-screen box (the
+     desktop 100svh) can't be filled by a square card on a ~2.2:1 phone screen and
+     left big empty bands above and below it. Whatever viewport is left below the
+     box is page background until the horizontal travel finishes. */
+  /* max-height caps it at one viewport: a sticky box taller than the screen can't
+     stick, so on a pathological size clip the bar rather than break the pin. */
+  .makers-sticky { height: auto !important; min-height: 0 !important; max-height: 100svh !important;
+    gap: 14px; padding: 14px 0 16px !important; }
+  .makers-head { padding-top: 0 !important; padding-bottom: 0 !important; }
+  .makers-head .eyebrow-row { margin-bottom: 10px !important; }
+  /* Horizontal position is owned by the transform — no native scrolling here, or
+     a swipe would fight the pin. flex:0 0 auto so it's sized by the card. */
+  .makers-viewport { overflow: hidden !important; flex: 0 0 auto !important; }
+  .makers-progress { margin: 0 var(--gutter) !important; }
+  /* Card keeps its original square photo — sizing it off viewport height instead
+     filled the box but wrecked the crop. */
+  .maker-card { flex: 0 0 78vw !important; }
+
+  /* Reduced-motion fallback: no pin, native swipe with CSS snap (no JS driving it).
+     One full card per view — card fills the viewport minus its gutters. */
+  .makers-h.no-pin .makers-sticky { position: static !important; height: auto !important; padding-bottom: 14px !important; }
+  .makers-h.no-pin .makers-head { padding-top: 0 !important; }
+  .makers-h.no-pin .makers-viewport { overflow-x: auto !important; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .makers-h.no-pin .makers-track { transform: none !important; gap: var(--gutter); }
+  .makers-h.no-pin .maker-card { flex: 0 0 calc(100vw - 2 * var(--gutter)) !important; scroll-snap-align: center; }
+  .makers-h.no-pin .makers-progress { display: none !important; }
+
+  /* Landscape phones: the sticky box now hugs its content, so the content MUST
+     stay shorter than the viewport or the box outgrows the screen and the pin
+     stops holding. A 78vw square card plus a 48px heading is roughly double a
+     landscape phone's height — shrink both. Higher specificity than the rules
+     above so this wins regardless of which mobile layer loads last. */
+  @media (orientation: landscape) {
+    .makers-h .maker-card { flex-basis: 26vw !important; }
+    .makers-head .h-sec { font-size: 28px !important; }
+  }
 
   /* ---- Stacked assurance cards: un-stick so they don't pile/overlap ---- */
   .stack { display: flex !important; flex-direction: column !important; gap: 20px !important; }

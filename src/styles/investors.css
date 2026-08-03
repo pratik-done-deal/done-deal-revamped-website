@@ -556,7 +556,6 @@ body.page-investors .hero .trust-check svg { stroke: #1b1547; }
   .glow,
   .drift,
   .proc3-vis,
-  .makers-progress,
   .scroll-hint { display: none !important; }
 
   /* ---- Hero: tighten panel + downscale type ---- */
@@ -600,13 +599,26 @@ body.page-investors .hero .trust-check svg { stroke: #1b1547; }
   .proc2-pin .proc2-sticky, .proc2-sticky { position: static !important; height: auto !important; overflow: visible !important; }
   .proc3-cards { padding: 0 !important; }
 
-  /* ---- Deal makers: drop pinned horizontal scroll → simple swipe ---- */
+  /* ---- Deal makers: KEEP the desktop scroll-pinned horizontal track ----
+     DUPLICATED from the sections.css mobile layer, which this block loads after —
+     both copies must pin, or this one silently un-pins the section again.
+     See that file for the full note; .no-pin (reduced motion) is the only
+     fallback to a native swipe strip. */
   .makers-h { margin-top: 48px !important; }
-  .makers-sticky { position: static !important; height: auto !important; padding-bottom: 14px !important; }
-  .makers-head { padding-top: 0 !important; }
-  .makers-viewport { overflow-x: auto !important; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-  .makers-track { transform: none !important; }
-  .maker-card { flex: 0 0 78vw !important; scroll-snap-align: start; }
+  .makers-sticky { height: auto !important; min-height: 0 !important; max-height: 100svh !important;
+    gap: 14px; padding: 14px 0 16px !important; }
+  .makers-head { padding-top: 0 !important; padding-bottom: 0 !important; }
+  .makers-head .eyebrow-row { margin-bottom: 10px !important; }
+  .makers-viewport { overflow: hidden !important; flex: 0 0 auto !important; }
+  .makers-progress { margin: 0 var(--gutter) !important; }
+  .maker-card { flex: 0 0 78vw !important; }
+
+  .makers-h.no-pin .makers-sticky { position: static !important; height: auto !important; padding-bottom: 14px !important; }
+  .makers-h.no-pin .makers-head { padding-top: 0 !important; }
+  .makers-h.no-pin .makers-viewport { overflow-x: auto !important; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .makers-h.no-pin .makers-track { transform: none !important; gap: var(--gutter); }
+  .makers-h.no-pin .maker-card { flex: 0 0 calc(100vw - 2 * var(--gutter)) !important; scroll-snap-align: center; }
+  .makers-h.no-pin .makers-progress { display: none !important; }
 
   /* ---- Stacked assurance cards: un-stick so they don't pile/overlap ---- */
   .stack { display: flex !important; flex-direction: column !important; gap: 20px !important; }
