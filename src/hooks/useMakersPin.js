@@ -1,23 +1,10 @@
 import { useEffect } from 'react';
 
 /**
- * Deal makers: the horizontal card strip advances with vertical scroll, and the
- * page doesn't move on to the next section until the strip has travelled end to
- * end. Two mechanisms, because reserving scroll height reads very differently on
- * a phone than on a desktop:
- *
- *   pin  (mouse / trackpad) — the section reserves extra height and a sticky
- *        child holds still inside it. The browser does all the scrolling, which
- *        is why it's rock solid, but the reserved height is empty screen below
- *        the strip for the whole travel. Fine at desktop size, where the sticky
- *        box fills the viewport anyway.
- *
- *   lock (touch) — the section keeps its NATURAL height, so the next section
- *        sits directly beneath the strip with no gap. The page is instead
- *        clamped at the section's top edge and finger travel is spent moving the
- *        strip sideways; the clamp lifts the moment the strip runs out.
- *
- * Reduced motion gets neither: .no-pin degrades to a native swipe strip.
+ * Deal makers: a section pinned for the duration of a vertical scroll budget,
+ * during which its horizontal track translates so the last card's right edge
+ * meets the viewport's right edge. Falls back to native flow on small screens
+ * or with reduced motion.
  */
 export default function useMakersPin() {
   useEffect(() => {
@@ -28,225 +15,164 @@ export default function useMakersPin() {
     const track = sec.querySelector('.makers-track');
     const bar = document.getElementById('makers-bar');
     if (!sticky || !viewport || !track) return;
-
-    // Matches the mobile CSS layer's breakpoint (sections.css / investors.css).
-    const small = window.matchMedia('(max-width: 800px)');
-    const coarse = window.matchMedia('(pointer: coarse)');
+    const small = window.matchMedia('(max-width: 860px)');
     const reduceMo = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let maxX = 0;
+    let pinHeight = 0;
 
-    // Scroll distance spent per pixel of horizontal travel on a phone. At 1:1 a
-    // seven-card strip costs ~2.5 screen-heights of swiping and reads as endless;
-    // 0.65 keeps a mobile pass about as long as the desktop one.
-    const MOBILE_BUDGET = 0.65;
-
-    let mode = 'pin';          // 'pin' | 'lock' | 'none'
-    let maxX = 0;              // horizontal distance the track must travel
-    let pinHeight = 0;         // pin mode only: height of the sticky box
-    let progress = 0;          // 0..1, shared by both modes
-
-    const render = () => {
+    const tick = () => {
+      if (sec.classList.contains('no-pin')) return;
+      const rect = sec.getBoundingClientRect();
+      const total = sec.offsetHeight - pinHeight;
+      const scrolled = Math.min(Math.max(-rect.top, 0), total);
+      const progress = total > 0 ? scrolled / total : 0;
       track.style.transform = 'translate3d(' + (-progress * maxX).toFixed(1) + 'px,0,0)';
       if (bar) bar.style.width = (progress * 100).toFixed(1) + '%';
     };
 
-    /* ── pin mode ─────────────────────────────────────────────── */
-
-    const tickPin = () => {
-      const rect = sec.getBoundingClientRect();
-      const total = sec.offsetHeight - pinHeight;
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      progress = total > 0 ? scrolled / total : 0;
-      render();
-    };
-
-    /* ── lock mode ────────────────────────────────────────────── */
-
-    let locked = false;
-    let anchorY = 0;           // page offset the section is held at
-    let lastTouchY = 0;
-    const travelPx = () => Math.max(240, maxX * MOBILE_BUDGET);
-    // Breathing room left above the eyebrow row while the page is held, so the
-    // strip isn't jammed against the top edge of the screen.
-    const LOCK_TOP = 50;
-
-    const lock = () => {
-      if (locked) return;
-      locked = true;
-      anchorY = Math.round(sec.getBoundingClientRect().top + window.scrollY - LOCK_TOP);
-      if (window.__lenis) window.__lenis.stop();
-      window.scrollTo(0, anchorY);
-      // Stops the browser treating a NEW gesture as a pan. Gestures already in
-      // flight aren't affected — those are handled by the clamp in onScroll.
-      document.body.classList.add('makers-locked');
-    };
-
-    const unlock = () => {
-      if (!locked) return;
-      locked = false;
-      document.body.classList.remove('makers-locked');
-      const lenis = window.__lenis;
-      if (lenis) {
-        lenis.start();
-        // Lenis held its own scroll target while stopped, and the clamp moved the
-        // page underneath it. Resync, or it can animate back to where the lock
-        // started the moment it resumes.
-        if (lenis.scrollTo) lenis.scrollTo(window.scrollY, { immediate: true, force: true });
-      }
-    };
-
-    // Spend a scroll delta on horizontal travel, and hand the page straight back
-    // the moment the strip runs out in the direction being scrolled — the lock
-    // must never outlast the thing it exists for.
-    const step = (dy) => {
-      if (!dy) return;
-      if (!maxX) { unlock(); return; }
-      progress = Math.min(1, Math.max(0, progress + dy / travelPx()));
-      render();
-      if ((dy > 0 && progress >= 1) || (dy < 0 && progress <= 0)) unlock();
-    };
-
-    /* ── scroll ───────────────────────────────────────────────── */
-
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      const dir = y > lastY ? 1 : (y < lastY ? -1 : 0);
-      lastY = y;
-
-      if (mode === 'lock') {
-        if (locked) {
-          // The page moved despite the lock — an iOS fling that was already
-          // under way, which preventDefault can't stop. Spend the overshoot on
-          // travel instead of fighting it, then hold the page still again.
-          const over = y - anchorY;
-          if (over) {
-            step(over);
-            if (locked) window.scrollTo(0, anchorY);
-          }
-          return;
-        }
-        // Engage as the section's top edge reaches its resting offset — going
-        // down with travel left, or coming back up with travel to undo.
-        const top = sec.getBoundingClientRect().top;
-        if (dir > 0 && progress < 1 && top <= LOCK_TOP && top > -sec.offsetHeight) lock();
-        else if (dir < 0 && progress > 0 && top >= LOCK_TOP && top < window.innerHeight) lock();
-        return;
-      }
-
-      if (mode === 'pin') tickPin();
-    };
-
-    /* ── input while locked ───────────────────────────────────── */
-
-    const onTouchStart = (e) => { lastTouchY = e.touches[0].clientY; };
-    const onTouchMove = (e) => {
-      if (!locked) return;
-      const y = e.touches[0].clientY;
-      const dy = lastTouchY - y;
-      lastTouchY = y;
-      // Only spend the delta when we can actually suppress the pan. If the event
-      // isn't cancelable the browser is mid-pan and will scroll anyway, and
-      // onScroll spends that movement — counting it here too would double it.
-      if (e.cancelable) { e.preventDefault(); step(dy); }
-    };
-    const onWheel = (e) => {
-      if (!locked) return;
-      if (e.cancelable) e.preventDefault();
-      step(e.deltaY);
-    };
-    const KEY_STEP = 0.18;
-    const onKey = (e) => {
-      if (!locked) return;
-      const k = e.key;
-      if (k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); step(travelPx() * KEY_STEP); }
-      else if (k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); step(-travelPx() * KEY_STEP); }
-      // Always leave a way out that doesn't require walking the whole strip.
-      else if (k === 'Escape' || k === 'End') { progress = 1; render(); unlock(); }
-    };
-    // Never let the lock swallow a navigation: Lenis is stopped while locked, so
-    // an in-page anchor jump would silently no-op. Any link or button press
-    // releases the page first.
-    const onClick = (e) => {
-      if (!locked) return;
-      if (e.target && e.target.closest && e.target.closest('a, button, [role="button"]')) unlock();
-    };
-
-    /* ── measure ──────────────────────────────────────────────── */
-
     const measure = () => {
       sec.classList.remove('no-pin');
-      // Keyed off width alone, NOT `pointer: coarse` — the mobile CSS layer is a
-      // width query, so gating the mechanism on touch let a narrow desktop window
-      // (and Chrome's responsive mode without touch emulation) get the mobile
-      // layout with the desktop pin: reserved empty height and no lock offset.
-      // Wheel and keyboard drive the lock too, so width is the honest signal.
-      mode = reduceMo.matches ? 'none' : (small.matches ? 'lock' : 'pin');
-
-      if (mode === 'none') {
-        unlock();
+      if (small.matches || reduceMo.matches) {
         sec.classList.add('no-pin');
         sec.style.height = '';
         track.style.transform = '';
-        if (bar) bar.style.width = '0%';
         return;
       }
-
-      maxX = Math.max(0, track.scrollWidth - viewport.clientWidth);
-
-      if (mode === 'lock') {
-        // Natural height — no reserved scroll, so the next section sits directly
-        // below the strip instead of below an empty band.
-        sec.style.height = '';
-        pinHeight = 0;
-        render();
-        return;
-      }
-
-      unlock();
-      // Measure the sticky box itself — its height is capped in CSS so it stays
-      // sane on tall/large viewports — instead of raw window.innerHeight, so the
-      // scroll-driven translate distance always matches how long the box is
-      // actually pinned on screen.
+      // Measure the sticky box itself — its height is capped in CSS so it
+      // stays sane on tall/large viewports — instead of raw window.innerHeight,
+      // so the scroll-driven translate distance always matches how long the
+      // box is actually pinned on screen.
       pinHeight = sticky.offsetHeight;
+      maxX = Math.max(0, track.scrollWidth - viewport.clientWidth);
       sec.style.height = (pinHeight + maxX) + 'px';
-      tickPin();
+      tick();
     };
 
-    // Mobile browsers fire resize whenever the URL bar shows/hides, which would
-    // otherwise re-measure (and drop the lock) mid-scroll. Nothing about the
-    // layout actually changed there, so re-measure on a real width change.
-    let lastW = window.innerWidth;
-    const onResize = () => {
-      if (coarse.matches && window.innerWidth === lastW) return;
-      lastW = window.innerWidth;
-      unlock();
-      measure();
-    };
-    const onRotate = () => { unlock(); measure(); };
-
+    let rafQueued = false;
+    const onScroll = () => { if (!rafQueued) { window.requestAnimationFrame(() => { tick(); rafQueued = false; }); rafQueued = true; } };
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
-    window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('keydown', onKey);
-    document.addEventListener('click', onClick, true);
-    window.addEventListener('resize', onResize);
-    window.addEventListener('orientationchange', onRotate);
+    window.addEventListener('resize', measure);
     window.addEventListener('load', measure);
     measure();
     const t = setTimeout(measure, 400);
 
+    // MOBILE carousel: the strip is a native swipe area, but snapping is driven
+    // in JS so a card is ALWAYS fully shown. On release we read the swipe
+    // direction (the sign of how far scrollLeft moved) and scroll to the
+    // next/previous card index — a slight swipe still completes to a whole card,
+    // and it never rests on a half card. The timer auto-advances until the user
+    // scrolls the strip themselves; from then on it stays off, so an advance can
+    // never land mid-swipe and fight the finger.
+    const STEP_MS = 2000;
+    const SWIPE_RATIO = 0.12; // fraction of a card that counts as a directional swipe
+    const SELF_SCROLL_MS = 1000;  // window our own smooth scroll owns after we start it
+    const SELF_SCROLL_TAIL = 150; // ...held open while that scroll is still emitting events
+    let autoTimer = null;
+    let userScrolled = false;
+    // Scroll events are the one signal that covers every way of moving the strip
+    // (finger, momentum, trackpad, scrollbar), so our own programmatic scrolls get
+    // stamped here and ignored. Starts stamped: a restored scroll position or an
+    // early layout shift must not read as the user taking over.
+    let selfScrollUntil = Date.now() + 1200;
+    let dragging = false;
+    let dragStartLeft = 0;
+    let dragStartIdx = 0;
+
+    const cardEls = () => [].slice.call(track.querySelectorAll('.maker-card'));
+    // scrollLeft that centres card i (base = the track's leading gutter, which
+    // equals (viewport − card)/2, so left-aligning to offsetLeft−base centres it).
+    const leftFor = (cards, i) => cards[i].offsetLeft - cards[0].offsetLeft;
+    const nearestIndex = (cards) => {
+      const cur = viewport.scrollLeft;
+      let idx = 0, best = Infinity;
+      cards.forEach((c, i) => { const d = Math.abs(leftFor(cards, i) - cur); if (d < best) { best = d; idx = i; } });
+      return idx;
+    };
+    const scrollToIndex = (i) => {
+      const cards = cardEls();
+      if (!cards.length) return;
+      const clamped = Math.max(0, Math.min(cards.length - 1, i));
+      selfScrollUntil = Date.now() + SELF_SCROLL_MS;
+      viewport.scrollTo({ left: leftFor(cards, clamped), behavior: 'smooth' });
+    };
+
+    const advance = () => {
+      const cards = cardEls();
+      if (cards.length < 2) return;
+      scrollToIndex((nearestIndex(cards) + 1) % cards.length); // loop at the end
+    };
+
+    const startAuto = () => {
+      if (autoTimer || userScrolled) return;
+      if (!small.matches || reduceMo.matches) return;
+      autoTimer = window.setInterval(advance, STEP_MS);
+    };
+    const stopAuto = () => {
+      if (autoTimer) { window.clearInterval(autoTimer); autoTimer = null; }
+    };
+    // The user moved the strip: hand it over for good. Merely pausing would let
+    // an advance fire back in mid-gesture, which is the jitter this prevents.
+    const takeOver = () => {
+      if (userScrolled) return;
+      userScrolled = true;
+      stopAuto();
+    };
+    // Any movement of the strip we didn't initiate — finger, momentum, trackpad,
+    // scrollbar — is the user scrolling horizontally. While our own smooth scroll
+    // is still running it keeps renewing its window, so a slow animation can't
+    // outlive it and read as the user; a real gesture that starts mid-animation
+    // is caught by onHold instead.
+    const onStripScroll = () => {
+      if (Date.now() < selfScrollUntil) { selfScrollUntil = Date.now() + SELF_SCROLL_TAIL; return; }
+      takeOver();
+    };
+    // Re-evaluate whether the auto-advance should run whenever we (re)measure —
+    // e.g. after a resize crosses the mobile breakpoint.
+    const syncAuto = () => { stopAuto(); startAuto(); };
+
+    // A touch starts a drag: the user has the strip now, so stop the timer and
+    // remember where we began.
+    const onHold = () => {
+      takeOver();
+      const cards = cardEls();
+      if (!cards.length) return;
+      dragging = true;
+      dragStartLeft = viewport.scrollLeft;
+      dragStartIdx = nearestIndex(cards);
+    };
+    // On release, snap to the next/previous card by swipe direction (bound to
+    // window so a finger lifted outside the strip still settles it). The timer
+    // does not come back — the strip stays the user's from here on.
+    const onRelease = () => {
+      if (!dragging) return;
+      dragging = false;
+      const cards = cardEls();
+      if (!cards.length) return;
+      const step = cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : viewport.clientWidth;
+      const delta = viewport.scrollLeft - dragStartLeft;
+      let target = dragStartIdx;
+      if (delta > step * SWIPE_RATIO) target = dragStartIdx + 1;       // swiped forward
+      else if (delta < -step * SWIPE_RATIO) target = dragStartIdx - 1; // swiped back
+      scrollToIndex(target);
+    };
+    viewport.addEventListener('scroll', onStripScroll, { passive: true });
+    viewport.addEventListener('pointerdown', onHold, { passive: true });
+    window.addEventListener('pointerup', onRelease, { passive: true });
+    window.addEventListener('pointercancel', onRelease, { passive: true });
+
+    startAuto();
+    window.addEventListener('resize', syncAuto);
+
     return () => {
-      unlock();
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('keydown', onKey);
-      document.removeEventListener('click', onClick, true);
-      window.removeEventListener('resize', onResize);
-      window.removeEventListener('orientationchange', onRotate);
+      window.removeEventListener('resize', measure);
       window.removeEventListener('load', measure);
+      window.removeEventListener('resize', syncAuto);
+      viewport.removeEventListener('scroll', onStripScroll);
+      viewport.removeEventListener('pointerdown', onHold);
+      window.removeEventListener('pointerup', onRelease);
+      window.removeEventListener('pointercancel', onRelease);
+      stopAuto();
       clearTimeout(t);
     };
   }, []);
