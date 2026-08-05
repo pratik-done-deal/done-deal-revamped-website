@@ -12,7 +12,7 @@ export const DEFAULT_OG_IMAGE = '/assets/og/done-deal-og.png';
 
 export const ROUTE_META = {
   '/': {
-    title: 'The Fastest Way to Invest in Startups | Done Deal',
+    title: 'Investment bank for ambitious founders | Done Deal',
     description:
       "Done Deal is the AI-native investment bank for founders raising capital and buyers sourcing acquisitions. We run every deal from mandate to close.",
   },
