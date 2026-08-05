@@ -35,6 +35,7 @@ const photoGaurav = cdnUrl("gaurav.webp");
 const photoVinit = cdnUrl("vinit.webp");
 const photoDeepty = cdnUrl("deepty.webp");
 const photoDhrish = cdnUrl("dhrish.webp");
+const photoDhairya = cdnUrl("dhairya.webp");
 const photoSagar = cdnUrl("sagar.webp");
 const photoRohit = cdnUrl("rohit.webp");
 const photoAneesh = cdnUrl("aneesh.webp");
@@ -97,6 +98,7 @@ const TEAM_GROUPS = [
   {
     label: "Bankers",
     members: [
+      { initials: "DB", name: "Dhairya Borar", role: "M&A Lead", photo: photoDhairya, linkedin_url: "https://www.linkedin.com/in/dhairya-borar/" },
       { initials: "GJ", name: "Gaurav Jha", role: "Founder's Office", photo: photoGaurav, linkedin_url: "https://www.linkedin.com/in/gaurav-jha1910" },
       { initials: "VJ", name: "Vinit Jain", role: "Associate", photo: photoVinit, linkedin_url: "https://www.linkedin.com/in/win-it-jain" },
       { initials: "DC", name: "Deepty Chopra", role: "Associate", photo: photoDeepty, linkedin_url: "https://www.linkedin.com/in/deepty-chopra/" },
