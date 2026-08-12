@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
 import '../styles/legal.css';
 import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
@@ -15,6 +16,7 @@ export default function Legal() {
   useReveal();
   useParallax();
   useLightwell();
+  useScrollPercentageTracker('legal');
 
   const location = useLocation();
   const navigate = useNavigate();

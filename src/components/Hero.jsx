@@ -1,6 +1,8 @@
 import React from 'react';
 import useHeroAurora from '../hooks/useHeroAurora.js';
 import useHeroViz from '../hooks/useHeroViz.js';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const VIZ_CARDS = [
   { m: 0, n: '01', t: ['78 / 100 — ', 'deal-ready.'], s: 'Readiness report · AI, 120s' },
@@ -79,7 +81,11 @@ export default function Hero() {
               <a className="btn btn-primary" href="#">
                 Get started
               </a>
-              <a className="link" href="#deals">
+              <a
+                className="link"
+                href="#deals"
+                onClick={() => trackEvent(POSTHOG_EVENTS.HOMEPAGE.WEBSITE_LP_VIEW_DEALS_CLICKED_HERO)}
+              >
                 View all deals <span className="arrow">→</span>
               </a>
             </div>

@@ -15,9 +15,15 @@ function commonProperties() {
 export function trackEvent(eventName, properties = {}) {
   const payload = { ...commonProperties(), ...properties };
 
-  if (POSTHOG_DEBUG_MODE) {
-    console.log(`[posthog] ${eventName}`, payload);
-  }
+
+    if (POSTHOG_DEBUG_MODE) {
+      console.log(
+        `%c${eventName}`,
+        "background: #4CAF50; color: white; padding: 2px 6px; border-radius: 4px;",
+        `\n Props:`,
+        properties
+      );
+    }
 
   posthog?.capture(eventName, payload);
 }

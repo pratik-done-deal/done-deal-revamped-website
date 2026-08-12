@@ -1,15 +1,19 @@
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
 import { POSTS } from '../data/posts';
 import LazyImage from '../components/LazyImage';
 import '../styles/blog.css';
 import Seo from '../components/Seo';
 import { SITE_URL, getBlogPostMeta, resolveImageUrl } from '../seo/meta';
 import { appUrl } from '../config/app';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 // eager: true bundles every post body at build time so it's present in the
 // initial render output — required for the body to show up in prerendered
@@ -49,6 +53,7 @@ export default function BlogPost() {
   useReveal();
   useParallax();
   useLightwell();
+  useScrollPercentageTracker('blog_post');
 
   const { slug } = useParams();
   const idx = POSTS.findIndex(p => p.slug === slug);
@@ -57,6 +62,10 @@ export default function BlogPost() {
   const next = idx < POSTS.length - 1 ? POSTS[idx + 1] : null;
 
   const bodyHtml = post ? (blogFiles[`../blogs/${post.slug}.html`] || null) : null;
+
+  useEffect(() => {
+    if (post) trackEvent(POSTHOG_EVENTS.BLOG.WEBSITE_USER_LANDED_BLOG_PAGE, { blog: post.slug });
+  }, [post]);
 
   if (!post) {
     return (

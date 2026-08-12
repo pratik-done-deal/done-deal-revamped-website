@@ -6,9 +6,12 @@ import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
 import useHeroAurora from '../hooks/useHeroAurora';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
 import '../styles/contact.css';
 import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const OFFICES = [
   {
@@ -106,6 +109,11 @@ export default function Contact() {
   useParallax();
   useLightwell();
   useHeroAurora(auroraRef, panelRef, 1);
+  useScrollPercentageTracker('contact');
+
+  React.useEffect(() => {
+    trackEvent(POSTHOG_EVENTS.CONTACT_US.WEBSITE_USER_LANDED_CONTACT_US);
+  }, []);
 
   return (
     <>

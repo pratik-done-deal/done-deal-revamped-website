@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 /**
  * Scroll-driven content behaviours shared across pages:
@@ -223,6 +225,13 @@ export default function useReveal() {
       const onLeave = () => { paused = false; };
       acc.addEventListener('mouseenter', onEnter);
       acc.addEventListener('mouseleave', onLeave);
+      const onCapLinkClick = () => {
+        const p = panels[idx];
+        trackEvent(POSTHOG_EVENTS.HOMEPAGE.WEBSITE_LP_READ_STORY_CLICKED, {
+          deal: p ? p.getAttribute('data-slug') : undefined,
+        });
+      };
+      if (capLink) capLink.addEventListener('click', onCapLinkClick);
       show(0);
       let io2 = null;
       if ('IntersectionObserver' in window) {
@@ -236,6 +245,7 @@ export default function useReveal() {
         if (next) next.removeEventListener('click', onNext);
         acc.removeEventListener('mouseenter', onEnter);
         acc.removeEventListener('mouseleave', onLeave);
+        if (capLink) capLink.removeEventListener('click', onCapLinkClick);
         if (io2) io2.disconnect();
       });
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Nav from '../components/Nav';
 import Hero from '../components/Hero';
 import DealStrip from '../components/DealStrip';
@@ -20,8 +20,11 @@ import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
 import useMakersPin from '../hooks/useMakersPin';
 import useProcessScenes from '../hooks/useProcessScenes';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
 import Seo from '../components/Seo';
 import { SITE_URL, SITE_NAME, ROUTE_META } from '../seo/meta';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const STRUCTURED_DATA = {
   '@context': 'https://schema.org',
@@ -33,6 +36,10 @@ const STRUCTURED_DATA = {
 };
 
 export default function Home() {
+  useEffect(() => {
+    trackEvent(POSTHOG_EVENTS.HOMEPAGE.WEBSITE_USER_LANDED_HOMEPAGE);
+  }, []);
+
   // Pinned / scroll-driven sections
   useProcessScenes();
   useMakersPin();
@@ -40,6 +47,7 @@ export default function Home() {
   useReveal();
   useParallax();
   useLightwell();
+  useScrollPercentageTracker('home');
 
   return (
     <>
