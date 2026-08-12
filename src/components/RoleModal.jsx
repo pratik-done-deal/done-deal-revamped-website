@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { appUrl } from '../config/app';
 import useUtmSource from '../hooks/useUtmSource';
+import { trackEvent } from '../helper/posthogHelper';
+import { GET_STARTED_MODAL_OPENED, GET_STARTED_ROLE_SELECTED } from '../constants/posthogEvents';
 
 const SIGNUP_URL = appUrl('signup');
 
@@ -113,6 +115,17 @@ export default function RoleModal() {
         }
         setCtaSource(source);
         setOpen(true);
+        trackEvent(GET_STARTED_MODAL_OPENED, {
+          cta_source: isHeaderCta
+            ? 'header'
+            : isComparisonCta
+            ? 'comparison'
+            : isCtaBand
+            ? 'cta_band'
+            : isHeroCta
+            ? 'hero'
+            : 'generic',
+        });
       }
     };
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
@@ -125,8 +138,9 @@ export default function RoleModal() {
   }, []);
 
   const close = () => setOpen(false);
-  const go = (e) => {
+  const go = (e, opt) => {
     e.stopPropagation();
+    trackEvent(GET_STARTED_ROLE_SELECTED, { role: opt.key, source: activeSource });
     close();
   };
 
@@ -152,7 +166,7 @@ export default function RoleModal() {
               href={withUtm(opt.base || SIGNUP_URL)}
               target={opt.newTab ? '_blank' : undefined}
               rel={opt.newTab ? 'noopener noreferrer' : undefined}
-              onClick={go}
+              onClick={(e) => go(e, opt)}
               key={opt.key}
             >
               <span className="ddrm-ic">{opt.icon}</span>
