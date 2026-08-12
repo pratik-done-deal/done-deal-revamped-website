@@ -21,7 +21,22 @@ export default function useLenis() {
         touchMultiplier: 1.4,
       });
       window.__lenis = lenis;
-      const rafLoop = (time) => { lenis.raf(time); rafId = requestAnimationFrame(rafLoop); };
+      // Cap Lenis's own update to ~60fps. requestAnimationFrame fires at the display's
+      // native refresh rate (e.g. 120Hz), and every lenis.raf() call writes scrollTop and
+      // dispatches a native 'scroll' event — which the lightwell background-wash, scroll
+      // tracker, and other scroll-linked effects all react to. Left uncapped, a 120Hz
+      // display does twice the scroll writes + reflow-triggering work per second, which is
+      // what makes the background-on-scroll jank show up there specifically. Skipping
+      // frames is safe: Lenis eases off the real timestamp it's given, not frame count.
+      const FRAME_INTERVAL = 1000 / 60;
+      let lastTime = 0;
+      const rafLoop = (time) => {
+        if (time - lastTime >= FRAME_INTERVAL) {
+          lastTime = time;
+          lenis.raf(time);
+        }
+        rafId = requestAnimationFrame(rafLoop);
+      };
       rafId = requestAnimationFrame(rafLoop);
     }
 

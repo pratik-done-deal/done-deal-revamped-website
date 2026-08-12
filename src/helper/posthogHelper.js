@@ -20,7 +20,7 @@ export function trackEvent(eventName, properties = {}) {
       console.log(
         `%c${eventName}`,
         "background: #4CAF50; color: white; padding: 2px 6px; border-radius: 4px;",
-        `\n Props:`,
+        `\n `,
         properties
       );
     }

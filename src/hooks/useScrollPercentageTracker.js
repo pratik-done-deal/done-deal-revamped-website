@@ -20,7 +20,7 @@ export default function useScrollPercentageTracker(pageName, containerRef) {
     maxScrollPercentRef.current = 0;
     let hasFired100Percent = false;
 
-    const handleScroll = (event) => {
+    const measure = (target) => {
       let percent = 0;
 
       if (containerRef && containerRef.current) {
@@ -41,7 +41,7 @@ export default function useScrollPercentageTracker(pageName, containerRef) {
           percent = totalScrollable > 0 ? (scrolledPastTop / totalScrollable) * 100 : 100;
         }
       } else {
-        const el = event.target === document ? document.documentElement : event.target;
+        const el = target === document ? document.documentElement : target;
 
         // Skip invalid targets or elements that aren't scroll containers
         if (!el || typeof el.scrollTop === 'undefined' || el.clientHeight === 0) return;
@@ -74,14 +74,33 @@ export default function useScrollPercentageTracker(pageName, containerRef) {
       }
     };
 
+    // Scroll fires far more often than the display can paint, and measuring involves
+    // layout reads (scrollHeight/getBoundingClientRect). Batch to one measurement per
+    // animation frame so this doesn't force synchronous reflow on every scroll tick.
+    let ticking = false;
+    let pendingTarget = document;
+    let rafId = null;
+    const handleScroll = (event) => {
+      pendingTarget = event.target;
+      if (!ticking) {
+        ticking = true;
+        rafId = requestAnimationFrame(() => {
+          ticking = false;
+          rafId = null;
+          measure(pendingTarget);
+        });
+      }
+    };
+
     // capture: true catches scroll events from any layout wrapper that handles page scrolling
     window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
 
     // Also run once on mount in case the user never scrolls but the page already fits on screen
-    handleScroll({ target: document });
+    measure(document);
 
     return () => {
       window.removeEventListener('scroll', handleScroll, { capture: true });
+      if (rafId !== null) cancelAnimationFrame(rafId);
 
       const maxPercent = Math.min(100, Math.round(maxScrollPercentRef.current));
       if (maxPercent <= 0) return;

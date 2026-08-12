@@ -22,7 +22,7 @@ export default function useInvestorsViz() {
       const ctx = canvas.getContext('2d');
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       let W = 0, H = 0; const N = 30, SEG = 46, winIdx = Math.floor(N / 2); let t = 0;
-      let rafId = null, alive = true;
+      let rafId = null, alive = true, visible = true;
       const COP = [161, 108, 58], COP_HI = [176, 119, 63], PUR = [70, 88, 230], BLU = [70, 88, 222];
       const rgba = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
       const mixc = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
@@ -116,10 +116,32 @@ export default function useInvestorsViz() {
         drawBall(wq.x * W, wq.y * H, gr, COP_HI, 1, 0.5 + 0.5 * Math.sin(t * 1.7), 1, false);
         drawBall(bx, by, br, PUR, 1, 0.5 + 0.5 * Math.sin(t * 1.7 + 1), 1, true);
       };
-      const frame = () => { if (!alive) return; t += reduce ? 0 : 0.012; render(); if (!reduce) rafId = requestAnimationFrame(frame); };
+      // Cap redraws to ~60fps — rAF fires at the display's native refresh rate (e.g. 120Hz),
+      // and this loop's gradient-heavy canvas work (plus its t increment, which controls
+      // animation speed) would otherwise run twice as fast/heavy on high-refresh screens.
+      const FRAME_INTERVAL = 1000 / 60;
+      let lastTime = 0;
+      const frame = (time) => {
+        if (!alive) return;
+        if (!visible) { rafId = null; return; }
+        if (time - lastTime < FRAME_INTERVAL) { rafId = requestAnimationFrame(frame); return; }
+        lastTime = time;
+        t += reduce ? 0 : 0.012; render();
+        if (!reduce) rafId = requestAnimationFrame(frame);
+      };
       window.addEventListener('resize', build);
       build(); render(); if (!reduce) rafId = requestAnimationFrame(frame);
-      cleanups.push(() => { alive = false; if (rafId) cancelAnimationFrame(rafId); window.removeEventListener('resize', build); });
+      // Only keep drawing while the fountain canvas is actually on screen — this loop
+      // otherwise runs forever, stealing frame budget from scroll even far down the page.
+      let io = null;
+      if (!reduce && 'IntersectionObserver' in window) {
+        io = new IntersectionObserver((entries) => {
+          visible = entries[0].isIntersecting;
+          if (visible && rafId === null && alive) rafId = requestAnimationFrame(frame);
+        }, { threshold: 0 });
+        io.observe(host);
+      }
+      cleanups.push(() => { alive = false; if (rafId) cancelAnimationFrame(rafId); window.removeEventListener('resize', build); if (io) io.disconnect(); });
     })();
 
     /* ── manifesto word fill ── */

@@ -370,7 +370,7 @@ image-slot::part(frame) { background: #100E16; }
 
 /* ── Reveal animation (refined, gated) ───────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal { opacity: 1; transform: none; } /* TEMP-VERIFY */
+  .reveal { opacity: 0; transform: translateY(20px); }
   .reveal.in {
     opacity: 1; transform: none;
     transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out);

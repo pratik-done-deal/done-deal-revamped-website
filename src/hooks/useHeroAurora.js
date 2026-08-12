@@ -82,8 +82,17 @@ export default function useHeroAurora(canvasRef, hostRef, mode = 1) {
     seedStars();
 
     let t = 0;
-    let raf;
-    const frame = () => {
+    let raf = null;
+    let visible = true;
+    // Cap redraws to ~60fps — rAF fires at the display's native refresh rate (e.g. 120Hz),
+    // and this loop's gradient-heavy canvas work (plus its t increment, which controls
+    // animation speed) would otherwise run twice as fast/heavy on high-refresh screens.
+    const FRAME_INTERVAL = 1000 / 60;
+    let lastTime = 0;
+    const frame = (time) => {
+      if (!visible) { raf = null; return; }
+      if (time - lastTime < FRAME_INTERVAL) { raf = requestAnimationFrame(frame); return; }
+      lastTime = time;
       t += 0.006;
       px = lerp(px, tx, 0.05);
       py = lerp(py, ty, 0.05);
@@ -129,8 +138,18 @@ export default function useHeroAurora(canvasRef, hostRef, mode = 1) {
     };
 
     resize();
+    let io = null;
     if (!reduce) {
       raf = requestAnimationFrame(frame);
+      // Only keep drawing while the hero panel is actually on screen — this loop
+      // otherwise runs forever, stealing frame budget from scroll even far down the page.
+      if ('IntersectionObserver' in window) {
+        io = new IntersectionObserver((entries) => {
+          visible = entries[0].isIntersecting;
+          if (visible && raf === null) raf = requestAnimationFrame(frame);
+        }, { threshold: 0 });
+        io.observe(host);
+      }
     } else {
       const cx2 = W * 0.66;
       const cy2 = H * 0.38;
@@ -143,6 +162,7 @@ export default function useHeroAurora(canvasRef, hostRef, mode = 1) {
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
+      if (io) io.disconnect();
       host.removeEventListener('pointermove', onMove);
       host.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('resize', resize);

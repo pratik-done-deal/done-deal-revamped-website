@@ -16,7 +16,7 @@ export default function useLightwell(opts = {}) {
     const lerp = (a, b, t) => a + (b - a) * t;
     const DARK = [7, 7, 7], LIGHT = [244, 241, 235];
 
-    const onScroll = () => {
+    const update = () => {
       const vh = window.innerHeight;
       let light = floor;
       for (let i = 0; i < wells.length; i++) {
@@ -33,13 +33,22 @@ export default function useLightwell(opts = {}) {
       document.documentElement.style.setProperty('--lw', light.toFixed(3));
       document.body.classList.toggle('is-light', light > 0.5);
     };
+    // Batch to one measurement + style write per animation frame instead of running
+    // this (layout read + global style/class writes) synchronously on every scroll tick.
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => { ticking = false; update(); });
+      }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    onScroll();
+    window.addEventListener('resize', update);
+    update();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', update);
       wash.style.backgroundColor = '';
       wash.style.removeProperty('--washdark');
       document.documentElement.style.removeProperty('--lw');
