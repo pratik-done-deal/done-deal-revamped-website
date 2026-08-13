@@ -9,5 +9,4 @@ export const POSTHOG_HOST = (
 // On for local dev, or wherever VITE_POSTHOG_DEBUG is explicitly set (e.g.
 // staging builds) — off in production by default. Only gates the console
 // logging in posthogHelper, not the SDK's own `debug` init option.
-export const POSTHOG_DEBUG_MODE =
-  import.meta.env.DEV || import.meta.env.VITE_POSTHOG_DEBUG === 'true';
+export const POSTHOG_DEBUG_MODE = window.location.hostname === 'localhost';
