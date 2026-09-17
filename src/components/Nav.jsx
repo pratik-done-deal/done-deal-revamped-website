@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useNav from '../hooks/useNav';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
+import { Link } from 'react-router-dom';
 
 const NAV_LINKS = [
-  { key: 'investors', label: 'For Investors', href: '/investors' },
-  { key: 'mandates', label: 'Mandates', href: '/mandates' },
-  { key: 'faq', label: 'FAQ', href: '/faq' },
-  { key: 'blog', label: 'Blog', href: '/blog' },
-  { key: 'about', label: 'About Us', href: '/about' },
+  { key: 'investors', label: 'For Investors', href: '/investors', event: POSTHOG_EVENTS.HEADER.WEBSITE_HEADER_FOR_INVESTORS_CLICKED },
+  { key: 'mandates', label: 'Mandates', href: '/mandates', event: POSTHOG_EVENTS.HEADER.WEBSITE_HEADER_MANDATES_CLICKED },
+  { key: 'faq', label: 'FAQ', href: '/faq', event: POSTHOG_EVENTS.HEADER.WEBSITE_HEADER_FAQ_CLICKED },
+  { key: 'blog', label: 'Blog', href: '/blog', event: POSTHOG_EVENTS.HEADER.WEBSITE_HEADER_BLOG_CLICKED },
+  { key: 'about', label: 'About Us', href: '/about', event: POSTHOG_EVENTS.HEADER.WEBSITE_HEADER_ABOUT_US_CLICKED },
 ];
 
 const brandLogoClass = 'brand-logo h-[26px] w-auto [body.is-light_&]:invert';
@@ -38,25 +41,26 @@ export default function Nav({ current }) {
         id="topnav"
         ref={headerRef}
       >
-        <a className="inline-flex items-center no-underline" href="/" aria-label="Done Deal home">
+        <Link className="inline-flex items-center no-underline" to="/" aria-label="Done Deal home">
           <img className={brandLogoClass} src="/assets/done-deal-icon.svg" alt="done.deals" />
-        </a>
+        </Link>
 
         <nav className="nav-links hidden items-center gap-[34px] min-[801px]:flex" aria-label="Primary navigation">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.key}
               className={`${linkClass}${current === link.key ? ' !text-[var(--purple)]' : ''}`}
-              href={link.href}
+              to={link.href}
+              onClick={() => trackEvent(link.event)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
-        <a className={`${ctaClass} hidden min-[801px]:inline-flex`} href="https://www.done.deals/get-started">
+        <Link className={`${ctaClass} hidden min-[801px]:inline-flex`} to="https://www.done.deals/get-started">
           Get started
-        </a>
+        </Link>
 
         <button
           className="dd-burger -mr-[9px] inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px] border-0 bg-transparent p-0 min-[801px]:hidden"
@@ -99,19 +103,19 @@ export default function Nav({ current }) {
         </div>
 
         {NAV_LINKS.map((link) => (
-          <a
+          <Link
             key={link.key}
             className={`dd-mn-link border-b border-white/10 py-[18px] text-[30px] font-medium leading-tight tracking-[-0.02em] text-[var(--bone)] no-underline active:text-[var(--purple-soft)]${current === link.key ? ' !text-[var(--purple-soft)]' : ''}`}
-            href={link.href}
-            onClick={closeMobile}
+            to={link.href}
+            onClick={() => { trackEvent(link.event); closeMobile(); }}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
 
-        <a className={`${ctaClass} dd-mn-cta mt-auto !w-full !py-[17px] !text-[17px]`} href="https://www.done.deals/get-started" onClick={closeMobile}>
+        <Link className={`${ctaClass} dd-mn-cta mt-auto !w-full !py-[17px] !text-[17px]`} to="https://www.done.deals/get-started" onClick={closeMobile}>
           Get started
-        </a>
+        </Link>
       </nav>
     </>
   );

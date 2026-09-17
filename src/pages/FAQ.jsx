@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
 import { FAQS } from '../data/faqs.jsx';
 import '../styles/faq.css';
 import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const FILTERS = [
   { key: 'all',     label: 'All questions' },
@@ -43,6 +46,11 @@ export default function FAQ() {
   useReveal();
   useParallax();
   useLightwell();
+  useScrollPercentageTracker('faq');
+
+  useEffect(() => {
+    trackEvent(POSTHOG_EVENTS.FAQ_PAGE.WEBSITE_USER_LANDED_FAQ_PAGE);
+  }, []);
 
   const [filter, setFilter] = useState('all');
   const [openItems, setOpenItems] = useState(new Set());

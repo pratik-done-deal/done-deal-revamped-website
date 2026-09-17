@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { appUrl } from '../config/app';
 import useUtmSource from '../hooks/useUtmSource';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const SIGNUP_URL = appUrl('signup');
 
@@ -113,6 +115,31 @@ export default function RoleModal() {
         }
         setCtaSource(source);
         setOpen(true);
+
+        // Page-section-specific "get started clicked" event, fired before the
+        // modal-open event below. Header CTA belongs to the HEADER category;
+        // the homepage hero/comparison/footer-band CTAs belong to HOMEPAGE.
+        if (isHeaderCta) {
+          trackEvent(POSTHOG_EVENTS.HEADER.WEBSITE_GET_STARTED_CLICKED, { page_section: 'header' });
+        } else if (isComparisonCta) {
+          trackEvent(POSTHOG_EVENTS.HOMEPAGE.WEBSITE_GET_STARTED_CLICKED, { page_section: 'lp_comparision' });
+        } else if (isCtaBand) {
+          trackEvent(POSTHOG_EVENTS.HOMEPAGE.WEBSITE_GET_STARTED_CLICKED, { page_section: 'lp_footer' });
+        } else if (isHeroCta) {
+          trackEvent(POSTHOG_EVENTS.HOMEPAGE.WEBSITE_GET_STARTED_CLICKED, { page_section: 'lp_hero' });
+        }
+
+        trackEvent(POSTHOG_EVENTS.GET_STARTED_MODAL.WEBSITE_GET_STARTED_MODAL_OPEN, {
+          cta_source: isHeaderCta
+            ? 'header'
+            : isComparisonCta
+            ? 'comparison'
+            : isCtaBand
+            ? 'cta_band'
+            : isHeroCta
+            ? 'hero'
+            : 'generic',
+        });
       }
     };
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
@@ -125,8 +152,12 @@ export default function RoleModal() {
   }, []);
 
   const close = () => setOpen(false);
-  const go = (e) => {
+  const go = (e, opt) => {
     e.stopPropagation();
+    const roleEvent = opt.key === 'seller'
+      ? POSTHOG_EVENTS.GET_STARTED_MODAL.WEBSITE_SELLER_SIGNUP_CLICKED
+      : POSTHOG_EVENTS.GET_STARTED_MODAL.WEBSITE_BUYER_SIGNUP_CLICKED;
+    trackEvent(roleEvent, { source: activeSource });
     close();
   };
 
@@ -152,7 +183,7 @@ export default function RoleModal() {
               href={withUtm(opt.base || SIGNUP_URL)}
               target={opt.newTab ? '_blank' : undefined}
               rel={opt.newTab ? 'noopener noreferrer' : undefined}
-              onClick={go}
+              onClick={(e) => go(e, opt)}
               key={opt.key}
             >
               <span className="ddrm-ic">{opt.icon}</span>

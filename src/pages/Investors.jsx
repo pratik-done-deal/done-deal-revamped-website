@@ -12,6 +12,9 @@ import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
 import { appUrl } from '../config/app';
 import useUtmSource from '../hooks/useUtmSource';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const DISPLAY_FAQS = ['general', 'founder', 'buyer'].flatMap((cat) =>
   FAQS.filter((faq) => faq.cat === cat).slice(0, 2)
@@ -39,17 +42,21 @@ export default function Investors() {
   const panelRef = React.useRef(null);
   const auroraRef = React.useRef(null);
 
+    useEffect(() => {
+    document.body.classList.add('page-investors');
+    trackEvent(POSTHOG_EVENTS.BUYER_LANDING_PAGE.WEBSITE_USER_LANDED_BUYER_LANDING_PAGE);
+    return () => document.body.classList.remove('page-investors');
+  }, []);
+
   useReveal();        // .reveal fades, FAQ accordions
   useParallax();      // ambient .drift shapes
   useLightwell(); // hero + sections 01-02 are light; sections 03+ are dark
   useInvestorsViz();  // match-viz fountain, manifesto fill, count-ups, card sweep
   useHeroAurora(auroraRef, panelRef, 1);
+  useScrollPercentageTracker('investors');
   
 
-  useEffect(() => {
-    document.body.classList.add('page-investors');
-    return () => document.body.classList.remove('page-investors');
-  }, []);
+
 
   return (
     <>
@@ -99,10 +106,20 @@ export default function Investors() {
                   We use AI to match you with startups that fit your exact mandate — then send you only the deals worth your time. No retainers. No finder fees. No noise.
                 </p>
                 <div className="cta-row">
-                  <a className="btn btn-primary" href={buyerOnboardingHeroUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    className="btn btn-primary"
+                    href={buyerOnboardingHeroUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent(POSTHOG_EVENTS.BUYER_LANDING_PAGE.WEBSITE_BUYER_SIGNUP_CLICKED, { page_section: 'buyer_lp_hero' })}
+                  >
                     Join buyer network
                   </a>
-                  <a className="link" href="#how">
+                  <a
+                    className="link"
+                    href="#how"
+                    onClick={() => trackEvent(POSTHOG_EVENTS.BUYER_LANDING_PAGE.WEBSITE_BUYER_LP_HOW_MATCHING_WORK_CLICKS)}
+                  >
                     {"See how matching works "}
                     <span className="arrow">
                       →
@@ -646,7 +663,13 @@ export default function Investors() {
                 </div>
               </div>
               <div style={{ "marginTop": "40px" }} className="reveal">
-                <a className="btn btn-primary" href={buyerOnboardingBuyerTypeUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  className="btn btn-primary"
+                  href={buyerOnboardingBuyerTypeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent(POSTHOG_EVENTS.BUYER_LANDING_PAGE.WEBSITE_BUYER_SIGNUP_CLICKED, { page_section: 'buyer_lp_buyer_type' })}
+                >
                   Join buyer network
                 </a>
               </div>
@@ -934,10 +957,22 @@ export default function Investors() {
             </div>
           </section>
           <section className="cta-band" data-screen-label="CTA actions">
-            <a className="btn btn-primary" href={buyerOnboardingFooterUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              className="btn btn-primary"
+              href={buyerOnboardingFooterUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent(POSTHOG_EVENTS.BUYER_LANDING_PAGE.WEBSITE_BUYER_SIGNUP_CLICKED, { page_section: 'buyer_lp_footer' })}
+            >
               Join buyer network
             </a>
-            <a className="link" href={buyerLoginFooterUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              className="link"
+              href={buyerLoginFooterUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent(POSTHOG_EVENTS.BUYER_LANDING_PAGE.WEBSITE_SELLER_SIGNIN_CLICKED, { page_section: 'buyer_lp_footer' })}
+            >
               {"Already a member? Login "}
               <span className="arrow">
                 →

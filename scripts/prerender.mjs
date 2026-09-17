@@ -4,7 +4,7 @@
 // then writes sitemap.xml alongside it.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(rootDir, 'dist');
@@ -12,7 +12,7 @@ const ssrEntry = path.join(rootDir, 'dist-ssr', 'entry-server.js');
 
 const SITE_URL = 'https://www.done.deals';
 
-const { render, getAllRoutes } = await import(ssrEntry);
+const { render, getAllRoutes } = await import(pathToFileURL(ssrEntry).href);
 
 const template = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
 const routes = getAllRoutes();

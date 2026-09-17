@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import useReveal from '../hooks/useReveal';
 import useParallax from '../hooks/useParallax';
 import useLightwell from '../hooks/useLightwell';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
 import { POSTS } from '../data/posts';
 import LazyImage from '../components/LazyImage';
 import '../styles/blog.css';
 import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 const ORB_SM = { width: 200, height: 200, left: '-10%', top: '-18%', opacity: 0.55 };
 
@@ -40,7 +43,11 @@ function BlogMeta({ date, readTime, className }) {
 
 function BlogCard({ post }) {
   return (
-    <a className="bcard reveal" href={`DoneDeal-Blog-Post.html?p=${post.slug}`}>
+    <a
+      className="bcard reveal"
+      href={`DoneDeal-Blog-Post.html?p=${post.slug}`}
+      onClick={() => trackEvent(POSTHOG_EVENTS.BLOG.WEBSITE_BLOG_CLICKED, { blog: post.slug })}
+    >
       <div className={`cover ${post.cover}`} style={{ height: 160 }}>
         {post.image ? (
           <>
@@ -78,6 +85,11 @@ export default function Blog() {
   useReveal();
   useParallax();
   useLightwell();
+  useScrollPercentageTracker('blog');
+
+  useEffect(() => {
+    trackEvent(POSTHOG_EVENTS.BLOG.WEBSITE_USER_LANDED_BLOGS_PAGE);
+  }, []);
 
   const [filter, setFilter] = useState('all');
   const visible = filter === 'all' ? POSTS : POSTS.filter(p => p.cat === filter);
@@ -125,7 +137,11 @@ export default function Blog() {
                 <p>Inside the largest commitment facilitated on Done Deal to date: how a beauty &amp; personal care brand attracted a nine-figure strategic partner, and what it signals for the market.</p>
                 <BlogMeta date="Jun 10, 2025" readTime="7 min read" className="mt" />
                 <div className="cta-row mt-6">
-                  <a className="btn btn-primary" href="DoneDeal-Blog-Post.html?p=150-cr-commitment-bpc-brand">
+                  <a
+                    className="btn btn-primary"
+                    href="DoneDeal-Blog-Post.html?p=150-cr-commitment-bpc-brand"
+                    onClick={() => trackEvent(POSTHOG_EVENTS.BLOG.WEBSITE_BLOG_CLICKED, { blog: '150-cr-commitment-bpc-brand' })}
+                  >
                     Read the post
                   </a>
                 </div>

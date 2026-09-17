@@ -9,6 +9,9 @@ import Seo from '../components/Seo';
 import { ROUTE_META } from '../seo/meta';
 import { appUrl } from '../config/app';
 import useUtmSource from '../hooks/useUtmSource';
+import useScrollPercentageTracker from '../hooks/useScrollPercentageTracker';
+import { trackEvent } from '../helper/posthogHelper';
+import { POSTHOG_EVENTS } from '../constants/posthogEvents';
 
 import { cdnUrl } from '../config/cdn';
 
@@ -218,7 +221,7 @@ const FILTERS = [
 ];
 
 /* ── Mandate card ───────────────────────────────────────────── */
-function MandateCard({ item, featured = false, signupUrl }) {
+function MandateCard({ item, featured = false, signupUrl, pageSection }) {
   return (
     <article className={`mcard${featured ? ' featured' : ''}`} data-cat={item.cat}>
       {featured && <span className="fbadge">Featured</span>}
@@ -243,7 +246,13 @@ function MandateCard({ item, featured = false, signupUrl }) {
             <span className="v">{item.ebitda}</span>
           </div>
         </div>
-        <a className="btn-express" href={`${signupUrl}&mandate=${item.id}`} target="_blank" rel="noopener noreferrer">
+        <a
+          className="btn-express"
+          href={`${signupUrl}&mandate=${item.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent(POSTHOG_EVENTS.MANDATE_LANDING_PAGE.WEBSITE_SELLER_SIGNUP_CLICKED, { page_section: pageSection, mandate_id: item.id })}
+        >
           Express interest
         </a>
       </div>
@@ -301,7 +310,7 @@ function FeaturedSlider({ items, signupUrl }) {
         <div className="fslider-track" ref={trackRef}>
           {items.map((item, i) => (
             <div key={item.id} className={`mcard-shell${i === current ? ' active' : ''}`}>
-              <MandateCard item={item} featured signupUrl={signupUrl} />
+              <MandateCard item={item} featured signupUrl={signupUrl} pageSection="mandate_lp_hero" />
             </div>
           ))}
         </div>
@@ -337,6 +346,11 @@ export default function Mandates() {
   useReveal();
   useParallax();
   useLightwell();
+  useScrollPercentageTracker('mandates');
+
+  useEffect(() => {
+    trackEvent(POSTHOG_EVENTS.MANDATE_LANDING_PAGE.WEBSITE_USER_LANDED_MANDATE_PAGE);
+  }, []);
 
   const utmSource = useUtmSource('mandate-page');
   const signupUrl = `${appUrl('signup')}?utm_source=${encodeURIComponent(utmSource)}`;
@@ -435,7 +449,10 @@ export default function Mandates() {
                   className={`fchip${filter === f.key ? ' on' : ''}`}
                   role="tab"
                   aria-selected={filter === f.key}
-                  onClick={() => setFilter(f.key)}
+                  onClick={() => {
+                    trackEvent(POSTHOG_EVENTS.MANDATE_LANDING_PAGE.WEBSITE_MANDATE_LP_CATEGORIES_CLICKED, { categories: f.label });
+                    setFilter(f.key);
+                  }}
                 >
                   {f.label}
                 </button>
@@ -446,7 +463,7 @@ export default function Mandates() {
             <div className="mand-grid">
               {visible.map((m) => (
                 <div key={m.id} className="mcard-shell">
-                  <MandateCard item={m} signupUrl={signupUrl} />
+                  <MandateCard item={m} signupUrl={signupUrl} pageSection="mandate_lp_listing" />
                 </div>
               ))}
             </div>
@@ -500,10 +517,20 @@ export default function Mandates() {
                 <h3>Not a fit? No problem.</h3>
                 <p>Our vetted investors are always looking for great companies. Get your valuation and let the right buyers find you — it's completely free.</p>
                 <div className="cta-actions">
-                  <a className="btn btn-primary" href={signupUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    className="btn btn-primary"
+                    href={signupUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent(POSTHOG_EVENTS.MANDATE_LANDING_PAGE.WEBSITE_SELLER_SIGNUP_CLICKED, { page_section: 'mandate_lp_footer' })}
+                  >
                     Sign up as a company
                   </a>
-                  <a className="link" href={appUrl('valuation-calculator')}>
+                  <a
+                    className="link"
+                    href={appUrl('valuation-calculator')}
+                    onClick={() => trackEvent(POSTHOG_EVENTS.MANDATE_LANDING_PAGE.WEBSITE_MANDATE_LP_GET_VALUATION_CLICKED_FOOTER)}
+                  >
                     Get your valuation <span className="arrow">→</span>
                   </a>
                 </div>
@@ -527,7 +554,13 @@ export default function Mandates() {
                 <h3>Have a requirement?</h3>
                 <p>List a mandate and we'll source companies that fit. Our team curates and vets every match before it ever reaches you.</p>
                 <div className="cta-actions">
-                  <a className="btn btn-light" href={buyerOnboardingUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    className="btn btn-light"
+                    href={buyerOnboardingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent(POSTHOG_EVENTS.MANDATE_LANDING_PAGE.WEBSITE_BUYER_SIGNUP_CLICKED, { page_section: 'mandate_lp_footer' })}
+                  >
                     List a mandate
                   </a>
                 </div>
