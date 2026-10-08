@@ -33,7 +33,7 @@ const photoAshutosh = cdnUrl("ashutosh.webp");
 const photoAbhijeet = cdnUrl("abhijeet.webp");
 const photoGaurav = cdnUrl("gaurav.webp");
 const photoVinit = cdnUrl("vinit.webp");
-const photoDeepty = cdnUrl("deepty.webp");
+const photoMehak = cdnUrl("mehek.webp");
 const photoDhrish = cdnUrl("dhrish.webp");
 const photoDhairya = cdnUrl("dhairya.webp");
 const photoSagar = cdnUrl("sagar.webp");
@@ -101,7 +101,7 @@ const TEAM_GROUPS = [
       { initials: "DB", name: "Dhairya Borar", role: "M&A Lead", photo: photoDhairya, linkedin_url: "https://www.linkedin.com/in/dhairya-borar/" },
       { initials: "GJ", name: "Gaurav Jha", role: "Founder's Office", photo: photoGaurav, linkedin_url: "https://www.linkedin.com/in/gaurav-jha1910" },
       { initials: "VJ", name: "Vinit Jain", role: "Associate", photo: photoVinit, linkedin_url: "https://www.linkedin.com/in/win-it-jain" },
-      { initials: "DC", name: "Deepty Chopra", role: "Associate", photo: photoDeepty, linkedin_url: "https://www.linkedin.com/in/deepty-chopra/" },
+      { initials: "MM", name: "Mahek Medh", role: "Fundraising Lead", photo: photoMehak, linkedin_url: "https://www.linkedin.com/in/mahek-medh/" },
       { initials: "DS", name: "Dhrish Saggi", role: "Category Lead", photo: photoDhrish, linkedin_url: "https://www.linkedin.com/in/dhrishsaggi/" },
       { initials: "SP", name: "Sagar Parekh", role: "Category Lead", photo: photoSagar, linkedin_url: "https://www.linkedin.com/in/parekh-sagar/" },
     ]

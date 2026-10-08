@@ -7,7 +7,7 @@ const photoGaurav = cdnUrl('gaurav.webp');
 const photoVinit = cdnUrl('vinit.webp');
 const photoDhrish = cdnUrl('dhrish.webp');
 const photoSagar = cdnUrl('sagar.webp');
-const photoDeepty = cdnUrl('deepty.webp');
+const photoMehak = cdnUrl('mehek.webp');
 const photoDhairya = cdnUrl('dhairya.webp');
 // const photoAneesh = aneeshDealMaker;
 // const photoRohit = rohitDealMaker;
@@ -23,7 +23,7 @@ const MAKERS = [
   { id: 'mk-4', sector: 'Fintech', photoSrc: photoSagar, name: 'Sagar Parekh', role: 'Lead, Fintech | Logistics | ESG', linkedin: 'https://www.linkedin.com/in/parekh-sagar/' },
   { id: 'mk-3', sector: 'Edtech', photoSrc: photoDhrish, name: 'Dhrish Saggi', role: 'Lead, Edtech | IT Services | SaaS', linkedin: 'https://www.linkedin.com/in/dhrishsaggi/' },
   { id: 'mk-2', sector: 'Logistics', photoSrc: photoVinit, name: 'Vinit Jain', role: 'Lead, Logistics | Consumer', linkedin: 'https://www.linkedin.com/in/win-it-jain' },
-  { id: 'mk-5', sector: 'Fundraising', photoSrc: photoDeepty, name: 'Deepty Chopra', role: 'Lead, Fundraising', linkedin: 'https://www.linkedin.com/in/deepty-chopra/' },
+  { id: 'mk-5', sector: 'Fundraising', photoSrc: photoMehak, name: 'Mahek Medh', role: 'Lead, Fundraising', linkedin: 'https://www.linkedin.com/in/mahek-medh/' },
 ];
 
 function LinkedInGlyph() {
